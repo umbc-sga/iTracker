@@ -1,7 +1,7 @@
     <!-- Sidebar user panel -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="/initiative-tracker/ver0.3/sga-logo-IT.png" class="img-circle" alt="User Image">
+        <img src="/itracker/sga-logo-IT.png" class="img-circle" alt="User Image">
       </div>
             <!-- <div class="pull-left info">
               <p>Alexander Pierce</p>
@@ -22,7 +22,7 @@
           <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
             <li class="active">
-              <a href="/initiative-tracker/ver0.3/">
+              <a href="/itracker/">
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
               </a>
             </li>
@@ -37,11 +37,11 @@
                 <?php
                 $groupData = Basecamp("groups.json");
 
-                for($i=0; $i<count($groupData); $i++) {
+                for($i=0; $i < count($groupData); $i++) {
                   $dept_name = $groupData[$i]["name"];
                   $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$i]["name"]))));
                   ?>
-                  <li><a class="department" href="/initiative-tracker/ver0.3/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
+                  <li><a class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
                 <?php
                 }
                 ?>
@@ -54,13 +54,13 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="/initiative-tracker/ver0.3/people/"><i class="fa fa-circle-o"></i>Everyone</a></li>
+                <li><a href="/itracker/people/"><i class="fa fa-circle-o"></i>Everyone</a></li>
                 <?php
                 for($j=0; $j<count($groupData); $j++) {
                   $dept_name = $groupData[$j]["name"];
                   $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$j]["name"]))));
                   ?>
-                  <li><a href="/initiative-tracker/ver0.3/departments/<?php echo($dept_url); ?>/people/"><i class="fa fa-circle-o"></i><?php echo($dept_name); ?></a></li>
+                  <li><a href="/itracker/departments/<?php echo($dept_url); ?>/people/"><i class="fa fa-circle-o"></i><?php echo($dept_name); ?></a></li>
                 <?php
                 }
                 ?>

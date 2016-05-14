@@ -6,9 +6,9 @@ ini_set('display_errors', 1);
 
 include("../version.php");
 
-if (!(file_exists("$version_dir/departments/"))) {
-	mkdir("$version_dir/departments/");
-	$deptLanding = fopen("$version_dir/departments/index.html", "w");
+if (!(file_exists("/itracker/departments/"))) {
+	mkdir("/itracker/departments/");
+	$deptLanding = fopen("/itracker/departments/index.html", "w");
 	$file = "
 	<html>
 	<head>

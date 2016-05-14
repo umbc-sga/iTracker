@@ -2,8 +2,7 @@
 <html>
 <head>
 	<?php
-	include("./version.php");
-	include("$version_dir/includes/web-header.php");
+	include("web-header.php");
 	?>
 	<title>Dashboard | UMBC SGA iTracker</title>
 </head>
@@ -12,7 +11,7 @@
 
 		<header class="main-header">
 			<?php
-			include("$version_dir/includes/header.php")
+			include("header.php")
 			?>
 		</header>
 		<!-- Left side column. contains the logo and sidebar -->
@@ -20,7 +19,7 @@
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 				<?php
-				include("$version_dir/includes/sidebar.php");
+				include("sidebar.php");
 				?>
 			</section>
 			<!-- /.sidebar -->
@@ -487,7 +486,7 @@
 		</div><!-- /.content-wrapper -->
 		<footer class="main-footer">
 			<?php
-			include("$version_dir/includes/footer.php");
+			include("footer.php");
 			?>
 		</footer>
 
@@ -497,7 +496,7 @@
   </div><!-- ./wrapper -->
 
   <?php
-  include("$version_dir/includes/web-footer.php");
+  include("web-footer.php");
   ?>
 
 </body>
