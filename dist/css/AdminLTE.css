@@ -470,8 +470,6 @@ a:focus {
   position: relative;
   width: 100%;
   padding: 10px;
-  padding-left: 28px;
-  padding-right: 27px;
   overflow: hidden;
 }
 .user-panel:before,
