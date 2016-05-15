@@ -40,36 +40,37 @@
 <script type="text/javascript">
   $(document).ready(function () {
     $(".department").click(function () {
-      var link = $(this).attr("href");
-      var req =  new XMLHttpRequest();
-      alert(req);
-      req.onerror = function(){
-        alert("error");
-      }
-      req.open("get", $(this).attr("href"), true);
-      req.send();
-      // $.ajax({
-      //   type: 'HEAD',
-      //   url: $(this).attr("href"),
-      //   async: false,
-      //   success: function() {
-      //     // do nothing
-      //   },
-      //   error: function() {
-      //     alert("/itracker/includes/update.php?url=" + link);
-      //     $.ajax({
-      //       type: 'GET',
-      //       url: "/itracker/includes/update.php?url=" + link,
-      //       async: false,
-      //       success: function(data) {
-      //         // Run the code here that needs
-      //         //    to access the data returned
-      //         alert(data);
-      //       }
-      //     });
-      //     alert("WHATTT???");
-      //   }
-      // });
+      var deptID = $(this).attr("id");
+      var deptHREF = $(this).attr("href");
+      // alert(deptID);
+      // var req =  new XMLHttpRequest();
+      // req.onerror = function(){
+      //   alert("error");
+      // }
+      // req.open("get", $(this).attr("href"), true);
+      // req.send();
+      $.ajax({
+        type: 'HEAD',
+        url: $(this).attr("href"),
+        success: function() {
+          // do nothing
+        },
+        error: function() {
+          // alert("/itracker/includes/update.php?url=" + deptID);
+          $.ajax({
+            type: 'GET',
+            url: "/itracker/includes/update.php?url=" + deptID,
+            success: function(data) {
+              // Run the code here that needs
+              //    to access the data returned
+              // alert(data);
+            }
+          });
+        }
+      });
+      setTimeout(function () {
+        window.location.href = deptHREF;
+      }, 500);
       return false;
     })
   })

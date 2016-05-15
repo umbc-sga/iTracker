@@ -1,6 +1,6 @@
   
 <!-- Logo -->
-<a href="index.php" class="logo">
+<a href="/itracker/" class="logo">
   <!-- mini logo for sidebar mini 50x50 pixels -->
   <span class="logo-mini"><b>i</b>Tr</span>
   <!-- logo for regular state and mobile devices -->

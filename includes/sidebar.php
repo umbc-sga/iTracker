@@ -29,22 +29,13 @@
 
             <li class="treeview">
               <a href="#">
-                <i class="fa fa-briefcase"></i>
-                <span>Departments</span>
+                <i class="fa fa-edit"></i>
+                <span>Projects</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <?php
-                $groupData = Basecamp("groups.json");
-
-                for($i=0; $i < count($groupData); $i++) {
-                  $dept_name = $groupData[$i]["name"];
-                  $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$i]["name"]))));
-                  ?>
-                  <li><a class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
-                <?php
-                }
-                ?>
+                <li><a href="/itracker/projects/by-name/"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
+                <li><a href="/itracker/projects/by-department/"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -54,26 +45,38 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="/itracker/people/"><i class="fa fa-circle-o"></i>Everyone</a></li>
+                <li><a href="/itracker/people/by-name/"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
+                <li><a href="/itracker/people/by-department/"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-briefcase"></i>
+                <span>Departments</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
                 <?php
-                for($j=0; $j<count($groupData); $j++) {
-                  $dept_name = $groupData[$j]["name"];
-                  $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$j]["name"]))));
-                  ?>
-                  <li><a href="/itracker/departments/<?php echo($dept_url); ?>/people/"><i class="fa fa-circle-o"></i><?php echo($dept_name); ?></a></li>
+                $groupData = Basecamp("groups.json");
+
+                for($i=0; $i<count($groupData); $i++) {
+                  $dept_name = $groupData[$i]["name"];
+                  $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$i]["name"]))));
+                ?>
+                  <li><a id=<?php echo($dept_url); ?> class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
                 <?php
                 }
                 ?>
               </ul>
             </li>
-            <li class="treeview">
+            <!-- <li class="treeview">
               <a href="#">
                 <i class="fa fa-archive"></i>
                 <span>Archive     </span>
-                <!-- <i class="fa fa-angle-left pull-right"></i> -->
+                <!- <i class="fa fa-angle-left pull-right"></i> ->
                 <span><small>(Coming Soon!)</small></span>
               </a>
-            </li>
+            </li> -->
             <li>
               <a href="http://sga.umbc.edu/about/get-involved">
                 <i class="fa fa-question"></i>
