@@ -35,7 +35,7 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="/itracker/projects/by-name/"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
-                <li><a href="/itracker/projects/by-department/"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
+                <li><a href="/itracker/projects/by-dept/"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -46,7 +46,7 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href="/itracker/people/by-name/"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
-                <li><a href="/itracker/people/by-department/"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
+                <li><a href="/itracker/people/by-dept/"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
               </ul>
             </li>
             <li class="treeview">
