@@ -2,10 +2,9 @@
 <html>
 <head>
 	<?php
-	include("../version.php");
 	include("web-header.php");
 	?>
-	<title>All People by Department | UMBC SGA iTracker</title>
+	<title>All Projects by Department | UMBC SGA iTracker</title>
 </head>
 <body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
@@ -32,13 +31,26 @@
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					All People By Department
+					All Projects By Department
 				</h1>
 				<ol class="breadcrumb">
 					<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
-					<li>People</li>
+					<li>Projects</li>
 					<li class="active">By Department</li>
 				</ol>
+			</section>
+
+			<section>
+				<h6>Jump To:<?php
+				for ($m=0; $m<sizeof($groupData); $m++) {
+					$groupInfo = Basecamp("groups/".$groupData[$m]["id"].".json");
+					$groupID = str_replace(" ", "-", strtolower($groupInfo["name"]));
+				?>
+					<a href="#<?php echo($groupID); ?>" > <? echo($groupInfo["name"]); ?> | </a>
+				<?php
+				}
+				?>
+				</h6>
 			</section>
 
 			<!-- Main content -->
@@ -47,16 +59,41 @@
 				<?php
 				for($i=0; $i<sizeof($groupData); $i++) {
 					$groupInfo = Basecamp("groups/".$groupData[$i]["id"].".json");
-					?>
-
-					<h2><?php echo($groupInfo["name"]); ?></h2>
+					$groupID = str_replace(" ", "-", strtolower($groupInfo["name"]));
+				?>
+					<h2 id=<?php echo($groupID); ?>><?php echo($groupInfo["name"]); ?></h2>
 					<?php
 					$members = $groupInfo["memberships"];
 					usort($members, 'compareName');
 
+					$groupProjs = [];
+
 					for ($j=0; $j<sizeof($members); $j++) {
-						if ( ($j%3 == 0) ) {
-							?>
+						$personProjs = Basecamp("people/".$members[$j]["id"]."/projects.json");
+						for ($k=0; $k<sizeof($personProjs); $k++) {
+							if ( (!(in_array($personProjs[$k], $groupProjs))) && ($personProjs[$k]["template"] == False)) {
+								array_push($groupProjs, $personProjs[$k]);
+							}
+						}
+					}
+
+					for ($l=0; $l<sizeof($groupProjs); $l++) {
+						$project = Basecamp("projects/" . $groupProjs[$l]["id"] . ".json");
+
+						$name = $project["name"];
+						$description = $project["description"];
+						if ($project["archived"] == True) {
+							$status = "Active";
+						} else {
+							$status = "Archived";
+						}
+						$creator = $project["creator"]["name"];
+						$numEvents = $project["calendar_events"]["count"];
+						$numDocs = $project["documents"]["count"];
+
+
+						if ( ($l%3 == 0) ) {
+					?>
 							<div class="row">
 								<?php
 							}
@@ -65,57 +102,34 @@
 								<!-- Widget: user widget style 1 -->
 								<div class="box box-widget widget-user">
 
-									<?php
-									$name = $members[$j]["name"];
-									$email = $members[$j]["email_address"];
-									$photo = $members[$j]["avatar_url"];
-
-									$person = Basecamp("people/".$members[$j]["id"].".json");
-									$personProjs = Basecamp("people/".$members[$j]["id"]."/projects.json");
-
-									$numActive = 0;
-									$numArchived = 0;
-									for ($k=0; $k<sizeof($personProjs); $k++) {
-										if (($personProjs[$k]["trashed"] == False) && ($personProjs[$k]["template"] == False)) {
-											if ($personProjs[$k]["archived"] == False) {
-												$numActive++;
-											} else {
-												$numArchived++;
-											}
-										}
-									}
-
-									$assignedTasks = $person["assigned_todos"]["count"];
-									?>
-
 									<!-- Add the bg color to the header using any of the bg-* classes -->
 									<div class="widget-user-header bg-blue">
-										<div class="widget-user-image">
+										<!--<div class="widget-user-image">
 											<img class="img-circle" src=<?php echo($photo) ?> alt="User Avatar">
-										</div><!-- /.widget-user-image -->
+										</div><!- /.widget-user-image -->
 										<h3 class="widget-user-username"><?php echo($name); ?></h3>
-										<h5 class="widget-user-desc"><!--<a href=<?php echo("mailto:".$email); ?>>--><?php echo($email); ?><!--</a>--></h5>
+										<h5 class="widget-user-desc"><?php echo($description); ?></h5>
 									</div>
 									<div class="box-footer no-padding">
 										<ul class="nav nav-stacked">
-											<li><a href="#">Projects <span class="pull-right badge bg-blue"><?php echo($numActive); ?></span></a></li>
-											<li><a href="#">Tasks <span class="pull-right badge bg-aqua"><?php echo($assignedTasks); ?></span></a></li>
-											<li><a href="#">Archived Projects <span class="pull-right badge bg-green"><?php echo($numArchived); ?></span></a></li>
-											<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+											<li><a href="#">Creator <span class="pull-right badge bg-blue"><?php echo($creator); ?></span></a></li>
+											<li><a href="#">Status <span class="pull-right badge bg-aqua"><?php echo($status); ?></span></a></li>
+											<li><a href="#">Number of Events <span class="pull-right badge bg-green"><?php echo($numEvents); ?></span></a></li>
+											<li><a href="#">Number of Docs <span class="pull-right badge bg-red"><?php echo($numDocs); ?></span></a></li>
 										</ul>
 									</div>
 								</div><!-- /.widget-user -->
 							</div><!-- /.col -->
 							<?php
                 			//  row tag closures
-							if ( ($j%3 == 2) || ($j == sizeof($members)-1) ) {
-								?>
-							</div>
+							if ( ($l%3 == 2) || ($l == sizeof($groupProjs)-1) ) {
+							?>
+								</div>
 							<?php
-						}
+							}
 					}
 				}
-				?>
+							?>
 			</section><!-- /.content -->
 		</div><!-- /.content-wrapper -->
 		<footer class="main-footer">

@@ -74,7 +74,7 @@
 					?>
 						<div class="col-md-4">
 								<!-- Widget: user widget style 1 -->
-								<div class="box box-widget widget-user-2">
+								<div class="box box-widget widget-user">
 
 									<?php
 									$name = $people[$i]["name"];
