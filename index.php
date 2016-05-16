@@ -4,7 +4,7 @@
 	<?php
 	include("web-header.php");
 	?>
-	<title>Dashboard | UMBC SGA iTracker</title>
+	<title>Home | UMBC SGA iTracker</title>
 </head>
 <body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
@@ -34,7 +34,7 @@
 					<small>Control panel</small>
 				</h1>
 				<ol class="breadcrumb">
-					<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+					<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
 					<li class="active">Dashboard</li>
 				</ol>
 			</section>

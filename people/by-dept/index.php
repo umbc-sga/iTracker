@@ -5,7 +5,7 @@
 	include("../version.php");
 	include("web-header.php");
 	?>
-	<title>All People | UMBC SGA iTracker</title>
+	<title>All People by Department | UMBC SGA iTracker</title>
 </head>
 <body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
@@ -32,11 +32,12 @@
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					People
+					All People By Department
 				</h1>
 				<ol class="breadcrumb">
-					<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-					<li class="active">Dashboard</li>
+					<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+					<li>People</li>
+					<li class="active">By Department</li>
 				</ol>
 			</section>
 

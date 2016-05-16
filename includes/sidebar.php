@@ -23,7 +23,7 @@
             <li class="header">MAIN NAVIGATION</li>
             <li class="active">
               <a href="/itracker/">
-                <i class="fa fa-dashboard"></i> <span>Dashboard</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
+                <i class="fa fa-home"></i> <span>Home</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
               </a>
             </li>
 
@@ -84,6 +84,12 @@
               </a>
             </li>
             <li>
+              <a href="http://sga.umbc.edu/contact/">
+                <i class="fa fa-phone"></i>
+                <span>Contact Us</span>
+              </a>
+            </li>
+            <li>
               <a href="http://sga.umbc.edu">
                 <i class="fa fa-arrow-left"></i>
                 <span>To the UMBC SGA Website</span>
@@ -91,13 +97,13 @@
             </li>
             <li class="header">SHARE THIS ON SOCIAL MEDIA</li>
             <li>
-              <a href="#">
+              <a href="#" onclick="javascript:FacebookShare();">
                 <i class="fa fa-facebook-square"></i>
                 <span>Share On Facebook!</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onclick="javascript:TwitterShare();">
                 <i class="fa fa-twitter-square"></i>
                 <span>Share on Twitter!</span>
               </a>

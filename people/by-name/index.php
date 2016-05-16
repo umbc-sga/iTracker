@@ -31,11 +31,12 @@
 			<!-- Content Header (Page header) -->
 			<section class="content-header">
 				<h1>
-					All People by Name
+					All People By Name
 				</h1>
 				<ol class="breadcrumb">
-					<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-					<li class="active">Dashboard</li>
+					<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+					<li>People</li>
+					<li class="active">By Name</li>
 				</ol>
 			</section>
 
@@ -48,24 +49,25 @@
 				$people = Basecamp("people.json");
 				usort($people, 'compareName');
 
-				$letterCounter = -1;
+				$letterCounter = 0;
 				$rowTrack = 0;
 				?>
 				
-
+				<h2><?php echo($alpha[$letterCounter]); ?></h2>
+				
 				<?php
 				for($i=0; $i<sizeof($people); $i++) {
 					while ($people[$i]["name"][0] != $alpha[$letterCounter]) {
 						$letterCounter++;
 				?>
+				
 						<h2><?php echo($alpha[$letterCounter]); ?></h2>
-					
-
-					<?php
+				
+				<?php
 					}
 						if ( ($rowTrack%3 == 0) || ($people[$i-1]["name"][0] != $alpha[$letterCounter]) ) {
 							$rowTrack = 0;
-					?>
+				?>
 							<div class="row">
 					<?php
 						}
