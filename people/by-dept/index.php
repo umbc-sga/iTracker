@@ -42,29 +42,14 @@
 			</section>
 
 			<!-- Main content -->
-
-			<section class="content-header">
-				<h6>Jump To: <?php
-				for ($m=0; $m<sizeof($groupData); $m++) {
-					$groupInfo = Basecamp("groups/".$groupData[$m]["id"].".json");
-					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupInfo["name"])));
-				?>
-					<a href="#<?php echo($groupID); ?>" > <? echo($groupInfo["name"]); ?> | </a>
-				<?php
-				}
-				?>
-				</h6>
-			</section>
-
 			<section class="content">
 				<!-- Small boxes (Stat box) -->
 				<?php
 				for($i=0; $i<sizeof($groupData); $i++) {
 					$groupInfo = Basecamp("groups/".$groupData[$i]["id"].".json");
-					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupInfo["name"])));
 					?>
 
-					<h2 id=<?php echo($groupID); ?>><?php echo($groupInfo["name"]); ?> <small>&nbsp;<a href="#">Back To Top &uarr;</a></small> </h2>
+					<h2><?php echo($groupInfo["name"]); ?></h2>
 					<?php
 					$members = $groupInfo["memberships"];
 					usort($members, 'compareName');
