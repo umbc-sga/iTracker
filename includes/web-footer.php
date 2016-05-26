@@ -56,10 +56,10 @@
           // do nothing
         },
         error: function() {
-          // alert("/itracker/includes/update.php?url=" + deptID);
+          // alert("/itracker/includes/update.php?" + deptID);
           $.ajax({
             type: 'GET',
-            url: "/itracker/includes/update.php?url=" + deptID,
+            url: "/itracker/includes/update.php?" + deptID,
             success: function(data) {
               // Run the code here that needs
               //    to access the data returned

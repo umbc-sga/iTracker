@@ -63,7 +63,7 @@
                   $dept_name = $groupData[$i]["name"];
                   $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$i]["name"]))));
                 ?>
-                  <li><a class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
+                  <li><a id="url=<?php echo($dept_url); ?>" class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
                 <?php
                 }
                 ?>
