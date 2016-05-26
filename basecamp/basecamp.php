@@ -1,19 +1,18 @@
 <?php
+
 function Basecamp($end){
 	$basecamp_url = "https://basecamp.com/2979808/api/v1/$end";
 	$appName = 'UMBCSGAiTracker';
 	$appContact = 'joshua.massey@umbc.edu';
 	
 	$helloHeader = "User-Agent: $appName ($appContact)";
-	$credentials = 'sga@umbc.edu:mySGAhacks1';
 	$xheaders = array(                                                'Content-Type: application/json'
 	);
+
+	include "/afs/umbc.edu/public/web/sites/sga/dev/cgi-bin/bc_cred.php";
 	
 	$session = curl_init();
- 	
-	// $username = 'sga@umbc.edu';
-	// $password = 'mySGAhacks1';
-	
+ 		
 	curl_setopt($session, CURLOPT_URL, $basecamp_url);
 	curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 	curl_setopt($session, CURLOPT_HTTPGET, 1);
