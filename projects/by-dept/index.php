@@ -43,10 +43,9 @@
 			<section>
 				<h6>Jump To:<?php
 				for ($m=0; $m<sizeof($groupData); $m++) {
-					$groupInfo = Basecamp("groups/".$groupData[$m]["id"].".json");
-					$groupID = str_replace(" ", "-", strtolower($groupInfo["name"]));
+					$groupID = str_replace(" ", "-", strtolower($groupData["name"]));
 				?>
-					<a href="#<?php echo($groupID); ?>" > <? echo($groupInfo["name"]); ?> | </a>
+					<a href="#<?php echo($groupID); ?>" > <? echo($groupData["name"]); ?> | </a>
 				<?php
 				}
 				?>
