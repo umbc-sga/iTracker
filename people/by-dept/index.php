@@ -46,9 +46,9 @@
 			<section class="content-header">
  				<h6>Jump To: <?php
  				for ($m=0; $m<sizeof($groupData); $m++) {
- 					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupData["name"])));
+ 					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupData[$m]["name"])));
  				?>
- 					<a href="#<?php echo($groupID); ?>" > <? echo($groupData["name"]); ?> | </a>
+ 					<a href="#<?php echo($groupID); ?>" > <? echo($groupData[$m]["name"]); ?> | </a>
  				<?php
  				}
  				?>

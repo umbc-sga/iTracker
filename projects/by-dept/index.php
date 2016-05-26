@@ -40,25 +40,26 @@
 				</ol>
 			</section>
 
-			<section>
+			<!-- Main content -->
+
+			<section class="content-header">
 				<h6>Jump To:<?php
 				for ($m=0; $m<sizeof($groupData); $m++) {
-					$groupID = str_replace(" ", "-", strtolower($groupData["name"]));
+					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupData[$m]["name"])));
 				?>
-					<a href="#<?php echo($groupID); ?>" > <? echo($groupData["name"]); ?> | </a>
+					<a href="#<?php echo($groupID); ?>" > <? echo($groupData[$m]["name"]); ?> | </a>
 				<?php
 				}
 				?>
 				</h6>
 			</section>
 
-			<!-- Main content -->
 			<section class="content">
 				<!-- Small boxes (Stat box) -->
 				<?php
 				for($i=0; $i<sizeof($groupData); $i++) {
 					$groupInfo = Basecamp("groups/".$groupData[$i]["id"].".json");
-					$groupID = str_replace(" ", "-", strtolower($groupInfo["name"]));
+					$groupID = str_replace("&", "and", str_replace(" ", "-", strtolower($groupInfo["name"])));
 				?>
 					<h2 id=<?php echo($groupID); ?>><?php echo($groupInfo["name"]); ?></h2>
 					<?php
@@ -81,7 +82,7 @@
 
 						$name = $project["name"];
 						$description = $project["description"];
-						if ($project["archived"] == True) {
+						if ($project["archived"] == False) {
 							$status = "Active";
 						} else {
 							$status = "Archived";
