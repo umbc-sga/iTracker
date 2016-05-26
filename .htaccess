@@ -1,2 +1,6 @@
+AuthType shibboleth
+ShibRequireSession on
+ShibUseHeaders on
+require valid-user
 
-php_value include_path ".:/usr/share/pear:/usr/share/php:/afs/umbc.edu/public/web/shared/dev/php/includes:/afs/umbc.edu/public/virthost/sites/appsga/dev/htdocs/itracker/includes/"
+php_value include_path ".:/usr/share/pear:/usr/share/php:/afs/umbc.edu/public/web/shared/dev/php/includes:/afs/umbc.edu/public/web/sites/sga/dev/htdocs/itracker/includes/"
