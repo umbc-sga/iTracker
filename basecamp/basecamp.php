@@ -23,9 +23,8 @@ function Basecamp($end){
 	 
 	$response = curl_exec($session);
 	curl_close($session);
-	$final = json_decode($response, true);
-	return $final;
-    //$array = json_decode($response);
+//	$final = json_decode($response, true);
+	return $response;
 }
 
 function compareName($a, $b){

@@ -8,17 +8,21 @@
 	
 	// var_dump($data);
 	$groupData = Basecamp("groups.json");
-	$groupInfo = Basecamp("groups/".$groupData[12]["id"].".json");
+	// $groupInfo = Basecamp("groups/".$groupData[12]["id"].".json");
 
-	$people = $groupInfo["memberships"];
+	// $people = $groupInfo["memberships"];
 	
-	$person = Basecamp("people/".$groupInfo["memberships"][0]["id"].".json");
-    $personProjs = Basecamp("people/".$groupInfo["memberships"][0]["id"]."/projects.json");
+	// $person = Basecamp("people/".$groupInfo["memberships"][0]["id"].".json");
+ //    $personProjs = Basecamp("people/".$groupInfo["memberships"][0]["id"]."/projects.json");
 
-    usort($people, 'compareName');
-    echo(gettype($people));
-    echo("<br/>");
-    var_dump($people);
+ //    usort($people, 'compareName');
+ //    echo(gettype($people));
+ //    echo("<br/>");
+ //    var_dump($people);
+	$file = fopen("myFile.json", "w");
+	echo(gettype($groupData));
+	fwrite($file, $groupData);
+	fclose($file);
 	
 ?>
 </body>
