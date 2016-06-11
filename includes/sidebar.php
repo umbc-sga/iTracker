@@ -57,13 +57,14 @@
               </a>
               <ul class="treeview-menu">
                 <?php
-                $groupData = Basecamp("groups.json");
+                $groupData = json_decode(file_get_contents("data/departments/00-all.json", FILE_USE_INCLUDE_PATH), true);
 
                 for($i=0; $i<count($groupData); $i++) {
+                  $dept_ID = $groupData[$i]["id"];
                   $dept_name = $groupData[$i]["name"];
                   $dept_url = str_replace("&", "and", str_replace(" ", "-", (strtolower($groupData[$i]["name"]))));
                 ?>
-                  <li><a id="url=<?php echo($dept_url); ?>" class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
+                  <li><a id="<?php echo($dept_ID); ?>" class="department" href="/itracker/departments/<?php echo($dept_url);?>/"><i class="fa fa-circle-o"></i><?php echo($dept_name);?> </a></li>
                 <?php
                 }
                 ?>
@@ -78,7 +79,7 @@
               </a>
             </li> -->
             <li>
-              <a href="http://sga.umbc.edu/about/get-involved">
+              <a href="http://sga.umbc.edu/get-involved">
                 <i class="fa fa-question"></i>
                 <span>How Do I Get Involved?</span>
               </a>

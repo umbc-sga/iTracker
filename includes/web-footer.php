@@ -38,42 +38,42 @@
 
 <!-- UPDATE DIRECTORIES -->
 <script type="text/javascript">
-  $(document).ready(function () {
-    $(".department").click(function () {
-      var deptID = $(this).attr("id");
-      var deptHREF = $(this).attr("href");
-      // alert(deptID);
-      // var req =  new XMLHttpRequest();
-      // req.onerror = function(){
-      //   alert("error");
-      // }
-      // req.open("get", $(this).attr("href"), true);
-      // req.send();
-      $.ajax({
-        type: 'HEAD',
-        url: $(this).attr("href"),
-        success: function() {
-          // do nothing
-        },
-        error: function() {
-          // alert("/itracker/includes/update.php?" + deptID);
-          $.ajax({
-            type: 'GET',
-            url: "/itracker/includes/update.php?" + deptID,
-            success: function(data) {
-              // Run the code here that needs
-              //    to access the data returned
-              // alert(data);
-            }
-          });
-        }
-      });
-      setTimeout(function () {
-        window.location.href = deptHREF;
-      }, 500);
-      return false;
-    })
-  })
+  // $(document).ready(function () {
+  //   $(".department").click(function () {
+  //     var deptID = $(this).attr("id");
+  //     var deptHREF = $(this).attr("href");
+  //     // alert(deptID);
+  //     // var req =  new XMLHttpRequest();
+  //     // req.onerror = function(){
+  //     //   alert("error");
+  //     // }
+  //     // req.open("get", $(this).attr("href"), true);
+  //     // req.send();
+  //     $.ajax({
+  //       type: 'HEAD',
+  //       url: $(this).attr("href"),
+  //       success: function() {
+  //         // do nothing
+  //       },
+  //       error: function() {
+  //         // alert("/itracker/includes/update.php?" + deptID);
+  //         $.ajax({
+  //           type: 'GET',
+  //           url: "/itracker/includes/updateDepts.php?id=" + deptID,
+  //           success: function(data) {
+  //             // Run the code here that needs
+  //             //    to access the data returned
+  //             // alert(data);
+  //           }
+  //         });
+  //       }
+  //     });
+  //     setTimeout(function () {
+  //       window.location.href = deptHREF;
+  //     }, 500);
+  //     return false;
+  //   })
+  // })
 </script>
 
 <!-- SOCIAL MEDIA -->
