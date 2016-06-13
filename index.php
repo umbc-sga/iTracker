@@ -2,7 +2,7 @@
 <html>
 <head>
 	<?php
-	include("web-header.php");
+	include("includes/web-header.php");
 	?>
 	<title>Home | UMBC SGA iTracker</title>
 </head>
@@ -11,7 +11,7 @@
 
 		<header class="main-header">
 			<?php
-			include("header.php")
+			include("includes/header.php")
 			?>
 		</header>
 		<!-- Left side column. contains the logo and sidebar -->
@@ -19,7 +19,7 @@
 			<!-- sidebar: style can be found in sidebar.less -->
 			<section class="sidebar">
 				<?php
-				include("sidebar.php");
+				include("includes/sidebar.php");
 				?>
 			</section>
 			<!-- /.sidebar -->
@@ -49,7 +49,7 @@
 							<div class="inner">
 								<h3>
 									<?php
-									$data = Basecamp("projects.json");
+									$data = json_decode(file_get_contents("data/projects/00-all.json", FILE_USE_INCLUDE_PATH), true);
 									echo(count($data));
 									?>
 								</h3>
@@ -67,8 +67,9 @@
 							<div class="inner">
 								<h3>
 									<?php
-									$data = Basecamp("projects/archived.json");
-									echo(count($data));
+									// $data = Basecamp("projects/archived.json");
+									// echo(count($data));
+									echo("0-WORK!");
 									?>
 								</h3>
 								<p>Archived Projects</p>
@@ -85,7 +86,7 @@
 							<div class="inner">
 								<h3>
 									<?php
-									$data = Basecamp("groups.json");
+									$data = json_decode(file_get_contents("data/departments/00-all.json", FILE_USE_INCLUDE_PATH), true);
 									echo(count($data));
 									?>
 								</h3>
@@ -103,7 +104,7 @@
 							<div class="inner">
 								<h3>
 									<?php
-									$data = Basecamp("people.json");
+									$data = json_decode(file_get_contents("data/people/00-all.json", FILE_USE_INCLUDE_PATH), true);
 									echo(count($data));
 									?>
 								</h3>
@@ -486,7 +487,7 @@
 		</div><!-- /.content-wrapper -->
 		<footer class="main-footer">
 			<?php
-			include("footer.php");
+			include("includes/footer.php");
 			?>
 		</footer>
 
@@ -496,7 +497,7 @@
   </div><!-- ./wrapper -->
 
   <?php
-  include("web-footer.php");
+  include("includes/web-footer.php");
   ?>
 
 </body>

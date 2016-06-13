@@ -50,6 +50,20 @@ function deleteDir($dirPath) {
     rmdir($dirPath);
 }
 
+function DeletePeopleProjects($folder){
+	if (! is_dir($folder)) {
+        return;
+    }
+    $files = glob($folder . '/*', GLOB_MARK);
+    foreach($files as $file){
+    	if(is_dir($file)){
+    		if(!(strcmp($file, $folder . '/by-name/') == 0 || strcmp($file, $folder . '/by-dept/') == 0 )){
+    			deleteDir($file);
+    		}
+    	}
+    }
+}
+
 function url($url) {
    $url = preg_replace('~[^\\pL0-9_]+~u', '-', $url);
    $url = trim($url, "-");
@@ -113,17 +127,17 @@ function WriteProject($project){
 	chmod('projects/' . $name . '/index.php', 0755);
 }
 
+
+
 deleteDir('data');
 deleteDir('departments');
-deleteDir('projects');
-deleteDir('people');
 mkdir('data', 0755);
 mkdir('data/departments', 0755);
 mkdir('data/people', 0755);
 mkdir('data/projects', 0755);
 mkdir('departments',0755);
-mkdir('people', 0755);
-mkdir('projects', 0755);
+DeletePeopleProjects('people');
+DeletePeopleProjects('projects');
 
 $groups = Basecamp('groups.json');
 $gpids = [];
@@ -159,8 +173,8 @@ for($i = 0; $i < sizeof($people); $i++){
 	$person = Basecamp('people/' . $people[$i]['id'] .'.json');
 	WritePerson($person);
 	$projects = Basecamp('people/' . $people[$i]['id'] . '/projects.json');
-	write('people/' . $people[$i]['id'] . 'projects.json', json_encode($projects));
-	write('people/' . $people[$i]['id'] . 'info.json' , json_encode($person));
+	write('people/' . $people[$i]['id'] . '/projects.json', json_encode($projects));
+	write('people/' . $people[$i]['id'] . '/info.json' , json_encode($person));
 }
 write('people/00-all.json', json_encode($peopids));
 

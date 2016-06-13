@@ -79,19 +79,19 @@
               </a>
             </li> -->
             <li>
-              <a href="http://sga.umbc.edu/get-involved">
+              <a href="http://sga.umbc.edu/getinvolved" target="_blank">
                 <i class="fa fa-question"></i>
                 <span>How Do I Get Involved?</span>
               </a>
             </li>
             <li>
-              <a href="http://sga.umbc.edu/contact/">
+              <a href="http://sga.umbc.edu/contact/" target="_blank">
                 <i class="fa fa-phone"></i>
                 <span>Contact Us</span>
               </a>
             </li>
             <li>
-              <a href="http://sga.umbc.edu">
+              <a href="http://sga.umbc.edu" target="_blank">
                 <i class="fa fa-arrow-left"></i>
                 <span>To the UMBC SGA Website</span>
               </a>
