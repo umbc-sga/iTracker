@@ -41,26 +41,8 @@
 
             <!-- Main content -->
 
-            <!-- <div class="navbar navbar-fixed-top">
-                <div class="navbar-inner">
-                    <div class="container">
-                        <a class="brand" href="#">Basecamp statistics</a>
-                        <ul class="nav">
-                            <li class="active"><a href="#">Projects</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
-
-
             <div class="container">
-                <div class="row">
-                    <div class="span12">
-
-                        <div ng-view></div>
-
-                    </div>
-                </div>
+                <div ng-view></div>
             </div>
 
         </div><!-- /.content-wrapper -->
