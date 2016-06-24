@@ -4,7 +4,7 @@
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
- $.widget.bridge('uibutton', $.ui.button);
+	$.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.5 -->
 <script src="/itracker/bootstrap/js/bootstrap.min.js"></script>
@@ -35,6 +35,34 @@
 <script src="/itracker/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/itracker/dist/js/demo.js"></script>
+
+<!-- <script type="text/javascript">
+	var username = "sga@umbc.edu";
+	var password = "hackSGA1";
+
+	var url = "https://basecamp.com/2979808/api/v1/people.json";
+	alert(url);
+
+	$.ajax
+	({
+		type: "GET",
+		url: url,
+		contentType: "application/json",
+		beforeSend: function (xhr){ 
+			xhr.setRequestHeader('Authorization', "Basic " + btoa(username + ":" + password), "Access-Control-Allow-Origin: *"); 
+		},
+		success: function (data){
+			var parsed = JSON.parse(data);
+			alert("Awesome! It worked: " + typeof parsed);
+			// for (var i in parsed) {
+			//   alert(parsed[i]["name"]);
+			// }
+	    },
+		error: function (jqXHR, textStatus, errorThrown) {
+			alert("This didn't work: " + textStatus + errorThrown);
+		}
+	});
+</script> -->
 
 <!-- UPDATE DIRECTORIES -->
 <script type="text/javascript">
@@ -78,13 +106,13 @@
 
 <!-- SOCIAL MEDIA -->
 <script>
-  function FacebookShare() {
-    var fb = "https://www.facebook.com/sharer/sharer.php?u=";
-    window.open(fb.concat(document.URL));
-  }
+	function FacebookShare() {
+		var fb = "https://www.facebook.com/sharer/sharer.php?u=";
+		window.open(fb.concat(document.URL));
+	}
 
-  function TwitterShare() {
-    var tw = "https://twitter.com/home?status=Check%20this%20out%20on%20the%20UMBC%20SGA%20iTracker!%20";
-    window.open(tw.concat(document.URL));
-  }
+	function TwitterShare() {
+		var tw = "https://twitter.com/home?status=Check%20this%20out%20on%20the%20UMBC%20SGA%20iTracker!%20";
+		window.open(tw.concat(document.URL));
+	}
 </script>

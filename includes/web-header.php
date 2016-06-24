@@ -37,11 +37,3 @@
         <!-- Favicon -->
         <link rel="icon" href="http://sga-dev.umbc.edu/favicon.ico" type="image/x-icon"> 
         <link rel="shortcut icon" href="http://sga-dev.umbc.edu/favicon.ico" type="image/x-icon"> 
-
-        <!-- BASECAMP INCLUSION -->
-        <?php
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
-        // echo(getcwd());
-        require_once "/afs/umbc.edu/public/web/sites/sga/dev/htdocs/itracker/basecamp/basecamp.php";
-        ?>

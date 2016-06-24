@@ -1,0 +1,79 @@
+<div ng-controller="HomeController">
+
+    <div class="page-header">
+        <h1>Projects</h1>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 60%;">Project</th>
+                <th style="width: 40%;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="info">
+                <td><input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by project name" /></td>
+                <td></td>
+            </tr>
+            <tr ng-repeat="project in main.projects | filter:search | orderBy:project.updated_at">
+                <td>
+                    <h4><a href="#/projects/{{project.id}}">{{project.name}}</a></h4>
+                    <p class="ng-cloak" ng-show="project.description">{{project.description}}</p>
+                    <p class="muted">Created: {{project.created_at | date}} | Last update: {{project.updated_at | date}}</p>
+                </td>
+                <td>
+                    <h4>{{getProjectCounts(project.id).percentComplete | number:0}}% complete</h4>
+                    <div class="progress progress-striped" ng-class="{ 'progress-success':((getProjectCounts(project.id).percentComplete | number:0) == 100) }">
+                        <div class="bar"
+                        ng-style="{width: getProjectCounts(project.id).percentComplete + '%' }"></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                All People By Department
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+                <li>People</li>
+                <li class="active">By Department</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-4" ng-repeat="person in main.people">
+                    <!-- Widget: user widget style 1 -->
+                    <div class="box box-widget widget-user-2">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <div class="widget-user-header bg-blue">
+                            <div class="widget-user-image">
+                                <img class="img-circle" src="{{person.info.avatar_url}}" alt="User Avatar">
+                            </div><!-- /.widget-user-image -->
+                            <h3 class="widget-user-username">{{person.info.name}}</h3>
+                            <h5 class="widget-user-desc"><!--<a href=<?php echo("mailto:".$email); ?>>-->{{person.info.email_address}}<!--</a>--></h5>
+                        </div>
+                        <div class="box-footer no-padding">
+                            <ul class="nav nav-stacked">
+                                <li><a href="#">Projects <span class="pull-right badge bg-blue">!!!</span></a></li>
+                                <li><a href="#">Tasks <span class="pull-right badge bg-aqua">{{person.info.assigned_todos.count}}</span></a></li>
+                                <li><a href="#">Archived Projects <span class="pull-right badge bg-green">!!!</span></a></li>
+                                <!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+                            </ul>
+                        </div>
+                    </div><!-- /.widget-user -->
+                </div><!-- /.col -->
+            </div> <!-- /.row -->
+        </section>
+
+    </div> <!-- /.content-wrapper -->
+
+</div>
