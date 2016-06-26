@@ -1,0 +1,49 @@
+<div ng-controller="PeopleByDeptController">
+
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				All People By Department
+			</h1>
+			<ol class="breadcrumb">
+				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+				<li>People</li>
+				<li class="active">By Department</li>
+			</ol>
+		</section>
+
+		<!-- Main content -->
+		<section class="content">
+			<h6>
+				<span ng-repeat="dept in depts">
+					<a href=""  ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a>
+				</span>
+			</h6>
+			<div ng-repeat="dept in depts">
+				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
+				<div class="row">
+					<div class="col-md-4" ng-repeat="person in dept.people">
+						<div class="box box-widget widget-user-2">
+							<div class="widget-user-header bg-blue">
+								<div class="widget-user-image">
+									<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
+								</div><!-- /.widget-user-image -->
+								<h3 class="widget-user-username">{{person.name}}</h3>
+								<h5 class="widget-user-desc">{{person.email}}</h5>
+							</div>
+							<div class="box-footer no-padding">
+								<ul class="nav nav-stacked">
+									<li><a href="#">Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>
+									<li><a href="#">Tasks <span class="pull-right badge bg-aqua"> {{person.assigned}}</span></a></li>
+									<li><a href="#">Archived Projects <span class="pull-right badge bg-green">{{person.archive}}</span></a></li>
+									<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+		</section>
+
+</div>
