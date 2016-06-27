@@ -23,7 +23,7 @@
                         <div class="small-box bg-aqua">
                             <div class="inner">
                                 <h3>
-                                    :)
+                                    {{main.projects.length}}
                                 </h3>
                                 <p>Active Projects</p>
                             </div>
@@ -38,7 +38,7 @@
                         <div class="small-box bg-green">
                             <div class="inner">
                                 <h3>
-                                    :)
+                                    &#9888;
                                 </h3>
                                 <p>Archived Projects</p>
                             </div>
@@ -53,7 +53,7 @@
                         <div class="small-box bg-yellow">
                             <div class="inner">
                                 <h3>
-                                    :)
+                                    {{main.groups.length}}
                                 </h3>
                                 <p>Departments</p>
                             </div>
@@ -68,7 +68,7 @@
                         <div class="small-box bg-red">
                             <div class="inner">
                                 <h3>
-                                    :)
+                                    {{main.people.length}}
                                 </h3>
                                 <p>Active Members</p>
                             </div>
@@ -81,48 +81,152 @@
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="box box-solid">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Carousel</h3>
-                            </div>  <!-- /.box-header -->
-                            <div class="box-body">
-                                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-                                    <ol class="carousel-indicators">
-                                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                                        <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                                        <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-                                    </ol>
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                            <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="First slide">
-                                            <div class="carousel-caption">
-                                                First Slide
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap" alt="Second slide">
-                                            <div class="carousel-caption">
-                                                Second Slide
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <img src="http://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap" alt="Third slide">
-                                            <div class="carousel-caption">
-                                                Third Slide
-                                            </div>
-                                        </div>
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                                <li data-target="#carousel-example-generic" data-slide-to="{{$index+1}}" class="" ng-repeat="project in featuredProjs"></li>
+                                <!-- <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li> -->
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=Welcome+To+The+UMBC+SGA+iTracker" alt="">
+                                    <div class="carousel-caption">
+                                        Welcome To The UMBC SGA iTracker
                                     </div>
-                                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-                                        <span class="fa fa-angle-left"></span>
-                                    </a>
-                                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-                                        <span class="fa fa-angle-right"></span>
-                                    </a>
                                 </div>
-                            </div>  <!-- /.box-body -->
-                        </div>  <!-- /.box -->
+                                <div class="item" ng-repeat="project in featuredProjs">
+                                    <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="{{project.name}}">
+                                    <div class="carousel-caption">
+                                        {{ project.name }}
+                                    </div>
+                                </div>
+                                <!-- <div class="item">
+                                    <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=I+Love+Bootstrap" alt="Second slide">
+                                    <div class="carousel-caption">
+                                        Second Slide
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <img src="http://placehold.it/900x500/f39c12/ffffff&text=I+Love+Bootstrap" alt="Third slide">
+                                    <div class="carousel-caption">
+                                        Third Slide
+                                    </div>
+                                </div> -->
+                            </div>
+                            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                                <span class="fa fa-angle-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                                <span class="fa fa-angle-right"></span>
+                            </a>
+                        </div>
                     </div>  <!-- /.col -->
-                </div>
+                    <div class="col-md-6">
+                    	<div class="box box-warning">
+                    		<div class="box-header with-border">
+                    			<h3 class="box-title">
+                    				About the UMBC Student Government Association
+                    			</h3>
+                    		</div> <!-- /.box-header -->
+                    		<div class="box-body">
+                    			The Student Government Association (SGA) is the voice of the undergraduate students at UMBC. Serving as one of the governing bodies at UMBC, the SGA meets with key administrators, organizes and empowers the undergraduate student body, and approves campus-wide policies in support of an active, academically enriched, social student environment. The SGA has an Executive Branch, Senate, Finance Board, and Election Board. The entire undergraduate population makes up the foundation of the SGA.<br/><br/>
+								Every undergraduate student at UMBC is a member of the SGA. Elected officers and many appointed officers run programs, services and advocacy efforts with all undergraduates. SGA’s purpose is to organize and support undergraduate students in creating distinctive community, co-curricular and academic experiences; identify and voice students’ hopes and concerns; engage students in campus activities and decision-making; build mutually beneficial partnerships with individuals and organizations on and off campus and promote and defend students’ welfare.
+							</div>
+                    		<div class="box-footer">
+                    			<a href="http://sga.umbc.edu/about" class="btn btn-warning" role="button">Read More!</a>
+                    		</div>
+                    	</div> <!-- /.box-warning -->
+                    </div> <!-- /.col -->
+                </div> <!-- /.row -->
+                <div class="row">
+                	<div class="col-md-6">
+                    	<div class="box box-success">
+                    		<div class="box-header with-border">
+                    			<h3 class="box-title">
+                    				About the SGA iTracker
+                    			</h3>
+                    		</div> <!-- /.box-header -->
+                    		<div class="box-body">
+                    			Some introductory info.<br/><br/>
+								More blurb about iTracker....
+							</div>
+                    		<div class="box-footer">
+                    			<a href="http://sga.umbc.edu/about" class="btn btn-success" role="button">Read More!</a>
+                    		</div>
+                    	</div> <!-- /.box-success -->
+                    </div> <!-- /.col -->
+                    <div class="col-md-6">
+                    	<!-- Calendar -->
+                    	<div class="box box-solid bg-green-gradient">
+				            <div class="box-header">
+				              	<i class="fa fa-calendar"></i>
+								<h3 class="box-title">Calendar</h3>
+				              	<!-- tools box -->
+				              	<div class="pull-right box-tools">
+					                <!-- button with a dropdown ->
+					                <div class="btn-group">
+						                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+						                	<i class="fa fa-bars"></i>
+						                </button>
+						                <ul class="dropdown-menu pull-right" role="menu">
+						                	<li><a href="#">Add new event</a></li>
+						                    <li><a href="#">Clear events</a></li>
+						                    <li class="divider"></li>
+						                    <li><a href="#">View calendar</a></li>
+						                </ul>
+					                </div>
+					                <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+					                </button>
+					                <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+					                </button> -->
+					            </div>	<!-- /. tools -->
+				            </div>	<!-- /.box-header -->
+				            <div class="box-body no-padding">
+					            <!--The calendar -->
+					            <div id="calendar" style="width: 100%"></div>
+				            </div>
+				            <!-- /.box-body -->
+				            <div class="box-footer text-black">
+				              	<div class="row">
+				                	<div class="col-sm-6">
+				                  		<!-- Progress bars -->
+				                  		<div class="clearfix">
+				                    		<span class="pull-left">Project #1</span>
+				                    		<small class="pull-right">90%</small>
+				                  		</div>
+					                  	<div class="progress xs">
+					                    	<div class="progress-bar progress-bar-green" style="width: 90%;"></div>
+					                  	</div>
+
+					                  	<div class="clearfix">
+					                    	<span class="pull-left">Project #2</span>
+					                    	<small class="pull-right">70%</small>
+					                  	</div>
+					                  	<div class="progress xs">
+					                    	<div class="progress-bar progress-bar-green" style="width: 70%;"></div>
+					                  	</div>
+				                	</div>	<!-- /.col -->
+				                	<div class="col-sm-6">
+				                  		<div class="clearfix">
+				                    		<span class="pull-left">Project #3</span>
+				                    		<small class="pull-right">60%</small>
+				                  		</div>
+				                  		<div class="progress xs">
+				                    		<div class="progress-bar progress-bar-green" style="width: 60%;"></div>
+				                  		</div>
+				                  		<div class="clearfix">
+				                    		<span class="pull-left">Project #4</span>
+				                    		<small class="pull-right">40%</small>
+				                  		</div>
+				                  		<div class="progress xs">
+				                    		<div class="progress-bar progress-bar-green" style="width: 40%;"></div>
+				                  		</div>
+				                	</div>	<!-- /.col -->
+				              	</div>	<!-- /.row -->
+				            </div>
+				        </div>	<!-- /.box -->
+                    </div> <!-- /.col -->
+                </div> <!-- /.row -->
         </section>
     </div> <!-- /.content-wrapper -->
 </div>

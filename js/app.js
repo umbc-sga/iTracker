@@ -5,13 +5,10 @@ function replace_All(str, find, replace){
     return str;
 }
 
-function comparePeople( p, q ){
-    return p.name.localeCompare(q.name);
-}
 
 angular.module('basecamp', [])
 
-    .config(function ($routeProvider) {
+    .config(function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'templates/home.html',
@@ -25,7 +22,14 @@ angular.module('basecamp', [])
                 templateUrl: 'templates/people-by-name.html',
                 controller: 'PeopleByNameController'
             })
-            //.when('/projects/by-name', {})
+            .when('/people/:personId', {
+                templateUrl: 'templates/person.html',
+                controller: 'PersonController'
+            })
+            .when('/projects/by-name', {
+                templateUrl: 'templates/projects-by-name.html',
+                controller: 'ProjectsByNameController'
+            })
             .when('/projects/by-dept', {
                 templateUrl: 'templates/projects-by-dept.html',
                 controller: 'ProjectsByDeptController'
@@ -37,16 +41,18 @@ angular.module('basecamp', [])
             .when('/projects/:projectId/todolists/:todoListId', {
                 templateUrl: 'templates/todo-list.html',
                 controller: 'TodoListController'
-            })
+            });
             //.when('/projects/:projectName', {})
-            //.when('/people/:personName', {})
+            
             //.when('/departments/members', {})
             //.when('/departmenet/projects', {})
             //.when('/departments/:departmentName', {})
+
+        $locationProvider.html5Mode(true);
     })
 
     .value('basecamp.config', {
-        debug: true // Set to false to disable logging to console
+        debug: false // Set to false to disable logging to console
     })
 
 /**
@@ -92,6 +98,7 @@ angular.module('basecamp', [])
                 })
         }
 
+        
 
         $scope.getPersonInfo = function(personID) {
             return $http.get('get.php?url=people/' + personID +'.json')
@@ -132,6 +139,12 @@ angular.module('basecamp', [])
                 })
         }
 
+        $scope.getProject = function (id) {
+            return $http.get('get.php?url=projects/' + id + '.json')
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting projects: ' + data);
+                })
+        }
 
         /**
          * Get all active todo lists
@@ -180,6 +193,24 @@ angular.module('basecamp', [])
                 })
             })
             return per;
+        }
+
+        $scope.getProjectPack = function(id){
+            var proj = {};
+            $scope.getProject(id).success(function(data, status, headers, config) {
+                proj.name = data.name;
+                proj.description = data.description;
+                proj.creator = data.creator.name;
+                proj.events = data.calendar_events.count
+                proj.docs = data.documents.count;
+                if(data.archived){
+                    proj.status = "Archived";
+                }else{
+                    proj.status = "Active";
+                }
+
+            })
+            return proj;
         }
         /**
          * Get project counts
@@ -326,7 +357,7 @@ angular.module('basecamp', [])
 
             $scope.getPeople().success(function (data, status, headers, config) {
                 if (angular.isArray(data)) {
-                    var rawPeople = data.sort(comparePeople);   
+                    var rawPeople = data;   
                     // basecampConfig.debug && console.log('People:', rawPeople);
 
                     angular.forEach (rawPeople, function (person) {
@@ -379,6 +410,19 @@ angular.module('basecamp', [])
  * Controller for the home page that displays the project overview
  */
     .controller('HomeController', ['$scope','$http', function ($scope, $http) {
+        $scope.featuredProjs = [];
+        
+        $scope.getProjects().success(function (data, status, headers, config) {
+            if (angular.isArray(data)) {
+                var rawProjects = data;
+
+                angular.forEach(rawProjects, function (project) {
+                    if (project.starred == true) {
+                        $scope.featuredProjs.push(project);
+                    }
+                })
+            }
+        })
     }])
 
 /**
@@ -529,13 +573,11 @@ angular.module('basecamp', [])
 
     .controller('PeopleByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         $scope.depts = [];
-
         $scope.scrollTo = function(id) {
-            $location.hash(id);
-            $anchorScroll();
-            alert(id);
+            console.log('go yo ' + id);
+            $anchorScroll(id);
         }
-
+        var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
         $scope.getGroups().success(function (data, status, headers, config) {
             angular.forEach(data,function(dept){
                 var department = {};
@@ -545,9 +587,8 @@ angular.module('basecamp', [])
                     
                     var people = [];
                     angular.forEach(data.memberships, function(person){
-                        //.success(function(data, status, headers, config) {
+                        if(badEmails.indexOf(person.email_address) == -1)
                             people.push($scope.getPersonPack(person.id));
-                        //})
                     })
                     department.people = people;
                     $scope.depts.push(department);
@@ -558,18 +599,67 @@ angular.module('basecamp', [])
 
     .controller('PeopleByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         $scope.people = {}
+        var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
+        $scope.scrollTo = function(id) {
+            console.log('go yo ' + id);
+            $anchorScroll(id);
+        }
         $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
         angular.forEach($scope.alpha, function(letter){
             $scope.people[letter] = [];
         })
         $scope.getPeople().success(function(data, status, headers, config) {
             angular.forEach(data, function(person){
-                var letter = person.name[0].toUpperCase();
-                $scope.people[letter].push($scope.getPersonPack(person.id));
+                if(badEmails.indexOf(person.email_address) == -1){
+                    var letter = person.name[0].toUpperCase();
+                    $scope.people[letter].push($scope.getPersonPack(person.id));
+                }
             })
         })
     }])
 
     .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.depts = [];
+        $scope.getGroups().success(function (data, status, headers, config) {
+            angular.forEach(data,function(dept){
+                var department = {};
+                $scope.getGroup(dept.id).success(function (data, status, headers, config) {
+                    department.name = data.name;
+                    department.id = data.id;
+                    
+                    var projects = [];
+                    angular.forEach(data.memberships, function(person){
+                        $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
+                            angular.forEach(data, function(proj){
+                                if(!proj.template)
+                                    projects.push($scope.getProjectPack(proj.id));
+                            })
 
+                        })
+                    })
+                    department.projects = projects;
+                    $scope.depts.push(department);
+                })
+            })
+        })
+    }])
+
+    .controller('ProjectsByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.projects = {};
+        $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        angular.forEach($scope.alpha, function(letter){
+            $scope.projects[letter] = [];
+        })
+        $scope.getProjects().success(function(data, status, headers, config) {
+            angular.forEach(data,function(proj){
+                var letter = proj.name[0];
+                $scope.projects[letter].push($scope.getProjectPack(proj.id));
+            })
+        })
+    }])
+
+    .controller('PersonController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.person = $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
+            
+        })
     }])

@@ -2,7 +2,6 @@
 <html ng-app="basecamp">
     <head>
         <meta charset="utf-8">
-        <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
         <!-- Tell the browser to be responsive to screen width -->
@@ -42,12 +41,13 @@
         <link rel="icon" href="http://sga-dev.umbc.edu/favicon.ico" type="image/x-icon"> 
         <link rel="shortcut icon" href="http://sga-dev.umbc.edu/favicon.ico" type="image/x-icon"> 
 
-        <title>Home | UMBC SGA iTracker</title>
+        <title>UMBC SGA iTracker</title>
         <!-- <script>document.write('<base href="' + document.location + '" />');</script> -->
         <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
         <!-- <link rel="stylesheet" href="css/style.css"> -->
         <script src="components/angular/angular.js"></script>
         <script src="js/app.js"></script>
+        <base href="/itracker/">
     </head>
     <body class="hold-transition skin-yellow sidebar-mini" ng-controller="MainController">
         <div class="wrapper">
@@ -67,25 +67,25 @@
                     </a>
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://50.umbc.edu/"><small>UMBC50</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/umbc-azindex"><small>A-Z Index</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://my.umbc.edu/"><small>myUMBC</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://my.umbc.edu/events"><small>Events</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/directory"><small>Directory</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/maps"><small>Maps</small></a>
                             </li>
-                            <li>
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/search"><small>Search</small></a>
                             </li>
                             <!-- Control Sidebar Toggle Button -->
@@ -150,7 +150,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li ng-repeat="group in main.groups">
+                                <li ng-repeat="group in main.groups | orderBy: 'name'">
                                     <a href="/itracker/departments/{{group.group_href}}/">
                                         <i class="fa fa-circle-o"></i>{{group.name}}
                                     </a>

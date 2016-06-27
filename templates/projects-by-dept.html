@@ -14,7 +14,33 @@
 		</section>
 		<!-- Main content -->
 		<section class="content">
-
+			<h6>
+				<span ng-repeat="dept in depts">
+					<a ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a>
+				</span>
+			</h6>
+			<div ng-repeat="dept in depts">
+				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
+				<div class="row">
+					<div class="col-md-4" ng-repeat="proj in dept.projects">
+						<div class="box box-widget widget-user">
+							<div class="widget-user-header bg-blue">
+								<h3 class="widget-user-username">{{proj.name}}</h3>
+								<h5 class="widget-user-desc">{{proj.description}}</h5>
+							</div>
+							<div class="box-footer no-padding">
+								<ul class="nav nav-stacked">
+									<li><a href="#">Creator<span class="pull-right badge bg-blue">{{proj.creator}}</span></a></li>
+									<li><a href="#">Status<span class="pull-right badge bg-aqua"> {{proj.status}}</span></a></li>
+									<li><a href="#">Number of Events<span class="pull-right badge bg-green">{{proj.events}}</span></a></li>
+									<li><a href="#">Number of documents<span class="pull-right badge bg-green">{{proj.docs}}</span></a></li>
+									<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
 </div>

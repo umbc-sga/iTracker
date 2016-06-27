@@ -9,11 +9,8 @@
 // Replace with your basecamp user id that you can see in your basecamp url's https://basecamp.com/1234567 when visiting basecamp in the browser
 $basecampUserId = '2979808';
 
-// Username of a basecamp user you wish to connect with
-$username = 'sga@umbc.edu';
-
-// Password of the basecamp user you wish to connect with (is secure because SSL is used)
-$password = 'hackSGA1';
+// Username and Password of a basecamp user you wish to connect with
+include "/afs/umbc.edu/public/web/sites/sga/dev/cgi-bin/bc_cred.php";
 
 /**
  * SAMPLE GET SCRIPT THAT USES PHP CURL
@@ -40,7 +37,7 @@ $ch = curl_init($apiUrl);
 // Configuring curl options
 $options = array(
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_USERPWD        => $username . ":" . $password, // authentication
+    CURLOPT_USERPWD        => $credentials, // authentication; from included file bc_cred.php
     CURLOPT_HTTPHEADER     => array('Content-type: application/json'),
     CURLOPT_USERAGENT      => 'Api Client',
     CURLOPT_FAILONERROR    => true

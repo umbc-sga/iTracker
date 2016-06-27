@@ -4,12 +4,12 @@
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				All People By Department
+				All People By Name
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
 				<li>People</li>
-				<li class="active">By Department</li>
+				<li class="active">By Name</li>
 			</ol>
 		</section>
 		<!-- Main content -->
@@ -18,7 +18,7 @@
 			<div ng-repeat="letter in alpha">
 				<h2 ng-show="people[letter].length != 0">{{letter}}</h2>
 				<div class="row">
-					<div class="col-md-4" ng-repeat="person in people[letter]">
+					<div class="col-md-4" ng-repeat="person in people[letter] | orderBy : 'name'">
 						<div class="box box-widget widget-user-2">
 							<div class="widget-user-header bg-blue">
 								<div class="widget-user-image">
