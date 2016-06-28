@@ -20,13 +20,15 @@
 				<div class="row">
 					<div class="col-md-4" ng-repeat="person in people[letter] | orderBy : 'name'">
 						<div class="box box-widget widget-user-2">
-							<div class="widget-user-header bg-blue">
-								<div class="widget-user-image">
-									<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
-								</div><!-- /.widget-user-image -->
-								<h3 class="widget-user-username">{{person.name}}</h3>
-								<h5 class="widget-user-desc">{{person.email}}</h5>
-							</div>
+							<a href="/itracker/people/{{person.id}}/">
+								<div class="widget-user-header bg-blue">
+									<div class="widget-user-image">
+										<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
+									</div><!-- /.widget-user-image -->
+									<h3 class="widget-user-username">{{person.name}}</h3>
+									<h5 class="widget-user-desc">{{person.email}}</h5>
+								</div>
+							</a>
 							<div class="box-footer no-padding">
 								<ul class="nav nav-stacked">
 									<li><a href="#">Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>

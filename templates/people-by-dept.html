@@ -17,22 +17,25 @@
 		<!-- Main content -->
 		<section class="content">
 			<h6>
-				<span ng-repeat="dept in depts">
-					<a href ="" ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a>
+				Jump to:
+				<span ng-repeat="dept in depts | orderBy: 'name'">
+					<a href ="" ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a> | 
 				</span>
 			</h6>
-			<div ng-repeat="dept in depts">
+			<div ng-repeat="dept in depts | orderBy: 'name'">
 				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
 				<div class="row">
 					<div class="col-md-4" ng-repeat="person in dept.people | orderBy : 'name'">
 						<div class="box box-widget widget-user-2">
-							<div class="widget-user-header bg-blue">
-								<div class="widget-user-image">
-									<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
-								</div><!-- /.widget-user-image -->
-								<h3 class="widget-user-username">{{person.name}}</h3>
-								<h5 class="widget-user-desc">{{person.email}}</h5>
-							</div>
+							<a href ="/itracker/people/{{person.id}}/">
+								<div class="widget-user-header bg-blue">
+									<div class="widget-user-image">
+										<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
+									</div><!-- /.widget-user-image -->
+									<h3 class="widget-user-username">{{person.name}}</h3>
+									<h5 class="widget-user-desc">{{person.email}}</h5>
+								</div>
+							</a>
 							<div class="box-footer no-padding">
 								<ul class="nav nav-stacked">
 									<li><a href="#">Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>
@@ -44,6 +47,7 @@
 						</div>
 					</div>
 				</div>
+			</div>
 		</section>
-
+	</div>
 </div>

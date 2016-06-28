@@ -1,65 +1,152 @@
 <div ng-controller="ProjectController">
 
-    <ul class="breadcrumb">
-        <li><a href="#">Projects</a> <span class="divider">/</span></li>
-        <li>{{project.name}}</li>
-    </ul>
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				{{project.name}}
+			</h1>
+			<ol class="breadcrumb">
+				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+				<li>Projects</li>
+				<li class="active">{{project.name}}</li>
+			</ol>
+		</section>
 
-    <div class="page-header">
-        <h1>{{project.name}} <small>{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}% complete</small></h1>
-    </div>
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th style="width: 60%">{{activeTodoLists.length || '0'}} todo list(s)</th>
-                <th style="width: 40%">
-                    {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}% complete
-                    ({{activeTodoListsCompletedCount + completedTodoListsCompletedCount}}/{{activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount}} todo's)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="info">
-                <td><input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by todo list name" /></td>
-                <td></td>
-            </tr>
-            <tr ng-repeat="todoList in activeTodoLists | filter:search | orderBy: todoList.position">
-                <td>
-                    <p><a href="#/projects/{{project.id}}/todolists/{{todoList.id}}">{{todoList.name}}</a></p>
-                    <p class="ng-cloak" ng-show="todoList.description">{{todoList.description}}</p>
-                    <p class="muted">Created: {{todoList.created_at | date}} | Last update: {{todoList.updated_at | date}}</p>
-                </td>
-                <td>
-                    <p>
-                        {{(todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) || '0' | number:0}}% complete
-                        ({{todoList.completed_count}}/{{todoList.remaining_count + todoList.completed_count}} todo's)
-                    </p>
-                    <div class="progress progress-striped">
-                        <div class="bar"
-                             ng-style="{width: (todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) + '%' }"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr ng-repeat="todoList in completedTodoLists | filter:search | orderBy: todoList.position">
-                <td>
-                    <p><a href="#/projects/{{project.id}}/todolists/{{todoList.id}}">{{todoList.name}}</a></p>
-                    <p class="ng-cloak" ng-show="todoList.description">{{todoList.description}}</p>
-                    <p class="muted">Created: {{todoList.created_at | date}} | Last update: {{todoList.updated_at | date}}</p>
-                </td>
-                <td>
-                    <p>
-                        {{(todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) || '0' | number:0}}% complete
-                        ({{todoList.completed_count}}/{{todoList.remaining_count + todoList.completed_count}} todo's)
-                    </p>
-                    <div class="progress progress-striped progress-success">
-                        <div class="bar"
-                             ng-style="{width: (todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) + '%' }"></div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+		<!-- Main content -->
+		<section class="content">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								Progress Bar
+							</h3>
+						</div>
+						<div class="box-body">
+							<div class="progress progress-xl progress-striped active">
+		                    	<div class="progress-bar progress-bar-primary" style="width: {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%</div>
+		                    </div>
+						</div>
+					</div>
+					<div class="box box-primary">
+						<div class="box-header">
+							<h3 class="box-title">
+								Project At-A-Glance
+							</h3>
+						</div>
+						<div class="box-body">
+							<table class="table table-condensed">
+								<tbody>
+									<tr>
+										<th>Name</th>
+										<th style="width: 225px">{{project.name}}</th>
+									</tr>
+									<tr>
+										<th>Description</th>
+										<th style="width: 225px">{{project.description}}</th>
+									</tr>
+									<tr>
+										<th>Created By</th>
+										<th style="width: 225px">{{project.creator.name}}</th>
+									</tr>
+									<tr>
+										<th>Created At</th>
+										<th style="width: 225px">{{project.created_at}}</th>
+									</tr>
+									<tr>
+										<th>Last Updated</th>
+										<th style="width: 225px">{{project.updated_at}}</th>
+									</tr>
+									<tr>
+										<th># of Topics</th>
+										<th style="width: 225px">{{project.topics.count}}</th>
+									</tr>
+									<tr>
+										<th>Completed To-Do Lists</th>
+										<th style="width: 225px">{{project.todolists.completed_count}}</th>
+									</tr>
+									<tr>
+										<th>Outstanding To-Do Lists</th>
+										<th style="width: 225px">{{project.todolists.remaining_count}}</th>
+									</tr>
+									<tr>
+										<th># of Accesses</th>
+										<th style="width: 225px">{{project.accesses.count}}</th>
+									</tr>
+									<tr>
+										<th># of Documents</th>
+										<th style="width: 225px">{{project.documents.attachments + project.attachments.count}}</th>
+									</tr>
+									<tr>
+										<th># of Events</th>
+										<th style="width: 225px">{{project.calendar_events.count}}</th>
+									</tr>
+								</tbody>
+							</table>
+						</div> <!-- /.box-body -->
+					</div> <!-- /.box -->
+				</div> <!-- /.col -->
+				<div class="col-md-4">
+					<div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
+						<div class="box-header with-border">
+							<h3 class="box-title">Active To-Do Lists</h3>
+							<div class="box-tools pull-right">
+								<div class="btn-group">
+                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                    				<i class="fa fa-bars"></i></button>
+                  					<ul class="dropdown-menu pull-right" role="menu">
+					                    <li><a href="#" ng-repeat="list in activeTodoLists">{{list.name}}</a></li>
+                  					</ul>
+                				</div>
+							</div>
+						</div>
+						<div class="box-body">
+							<div ng-repeat="list in activeTodoLists">
+								{{list.name}}
+								<div class="progress progress-md progress-striped active">
+									<div class="progress-bar progress-bar-primary" style="width:{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}%">{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}% complete</div>
+	                        		({{list.completed_count}}/{{list.remaining_count + list.completed_count}} todo's)
+	                        	</div>
+                        	</div>
+						</div>
+					</div>
+					<div class="box box-primary" ng-show="project.todolists.completed_count > 0">
+						<div class="box-header with-border">
+							<h3 class="box-title">Completed To-Do Lists</h3>
+							<div class="box-tools pull-right">
+								<div class="btn-group">
+                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                    				<i class="fa fa-bars"></i></button>
+                  					<ul class="dropdown-menu pull-right" role="menu">
+					                    <li><a href="#" ng-repeat="list in completedTodoLists">{{list.name}}</a></li>
+                  					</ul>
+                				</div>
+							</div>
+						</div>
+						<div class="box-body">
+							!!!
+						</div>
+					</div>
+					<div class="box box-primary" ng-show="(project.attachments.count + project.documents.count) > 0">
+						<div class="box-header with-border">
+							<h3 class="box-title">Documents</h3>
+						</div>
+						<div class="box-body">
+							!!!
+						</div>
+					</div>
+				</div> <!-- /.col -->
+				<div class="col-md-4">
+					(Timeline Placeholder)
+					<ul class="timeline">
+						<li></li>
+					</ul>
+				</div>
+			</div> <!-- /.row -->
+			
+		</section> <!-- /.content -->
+	</div> <!-- /.content-wrapper -->
 </div>
 

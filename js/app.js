@@ -6,35 +6,79 @@ function replace_All(str, find, replace){
 }
 
 
+// Changes XML to JSON
+function xmlToJson(xml) {
+    
+    // Create the return object
+    var obj = {};
+
+    if (xml.nodeType == 1) { // element
+        // do attributes
+        if (xml.attributes.length > 0) {
+        obj["@attributes"] = {};
+            for (var j = 0; j < xml.attributes.length; j++) {
+                var attribute = xml.attributes.item(j);
+                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+    } else if (xml.nodeType == 3) { // text
+        obj = xml.nodeValue;
+    }
+
+    // do children
+    if (xml.hasChildNodes()) {
+        for(var i = 0; i < xml.childNodes.length; i++) {
+            var item = xml.childNodes.item(i);
+            var nodeName = item.nodeName;
+            if (typeof(obj[nodeName]) == "undefined") {
+                obj[nodeName] = xmlToJson(item);
+            } else {
+                if (typeof(obj[nodeName].push) == "undefined") {
+                    var old = obj[nodeName];
+                    obj[nodeName] = [];
+                    obj[nodeName].push(old);
+                }
+                obj[nodeName].push(xmlToJson(item));
+            }
+        }
+    }
+    return obj;
+}
+
+
 angular.module('basecamp', [])
 
-    .config(function ($routeProvider, $locationProvider) {
+    .config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'templates/home.html',
                 controller: 'HomeController'
             })
-            .when('/people/by-dept', {
+            .when('/people/by-dept/', {
                 templateUrl: 'templates/people-by-dept.html',
                 controller: 'PeopleByDeptController'
             })
-            .when('/people/by-name', {
+            .when('/people/by-name/', {
                 templateUrl: 'templates/people-by-name.html',
                 controller: 'PeopleByNameController'
             })
-            .when('/people/:personId', {
+            .when('/people/:personId/', {
                 templateUrl: 'templates/person.html',
                 controller: 'PersonController'
             })
-            .when('/projects/by-name', {
+            .when('/projects/by-name/', {
                 templateUrl: 'templates/projects-by-name.html',
                 controller: 'ProjectsByNameController'
             })
-            .when('/projects/by-dept', {
+            .when('/projects/by-dept/', {
                 templateUrl: 'templates/projects-by-dept.html',
                 controller: 'ProjectsByDeptController'
             })
-            .when('/projects/:projectId', {
+            .when('/projects-old/:projectId/', {
+                templateUrl: 'templates/project-orig.html',
+                controller: 'ProjectController'
+            })
+            .when('/projects/:projectId/', {
                 templateUrl: 'templates/project.html',
                 controller: 'ProjectController'
             })
@@ -49,7 +93,7 @@ angular.module('basecamp', [])
             //.when('/departments/:departmentName', {})
 
         $locationProvider.html5Mode(true);
-    })
+    }])
 
     .value('basecamp.config', {
         debug: false // Set to false to disable logging to console
@@ -173,6 +217,7 @@ angular.module('basecamp', [])
         $scope.getPersonPack = function(id){
             var per = {};
             $scope.getPersonInfo(id).success(function(data, status, headers, config) {
+                per.id = data.id;
                 per.name = data.name;
                 per.email = data.email_address;
                 per.assigned = data.assigned_todos.count;
@@ -198,6 +243,7 @@ angular.module('basecamp', [])
         $scope.getProjectPack = function(id){
             var proj = {};
             $scope.getProject(id).success(function(data, status, headers, config) {
+                proj.id = data.id;
                 proj.name = data.name;
                 proj.description = data.description;
                 proj.creator = data.creator.name;
@@ -208,10 +254,27 @@ angular.module('basecamp', [])
                 }else{
                     proj.status = "Active";
                 }
-
             })
             return proj;
         }
+
+        $scope.getPersonDepts = function(id){
+            var departments = [];
+            $scope.getGroups().success(function(data, status, headers, config) {
+                angular.forEach(data,function(dept){
+                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                        angular.forEach(data.memberships, function(person){
+                            if(person.id == id){
+                                departments.push(data);
+                            }
+                        })
+                    })
+                })
+            })
+            return departments;
+        }
+
+
         /**
          * Get project counts
          *
@@ -493,6 +556,12 @@ angular.module('basecamp', [])
                 console.log('ERROR');
             })
 
+        // WORK!
+        // $scope.getProjectRSS = $http.get('https://basecamp.com/2979808/projects/' + $routeParams.projectId + '.atom')
+        //     .success(function (data, status, headers, config) {
+        //         project.rss = xmlToJson(data);
+        //     })
+
         $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
 
             if (activeTodoLists === oldActiveTodoLists) {
@@ -620,6 +689,9 @@ angular.module('basecamp', [])
 
     .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         $scope.depts = [];
+        $scope.scrollTo = function(id){
+            $anchorScroll(id);
+        }
         $scope.getGroups().success(function (data, status, headers, config) {
             angular.forEach(data,function(dept){
                 var department = {};
@@ -634,7 +706,6 @@ angular.module('basecamp', [])
                                 if(!proj.template)
                                     projects.push($scope.getProjectPack(proj.id));
                             })
-
                         })
                     })
                     department.projects = projects;
@@ -653,13 +724,22 @@ angular.module('basecamp', [])
         $scope.getProjects().success(function(data, status, headers, config) {
             angular.forEach(data,function(proj){
                 var letter = proj.name[0];
-                $scope.projects[letter].push($scope.getProjectPack(proj.id));
+                if(!proj.template)
+                    $scope.projects[letter].push($scope.getProjectPack(proj.id));
             })
         })
     }])
 
     .controller('PersonController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
-        $scope.person = $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
-            
+        $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
+            $scope.person = data;    
+        })
+        $scope.depts = $scope.getPersonDepts($routeParams.personId);
+        $scope.projs = [];
+        $scope.getPersonProj($routeParams.personId).success(function(data, status, headers, config) {
+            angular.forEach(data, function(proj){
+                if(!proj.template)
+                    $scope.projs.push($scope.getProjectPack(proj.id));
+            })
         })
     }])
