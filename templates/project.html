@@ -17,7 +17,7 @@
 		<!-- Main content -->
 		<section class="content">
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-5">
 					<div class="box box-primary">
 						<div class="box-header with-border">
 							<h3 class="box-title">
@@ -26,7 +26,9 @@
 						</div>
 						<div class="box-body">
 							<div class="progress progress-xl progress-striped active">
-		                    	<div class="progress-bar progress-bar-primary" style="width: {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%</div>
+		                    	<div class="progress-bar progress-bar-primary" style="width: {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">
+		                    		{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%
+		                    	</div>
 		                    </div>
 						</div>
 					</div>
@@ -87,19 +89,23 @@
 							</table>
 						</div> <!-- /.box-body -->
 					</div> <!-- /.box -->
-				</div> <!-- /.col -->
-				<div class="col-md-4">
+				<!-- </div> /.col -->
+				<!-- <div class="col-md-4"> -->
 					<div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
 						<div class="box-header with-border">
 							<h3 class="box-title">Active To-Do Lists</h3>
 							<div class="box-tools pull-right">
-								<div class="btn-group">
-                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                    				<i class="fa fa-bars"></i></button>
-                  					<ul class="dropdown-menu pull-right" role="menu">
-					                    <li><a href="#" ng-repeat="list in activeTodoLists">{{list.name}}</a></li>
-                  					</ul>
-                				</div>
+								<div ng-init="currentList = activeTodoLists[0]">
+									{{currentList.name}}
+									<div class="btn-group">
+	                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+	                    				<i class="fa fa-bars"></i></button>
+	                  					<ul class="dropdown-menu pull-right" role="menu">
+						                    <!-- <li><a href="#" ng-repeat="list in activeTodoLists">{{list.name}}</a></li> -->
+						                    <li><a href="#" >{{currentList.name}}</a></li>
+	                  					</ul>
+	                				</div>
+	                			</div>
 							</div>
 						</div>
 						<div class="box-body">
@@ -138,11 +144,32 @@
 						</div>
 					</div>
 				</div> <!-- /.col -->
-				<div class="col-md-4">
-					(Timeline Placeholder)
-					<ul class="timeline">
-						<li></li>
+				<div class="col-md-7">
+					<ul class="timeline" ng-init="limit = 5">
+						<li class="time-label" ng-repeat="entry in projectRSSentries | limitTo: limit ">
+							<span class="bg-red" ng-show ='entry.published.length > 0'> 
+								{{entry.published}}
+							</span>
+							<i style="margin-top:40px;" class="fa fa-user bg-blue"></i>
+
+							<div class="timeline-item" style="margin-top:10px;">
+								<span class="time">
+									<!-- <i class="fa fa-clock-o"></i> TIME -->
+								</span>
+								<h3 class="timeline-header">
+									{{entry.title}}
+								</h3>
+								<div ng-bind-html="entry.content" class="timeline-body">
+									
+								</div>
+							</div>
+						</li>
+						<li>
+							<button ng-hide = "limit >= projectRSSentries.length" 
+									ng-click = "limit = limit + 2">show more</button>
+						</li>
 					</ul>
+					
 				</div>
 			</div> <!-- /.row -->
 			

@@ -16,13 +16,14 @@
 
 		<!-- Main content -->
 		<section class="content">
-			<h6>
+			<!-- <h6>
 				Jump to:
 				<span ng-repeat="dept in depts | orderBy: 'name'">
 					<a href ="" ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a> | 
 				</span>
-			</h6>
-			<div ng-repeat="dept in depts | orderBy: 'name'">
+			</h6> -->
+			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by department name" />
+			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'">
 				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
 				<div class="row">
 					<div class="col-md-4" ng-repeat="person in dept.people | orderBy : 'name'">

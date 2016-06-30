@@ -14,11 +14,11 @@
 		</section>
 		<!-- Main content -->
 		<section class="content">
-
+			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by person name" />
 			<div ng-repeat="letter in alpha">
 				<h2 ng-show="people[letter].length != 0">{{letter}}</h2>
 				<div class="row">
-					<div class="col-md-4" ng-repeat="person in people[letter] | orderBy : 'name'">
+					<div class="col-md-4" ng-repeat="person in people[letter] | filter: search | orderBy : 'name'">
 						<div class="box box-widget widget-user-2">
 							<a href="/itracker/people/{{person.id}}/">
 								<div class="widget-user-header bg-blue">

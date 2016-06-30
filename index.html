@@ -47,6 +47,7 @@
         <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
         <!-- <link rel="stylesheet" href="css/style.css"> -->
         <script src="components/angular/angular.js"></script>
+        <script src="components/angular/angular-sanitize.js"></script>
         <script src="js/app.js"></script>
         <base href="/itracker/">
     </head>
@@ -65,31 +66,30 @@
                     <!-- Sidebar toggle button-->
                     <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
-                    </a>
+                    </a>    <!-- Control Sidebar Toggle Button -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://50.umbc.edu/"><small>UMBC50</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://umbc.edu/go/umbc-azindex"><small>A-Z Index</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://my.umbc.edu/"><small>myUMBC</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://my.umbc.edu/events"><small>Events</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://umbc.edu/go/directory"><small>Directory</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://umbc.edu/go/maps"><small>Maps</small></a>
                             </li>
-                            <li class="hidden-xs">
+                            <li class="hidden-s">
                                 <a href="http://umbc.edu/search"><small>Search</small></a>
                             </li>
-                            <!-- Control Sidebar Toggle Button -->
                         </ul>
                     </div>
                 </nav>
@@ -186,13 +186,13 @@
                         </li>
                         <li class="header">SHARE THIS ON SOCIAL MEDIA</li>
                         <li>
-                            <a onclick="javascript:FacebookShare();">
+                            <a href="" onclick="javascript:FacebookShare();">
                                 <i class="fa fa-facebook-square"></i>
                                 <span>Share On Facebook!</span>
                             </a>
                         </li>
                         <li>
-                            <a onclick="javascript:TwitterShare();">
+                            <a href="" onclick="javascript:TwitterShare();">
                                 <i class="fa fa-twitter-square"></i>
                                 <span>Share on Twitter!</span>
                             </a>

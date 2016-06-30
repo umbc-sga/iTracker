@@ -14,11 +14,11 @@
 		</section>
 		<!-- Main content -->
 		<section class="content">
-
+			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by project name" />
 			<div ng-repeat="letter in alpha">
 				<h2 ng-show="projects[letter].length != 0">{{letter}}</h2>
 				<div class="row">
-					<div class="col-md-4" ng-repeat="proj in projects[letter] | orderBy : 'name'">
+					<div class="col-md-4" ng-repeat="proj in projects[letter] | filter: search | orderBy : 'name'">
 						<div class="box box-widget widget-user">
 							<a href="/itracker/projects/{{proj.id}}/">
 								<div class="widget-user-header bg-blue">

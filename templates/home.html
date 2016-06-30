@@ -29,7 +29,7 @@
                             <div class="icon">
                                 <i class="ion ion-compose"></i>
                             </div>
-                            <a href="/itracker/projects/by-name/" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="/itracker/projects/by-name/" class="small-box-footer">See What We Are Working On! <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div><!-- ./col -->
                     <div class="col-lg-3 col-xs-6">
@@ -44,7 +44,7 @@
                             <div class="icon">
                                 <i class="ion ion-ios-box"></i>
                             </div>
-                            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="#" class="small-box-footer">[This is being worked on...]<!-- See What We Have Finished! --> <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div><!-- ./col -->
                     <div class="col-lg-3 col-xs-6">
@@ -80,6 +80,7 @@
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-md-6">
+                        <div class="box">
                         <div id="featured-carousel" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <li data-target="#featured-carousel" data-slide-to="0" class="active"></li>
@@ -94,7 +95,7 @@
                                     </div>
                                 </div>
                                 <div class="item" ng-repeat="project in featuredProjs">
-                                    <img src="http://placehold.it/900x500/39CCCC/ffffff&text=I+Love+Bootstrap" alt="{{project.name}}">
+                                    <img src="http://placehold.it/900x500/39CCCC/ffffff&text=Featured:+{{project.name}}" alt="{{project.name}}">
                                     <div class="carousel-caption">
                                         {{ project.name }}
                                     </div>
@@ -118,6 +119,7 @@
                             <a class="right carousel-control" href="#featured-carousel" data-slide="next">
                                 <span class="fa fa-angle-right"></span>
                             </a>
+                        </div>
                         </div>
                     </div>  <!-- /.col -->
                     <div class="col-md-6">
@@ -146,11 +148,11 @@
                     			</h3>
                     		</div> <!-- /.box-header -->
                     		<div class="box-body">
-                    			Some introductory info.<br/><br/>
-								More blurb about iTracker....
+                    			The SGA Initiative Tracker is the place where the UMBC community and general public can educate themselves about the work being done by active members of the UMBC Student Government Association on behalf of the undergraduate student body.<br/><br/>
+                                Envisioned in Fall 2014 by Justin Chavez '17 as a project to educate the average student about how their student fees are being used, the project vision grew from a simple website to a dynamic application that shows updated information on all project-based activities of the organization.  Joining with fellow students Matthew Landen '17 and Josh Massey '18, the team worked on and <a href="http://devpost.com/software/sga-initiative-tracker">submitted an early version as part of HackUMBC</a>, UMBC's annual hackathon competiton, in the Fall 2014 semester.  Although it was not selected as a finalist for a prize, this initial version received much attention from the SGA administration.  Much work was done to improve both the public website and the behind-the-scenes work of the tool before a fully-functional public version was released in the Fall 2016 semester.  The Tracker is currently being put to a beta test with multiple scheduled improvements over the Fall semester and into the Spring.
 							</div>
                     		<div class="box-footer">
-                    			<a href="http://sga.umbc.edu/about" class="btn btn-success" role="button">Read More!</a>
+                    			<a href="/itracker/projects/9793947/" class="btn btn-success" role="button">View this Project!</a>
                     		</div>
                     	</div> <!-- /.box-success -->
                     </div> <!-- /.col -->
