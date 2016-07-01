@@ -33,13 +33,31 @@
 						</div>
 					</div>
 					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								People on this Project
+							</h3>
+						</div>
+						<div class="box-body">
+							<!-- <table class="table table-hover">
+								<tbody>
+									<tr ng-repeat="person in people">
+										<td><img src="{{person.avatar_url}}" class="img-circle" alt="{{person.name}}"></td>
+										<td>{{person.name}}</td>
+									</tr>
+								</tbody>
+							</table> -->
+							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}"><img src="{{person.avatar_url}}" class="img-circle project-people" title="{{person.name}}" alt="{{person.name}}"></a>
+						</div>
+					</div>
+					<div class="box box-primary">
 						<div class="box-header">
 							<h3 class="box-title">
 								Project At-A-Glance
 							</h3>
 						</div>
 						<div class="box-body">
-							<table class="table table-condensed">
+							<table class="table table-responsive table-condensed">
 								<tbody>
 									<tr>
 										<th>Name</th>
@@ -74,7 +92,7 @@
 										<th style="width: 225px">{{project.todolists.remaining_count}}</th>
 									</tr>
 									<tr>
-										<th># of Accesses</th>
+										<th># of People</th>
 										<th style="width: 225px">{{project.accesses.count}}</th>
 									</tr>
 									<tr>
@@ -146,27 +164,24 @@
 				</div> <!-- /.col -->
 				<div class="col-md-7">
 					<ul class="timeline" ng-init="limit = 5">
-						<li class="time-label" ng-repeat="entry in projectRSSentries | limitTo: limit ">
-							<span class="bg-red" ng-show ='entry.published.length > 0'> 
-								{{entry.published}}
+						<li class="time-label" ng-repeat="event in events | limitTo: limit ">
+							<span class="bg-red" ng-show ='event.created_at.length > 0'> 
+								{{event.created_at}}
 							</span>
-							<i style="margin-top:40px;" class="fa fa-user bg-blue"></i>
+							<img ng-class="{timeline_afterDate: event.created_at.length > 0, timeline_otherwise: event.created_at.length == 0}" class=" fa fa-user img-circle bg-blue" src="{{event.creator.avatar_url}}" title = "{{event.creator.name}}">
 
 							<div class="timeline-item" style="margin-top:10px;">
 								<span class="time">
 									<!-- <i class="fa fa-clock-o"></i> TIME -->
 								</span>
 								<h3 class="timeline-header">
-									{{entry.title}}
+									<a href="/itracker/people/{{event.creator.id}}">{{event.creator.name}} </a><span ng-bind-html="event.summary"></span>
 								</h3>
-								<div ng-bind-html="entry.content" class="timeline-body">
-									
-								</div>
 							</div>
 						</li>
 						<li>
-							<button ng-hide = "limit >= projectRSSentries.length" 
-									ng-click = "limit = limit + 2">show more</button>
+							<button type="button" class="btn btn-primary" ng-hide = "limit >= events.length" 
+									ng-click = "limit = limit + 2"><i class="fa fa-clock-o"></i> Show Previous Events</button>
 						</li>
 					</ul>
 					

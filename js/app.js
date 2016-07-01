@@ -9,163 +9,6 @@ function replace_All(str, find, replace){
     return str;
 }
 
-/*  This work is licensed under Creative Commons GNU LGPL License.
-
-    License: http://creativecommons.org/licenses/LGPL/2.1/
-   Version: 0.9
-    Author:  Stefan Goessner/2006
-    Web:     http://goessner.net/ 
-*/
-function xml2json(xml, tab) {
-   var X = {
-      toObj: function(xml) {
-         var o = {};
-         if (xml.nodeType==1) {   // element node ..
-            if (xml.attributes.length)   // element with attributes  ..
-               for (var i=0; i<xml.attributes.length; i++)
-                  o["@"+xml.attributes[i].nodeName] = (xml.attributes[i].nodeValue||"").toString();
-            if (xml.firstChild) { // element has child nodes ..
-               var textChild=0, cdataChild=0, hasElementChild=false;
-               for (var n=xml.firstChild; n; n=n.nextSibling) {
-                  if (n.nodeType==1) hasElementChild = true;
-                  else if (n.nodeType==3 && n.nodeValue.match(/[^ \f\n\r\t\v]/)) textChild++; // non-whitespace text
-                  else if (n.nodeType==4) cdataChild++; // cdata section node
-               }
-               if (hasElementChild) {
-                  if (textChild < 2 && cdataChild < 2) { // structured element with evtl. a single text or/and cdata node ..
-                     X.removeWhite(xml);
-                     for (var n=xml.firstChild; n; n=n.nextSibling) {
-                        if (n.nodeType == 3)  // text node
-                           o["#text"] = X.escape(n.nodeValue);
-                        else if (n.nodeType == 4)  // cdata node
-                           o["#cdata"] = X.escape(n.nodeValue);
-                        else if (o[n.nodeName]) {  // multiple occurence of element ..
-                           if (o[n.nodeName] instanceof Array)
-                              o[n.nodeName][o[n.nodeName].length] = X.toObj(n);
-                           else
-                              o[n.nodeName] = [o[n.nodeName], X.toObj(n)];
-                        }
-                        else  // first occurence of element..
-                           o[n.nodeName] = X.toObj(n);
-                     }
-                  }
-                  else { // mixed content
-                     if (!xml.attributes.length)
-                        o = X.escape(X.innerXml(xml));
-                     else
-                        o["#text"] = X.escape(X.innerXml(xml));
-                  }
-               }
-               else if (textChild) { // pure text
-                  if (!xml.attributes.length)
-                     o = X.escape(X.innerXml(xml));
-                  else
-                     o["#text"] = X.escape(X.innerXml(xml));
-               }
-               else if (cdataChild) { // cdata
-                  if (cdataChild > 1)
-                     o = X.escape(X.innerXml(xml));
-                  else
-                     for (var n=xml.firstChild; n; n=n.nextSibling)
-                        o["#cdata"] = X.escape(n.nodeValue);
-               }
-            }
-            if (!xml.attributes.length && !xml.firstChild) o = null;
-         }
-         else if (xml.nodeType==9) { // document.node
-            o = X.toObj(xml.documentElement);
-         }
-         else
-            alert("unhandled node type: " + xml.nodeType);
-         return o;
-      },
-      toJson: function(o, name, ind) {
-         var json = name ? ("\""+name+"\"") : "";
-         if (o instanceof Array) {
-            for (var i=0,n=o.length; i<n; i++)
-               o[i] = X.toJson(o[i], "", ind+"\t");
-            json += (name?":[":"[") + (o.length > 1 ? ("\n"+ind+"\t"+o.join(",\n"+ind+"\t")+"\n"+ind) : o.join("")) + "]";
-         }
-         else if (o == null)
-            json += (name&&":") + "null";
-         else if (typeof(o) == "object") {
-            var arr = [];
-            for (var m in o)
-               arr[arr.length] = X.toJson(o[m], m, ind+"\t");
-            json += (name?":{":"{") + (arr.length > 1 ? ("\n"+ind+"\t"+arr.join(",\n"+ind+"\t")+"\n"+ind) : arr.join("")) + "}";
-         }
-         else if (typeof(o) == "string")
-            json += (name&&":") + "\"" + o.toString() + "\"";
-         else
-            json += (name&&":") + o.toString();
-         return json;
-      },
-      innerXml: function(node) {
-         var s = ""
-         if ("innerHTML" in node)
-            s = node.innerHTML;
-         else {
-            var asXml = function(n) {
-               var s = "";
-               if (n.nodeType == 1) {
-                  s += "<" + n.nodeName;
-                  for (var i=0; i<n.attributes.length;i++)
-                     s += " " + n.attributes[i].nodeName + "=\"" + (n.attributes[i].nodeValue||"").toString() + "\"";
-                  if (n.firstChild) {
-                     s += ">";
-                     for (var c=n.firstChild; c; c=c.nextSibling)
-                        s += asXml(c);
-                     s += "</"+n.nodeName+">";
-                  }
-                  else
-                     s += "/>";
-               }
-               else if (n.nodeType == 3)
-                  s += n.nodeValue;
-               else if (n.nodeType == 4)
-                  s += "<![CDATA[" + n.nodeValue + "]]>";
-               return s;
-            };
-            for (var c=node.firstChild; c; c=c.nextSibling)
-               s += asXml(c);
-         }
-         return s;
-      },
-      escape: function(txt) {
-         return txt.replace(/[\\]/g, "\\\\")
-                   .replace(/[\"]/g, '\\"')
-                   .replace(/[\n]/g, '\\n')
-                   .replace(/[\r]/g, '\\r');
-      },
-      removeWhite: function(e) {
-         e.normalize();
-         for (var n = e.firstChild; n; ) {
-            if (n.nodeType == 3) {  // text node
-               if (!n.nodeValue.match(/[^ \f\n\r\t\v]/)) { // pure whitespace text node
-                  var nxt = n.nextSibling;
-                  e.removeChild(n);
-                  n = nxt;
-               }
-               else
-                  n = n.nextSibling;
-            }
-            else if (n.nodeType == 1) {  // element node
-               X.removeWhite(n);
-               n = n.nextSibling;
-            }
-            else                      // any other node
-               n = n.nextSibling;
-         }
-         return e;
-      }
-   };
-   if (xml.nodeType == 9) // document node
-      xml = xml.documentElement;
-   var json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
-   return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
-}
-
-
 angular.module('basecamp', ['ngSanitize'])
 
     .config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
@@ -210,8 +53,6 @@ angular.module('basecamp', ['ngSanitize'])
                 templateUrl: 'templates/404-error.html',
                 controller: 'ErrorController'
             });
-            //.when('/projects/:projectName', {})
-            
             //.when('/departments/members', {})
             //.when('/departmenet/projects', {})
             //.when('/departments/:departmentName', {})
@@ -282,6 +123,20 @@ angular.module('basecamp', ['ngSanitize'])
                 })
         }
 
+        $scope.getPersonEvents= function(personID, page) {
+            if (page === 1) {
+                return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00")
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            } else {
+                return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00&page=" + page)
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            }
+        }
+
         $scope.getGroups = function(){
             return $http.get('get.php?url=groups.json')
                 .error(function (data, status, headers, config) {
@@ -338,6 +193,12 @@ angular.module('basecamp', ['ngSanitize'])
                 })
         }
 
+        $scope.getProjectAccesses = function(id){
+          return $http.get("get.php?url=projects/" + id + "/accesses.json")
+            .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting project accesses: ' + data);
+                })
+        }
         $scope.getPersonPack = function(id){
             var per = {};
             $scope.getPersonInfo(id).success(function(data, status, headers, config) {
@@ -363,6 +224,7 @@ angular.module('basecamp', ['ngSanitize'])
             })
             return per;
         }
+
 
         $scope.getProjectPack = function(id){
             var proj = {};
@@ -398,7 +260,19 @@ angular.module('basecamp', ['ngSanitize'])
             return departments;
         }
 
-
+        $scope.getProjectEvents= function(id, page){
+            if (page === 1) {
+                return $http.get("get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00")
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            } else {
+                return $http.get("get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00&page=" + page)
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            }
+        }
         /**
          * Get project counts
          *
@@ -619,7 +493,7 @@ angular.module('basecamp', ['ngSanitize'])
     .controller('ProjectController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
 
         $scope.project = {};
-        $scope.projectRSSentries = [];
+        $scope.events = [];
 
         $scope.activeTodoLists = [];
         $scope.completedTodoLists = [];
@@ -641,13 +515,12 @@ angular.module('basecamp', ['ngSanitize'])
           var prettyDate = day + ' ' + month + ' ' + year; 
           return prettyDate;
         }
-        $scope.trust = $http.trustAsHtml;
         $http.get('get.php?url=projects/' + $routeParams.projectId + '.json')
             .success(function (data, status, headers, config) {
                 // console.log('SUCCESS');
                 // this callback will be called asynchronously
                 // when the response is available
-                var project = angular.fromJson(data);
+                var project = data;
                 if (angular.isObject(project)) {
                     $scope.project = project;
                     // console.log(project);
@@ -661,45 +534,36 @@ angular.module('basecamp', ['ngSanitize'])
                 // or server returns response with an error status.
                 console.log('ERROR');
             })
+        
+        var page = 1;
+        var curDate = '';
+        var more = true;
+        while (more) {
+            $scope.getProjectEvents($routeParams.projectId, page).success(function (data, status, headers, config) {
+                if (data.length > 0) {
+                    angular.forEach(data,function (event){
+                        event.created_at = $scope.prettyDate(event.created_at);
+                        event.updated_at = $scope.prettyDate(event.updated_at);
 
-        $http.get('getRSS.php?id=' + $routeParams.projectId)
-            .success(function (data, status, headers, config) {
-                var xml = data;
-                var parsed;
+                        var date = event.created_at;
+                        if(date === curDate){
+                            event.created_at = '';
+                        }
 
-                if (window.DOMParser) {     // you are using a SANE browser
-                    parser = new DOMParser();
-                    parsed = parser.parseFromString(xml, "text/xml");
-                } else {                    // you are using INTERNET EXPLORER
-                    parsed = new ActiveXObject("Microsoft.XMLDOM");
-                    parsed.async = false;
-                    parsed.loadXML(xml);
+                        curDate = date;
+                        $scope.events.push(event);
+                    })
+                }else{
+                    more = false;
                 }
-
-                var temp = JSON.parse(xml2json(parsed,''));
-                var oldDate = '';
-                angular.forEach(temp["feed"]["entry"], function (entry) {
-                    if (entry.hasOwnProperty("content")) {
-                        entry.content = entry["content"]["#text"];
-                    }
-                    var dateTime = entry.published;
-                    var prettyDate = $scope.prettyDate(dateTime);
-                    entry.published = prettyDate;
-                    if(entry.published == oldDate){
-                      entry.published = '';
-					}
-                    oldDate = prettyDate;
-                    $scope.projectRSSentries.push(entry);
-                    
-                })
-
-                // console.log($scope.projectRSS);
             })
-            .error(function (data, status, headers, config) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
-                console.log('ERROR');
-            })
+            page++;
+        }
+
+        $scope.getProjectAccesses($routeParams.projectId).success(function (data, status, headers, config) {
+          $scope.people = data;
+        })
+
 
         // Get active todo lists
         $scope.activeTodoLists = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists.json')
@@ -907,6 +771,8 @@ angular.module('basecamp', ['ngSanitize'])
     }])
 
     .controller('PersonController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.events = [];
+
         $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
             $scope.person = data;    
         })
@@ -918,4 +784,42 @@ angular.module('basecamp', ['ngSanitize'])
                     $scope.projs.push($scope.getProjectPack(proj.id));
             })
         })
+
+        $scope.prettyDate = function(dateTime){
+            var dateStr = dateTime.substring(0,dateTime.indexOf('T'));
+            var year = dateStr.substring(0,dateStr.indexOf('-'));
+            var rest = dateStr.substring(dateStr.indexOf('-') + 1);
+
+            var month = monthNames[parseInt(rest.substring(0,rest.indexOf('-'))) - 1];
+            rest = rest.substring(rest.indexOf('-') + 1);
+            var day = rest;
+            var prettyDate = day + ' ' + month + ' ' + year; 
+            return prettyDate;
+        }
+
+        var page = 1;
+        while (!($scope.events.length % 50)) {
+            var curDate = '';
+            $scope.getPersonEvents($routeParams.personId, page).success(function (data, status, headers, config) {
+                if (data.length > 0) {
+                    angular.forEach(data,function (event){
+                        event.created_at = $scope.prettyDate(event.created_at);
+                        event.updated_at = $scope.prettyDate(event.updated_at);
+
+                        var date = event.created_at;
+                        if (date === curDate) {
+                            event.created_at = '';
+                        }
+
+                        curDate = date;
+                        $scope.events.push(event);
+                    })
+                }
+            })
+            page++;
+        }
+    }])
+
+    .controller('ErrorController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        // do we really need anything here?
     }])
