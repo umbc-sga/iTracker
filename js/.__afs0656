@@ -9,7 +9,7 @@ function replace_All(str, find, replace){
     return str;
 }
 
-angular.module('basecamp', ['ngSanitize'])
+angular.module('basecamp', [])
 
     .config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
         $routeProvider
@@ -524,7 +524,7 @@ angular.module('basecamp', ['ngSanitize'])
         
         $scope.page = 0;
         $scope.more = true;
-        $scope.limit = 10;
+        $scope.limit = 45;
         $scope.getEventSet = function(){
             if($scope.limit >= $scope.events.length){
                 var curDate = '';
@@ -533,7 +533,7 @@ angular.module('basecamp', ['ngSanitize'])
                         angular.forEach(data,function (event){
                             event.created_at = $scope.prettyDate(event.created_at);
                             event.updated_at = $scope.prettyDate(event.updated_at);
-
+                            alert(event.summary);
                             var date = event.created_at;
                             if (date === curDate){
                                 event.created_at = '';
@@ -790,7 +790,7 @@ angular.module('basecamp', ['ngSanitize'])
 
         $scope.page = 1;
         $scope.more = true;
-        $scope.limit = 10;
+        $scope.limit = 45;
         $scope.getEventSet = function(){
             if($scope.limit >= $scope.events.length){
                 var curDate = '';
