@@ -20,7 +20,7 @@ $options = array(
     CURLOPT_URL            => 'https://basecamp.com/2979808/api/v1/' . $url,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_USERPWD        => $credentials, // authentication; from included file bc_cred.php
-    CURLOPT_HTTPHEADER     => array('Content-type: application/json'),
+    CURLOPT_HTTPHEADER     => array('Content-type: application/json', 'User-Agent: UMBC SGA iTracker (joshua.massey@umbc.edu)'),
     CURLOPT_USERAGENT      => 'Api Client',
     CURLOPT_FAILONERROR    => true
 );

@@ -87,7 +87,7 @@
 							</div>	<!-- /.tab-pane -->
 							<div ng-class="{active: tab == 2}" class="tab-pane" id="timeline">
 								<!-- The`timeline -->
-								<ul class="timeline timeline-inverse" ng-init="limit = 5">
+								<ul class="timeline timeline-inverse" >
 									<li class="time-label" ng-repeat="event in events | limitTo: limit ">
 										<span class="bg-red" ng-show ='event.created_at.length > 0'> 
 											{{event.created_at}}
@@ -104,8 +104,7 @@
 										</div>
 									</li>
 									<li>
-										<button type="button" class="btn btn-primary" ng-hide = "limit >= events.length" 
-												ng-click = "limit = limit + 2"><i class="fa fa-clock-o"></i> Show Previous Events</button>
+										<button type="button" class="btn btn-primary" ng-hide = "!more"  ng-click = "limit = limit + 2; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
 									</li>
 								</ul>
 							</div>	<!-- /.tab-pane -->

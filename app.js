@@ -126,10 +126,17 @@ angular.module('basecamp', ['ngSanitize'])
         }
 
         $scope.getPersonEvents= function(personID, page) {
-            return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00&26page=" + page)
-                .error(function (data, status, headers, config) {
-                    basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
-                })
+            if (page === 1) {
+                return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00")
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            } else {
+                return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00&page=" + page)
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    })
+            }
         }
 
         $scope.getGroups = function(){
@@ -207,13 +214,13 @@ angular.module('basecamp', ['ngSanitize'])
 
                 $scope.getPersonProj(id).success(function(data, status, headers, config) {
                     angular.forEach(data, function(proj){
-                        if (!proj.template) {
-                            if(!proj.trashed) {
-                                per.active++;
-                            }else{
-                                per.archive++;
-                            }
-                        }
+                    	if (!proj.template) {
+	                        if(!proj.trashed) {
+	                            per.active++;
+	                        }else{
+	                            per.archive++;
+	                        }
+	                    }
                     })
                 })
             })
@@ -256,9 +263,11 @@ angular.module('basecamp', ['ngSanitize'])
         }
 
         $scope.getProjectEvents= function(id, page){
+        	console.log("I'm in events..." + page);
             return $http.get("get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                    alert("error 2+");
                 })
         }
         /**
@@ -524,33 +533,31 @@ angular.module('basecamp', ['ngSanitize'])
         
         $scope.page = 0;
         $scope.more = true;
-        $scope.limit = 45;
-        $scope.getEventSet = function(){
-            if($scope.limit >= $scope.events.length){
-                var curDate = '';
-                $scope.getProjectEvents($routeParams.projectId, $scope.page).success(function (data, status, headers, config) {
-                    if (data.length > 0) {
-                        angular.forEach(data,function (event){
-                            event.created_at = $scope.prettyDate(event.created_at);
-                            event.updated_at = $scope.prettyDate(event.updated_at);
+        for ($scope.page = 1; $scope.more == true; $scope.page++) {
+            var curDate = '';
+            console.log("More is now: " + $scope.more);
+            console.log("Page is now: " + $scope.page);
+            $scope.getProjectEvents($routeParams.projectId, $scope.page).success(function (data, status, headers, config) {
+         	  	alert(typeof data);
+                if (data.length > 0) {
+                    angular.forEach(data,function (event){
+                        event.created_at = $scope.prettyDate(event.created_at);
+                        event.updated_at = $scope.prettyDate(event.updated_at);
 
-                            var date = event.created_at;
-                            if (date === curDate){
-                                event.created_at = '';
-                            }
+                        var date = event.created_at;
+                        if (date === curDate){
+                            event.created_at = '';
+                        }
 
-                            curDate = date;
-                            $scope.events.push(event);
-                        })
-                    }else{
-                        $scope.more = false;
-                    }
-                })
-                $scope.page++;
-            }
+                        curDate = date;
+                        $scope.events.push(event);
+                    })
+                }else{
+                	$scope.more = false;
+                }
+            })
         }
 
-        $scope.getEventSet();
         $scope.getProjectAccesses($routeParams.projectId).success(function (data, status, headers, config) {
           $scope.people = data;
         })
@@ -788,34 +795,30 @@ angular.module('basecamp', ['ngSanitize'])
             return prettyDate;
         }
 
-        $scope.page = 1;
-        $scope.more = true;
-        $scope.limit = 45;
-        $scope.getEventSet = function(){
-            if($scope.limit >= $scope.events.length){
-                var curDate = '';
-                $scope.getPersonEvents($routeParams.personId, $scope.page).success(function (data, status, headers, config) {
-                    if (data.length > 0) {
-                        angular.forEach(data,function (event){
-                            event.created_at = $scope.prettyDate(event.created_at);
-                            event.updated_at = $scope.prettyDate(event.updated_at);
+        var page = 1;
+        var more = true;
+        while (more) {
+            var curDate = '';
+            $scope.getPersonEvents($routeParams.personId, page).success(function (data, status, headers, config) {
+                if (data.length > 0) {
+                    angular.forEach(data,function (event){
+                        event.created_at = $scope.prettyDate(event.created_at);
+                        event.updated_at = $scope.prettyDate(event.updated_at);
 
-                            var date = event.created_at;
-                            if (date === curDate) {
-                                event.created_at = '';
-                            }
+                        var date = event.created_at;
+                        if (date === curDate) {
+                            event.created_at = '';
+                        }
 
-                            curDate = date;
-                            $scope.events.push(event);
-                        })
-                    }else{
-                        $scope.more = false;
-                    }
-                })
-            }
-            $scope.page++;
+                        curDate = date;
+                        $scope.events.push(event);
+                    })
+                }else{
+                	more = false;
+                }
+            })
+            page++;
         }
-        $scope.getEventSet();
     }])
 
     // .controller('ErrorController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {

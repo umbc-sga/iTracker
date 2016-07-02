@@ -1,0 +1,20 @@
+.no-link:hover{
+	cursor: pointer; cursor: hand; 
+}
+
+.timeline_afterDate{
+	margin-top: 45px;
+}
+
+.timeline_otherwise{
+	margin-top: 15px;
+}
+
+.project-people{
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.img-timeline{
+	width: 10px;
+}
