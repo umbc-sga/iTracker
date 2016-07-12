@@ -10,11 +10,17 @@
 	margin-top: 15px;
 }
 
-.project-people{
+.people-list{
 	margin-right: 10px;
 	margin-bottom: 10px;
 }
 
 .img-timeline{
 	width: 10px;
+}
+
+.todoTitle{
+	color:black;
+	margin:5px 5px;
+	position: absolute;
 }

@@ -9,7 +9,7 @@
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
-				<li>Projects</li>
+				<li><a href="/itracker/projects/by-name/">Projects</a></li>
 				<li class="active">{{project.name}}</li>
 			</ol>
 		</section>
@@ -25,7 +25,7 @@
 							</h3>
 						</div>
 						<div class="box-body">
-							<div class="progress progress-xl progress-striped active">
+							<div class="progress progress-xl progress-striped active" style="height:30px;">
 		                    	<div class="progress-bar progress-bar-primary" style="width: {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">
 		                    		{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%
 		                    	</div>
@@ -39,14 +39,6 @@
 							</h3>
 						</div>
 						<div class="box-body">
-							<!-- <table class="table table-hover">
-								<tbody>
-									<tr ng-repeat="person in people">
-										<td><img src="{{person.avatar_url}}" class="img-circle" alt="{{person.name}}"></td>
-										<td>{{person.name}}</td>
-									</tr>
-								</tbody>
-							</table> -->
 							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}"><img src="{{person.avatar_url}}" class="img-circle project-people" title="{{person.name}}" alt="{{person.name}}"></a>
 						</div>
 					</div>
@@ -60,110 +52,218 @@
 							<table class="table table-responsive table-condensed">
 								<tbody>
 									<tr>
-										<th>Name</th>
-										<th style="width: 225px">{{project.name}}</th>
+										<td style="width:150px;" align="right">Name</td>
+										<td>{{project.name}}</td>
 									</tr>
 									<tr>
-										<th>Description</th>
-										<th style="width: 225px">{{project.description}}</th>
+										<td style="width:150px;" align="right">Description</td>
+										<td>{{project.description}}</td>
 									</tr>
 									<tr>
-										<th>Created By</th>
-										<th style="width: 225px">{{project.creator.name}}</th>
+										<td style="width:150px;" align="right">Created By</td>
+										<td>{{project.creator.name}}</td>
 									</tr>
 									<tr>
-										<th>Created At</th>
-										<th style="width: 225px">{{project.created_at}}</th>
+										<td style="width:150px;" align="right">Created At</td>
+										<td>{{project.created_at}}</td>
 									</tr>
 									<tr>
-										<th>Last Updated</th>
-										<th style="width: 225px">{{project.updated_at}}</th>
+										<td style="width:150px;" align="right">Last Updated</td>
+										<td>{{project.updated_at}}</td>
 									</tr>
 									<tr>
-										<th># of Topics</th>
-										<th style="width: 225px">{{project.topics.count}}</th>
+										<td style="width:150px;" align="right"># of Topics</td>
+										<td>{{project.topics.count}}</td>
 									</tr>
 									<tr>
-										<th>Completed To-Do Lists</th>
-										<th style="width: 225px">{{project.todolists.completed_count}}</th>
+										<td style="width:150px;" align="right">Completed To-Do Lists</td>
+										<td>{{project.todolists.completed_count}}</td>
 									</tr>
 									<tr>
-										<th>Outstanding To-Do Lists</th>
-										<th style="width: 225px">{{project.todolists.remaining_count}}</th>
+										<td style="width:150px;" align="right">Outstanding To-Do Lists</td>
+										<td>{{project.todolists.remaining_count}}</td>
 									</tr>
 									<tr>
-										<th># of People</th>
-										<th style="width: 225px">{{project.accesses.count}}</th>
+										<td style="width:150px;" align="right"># of People</td>
+										<td>{{project.accesses.count}}</td>
 									</tr>
 									<tr>
-										<th># of Documents</th>
-										<th style="width: 225px">{{project.documents.attachments + project.attachments.count}}</th>
+										<td style="width:150px;" align="right"># of Documents</td>
+										<td>{{project.documents.attachments + project.attachments.count}}</td>
 									</tr>
 									<tr>
-										<th># of Events</th>
-										<th style="width: 225px">{{project.calendar_events.count}}</th>
+										<td style="width:150px;" align="right"># of Events</td>
+										<td>{{project.calendar_events.count}}</td>
 									</tr>
 								</tbody>
 							</table>
 						</div> <!-- /.box-body -->
 					</div> <!-- /.box -->
-				<!-- </div> /.col -->
-				<!-- <div class="col-md-4"> -->
 					<div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
 						<div class="box-header with-border">
-							<h3 class="box-title">Active To-Do Lists</h3>
-							<div class="box-tools pull-right">
-								<div ng-init="currentList = activeTodoLists[0]">
-									{{currentList.name}}
-									<div class="btn-group">
-	                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-	                    				<i class="fa fa-bars"></i></button>
-	                  					<ul class="dropdown-menu pull-right" role="menu">
-						                    <!-- <li><a href="#" ng-repeat="list in activeTodoLists">{{list.name}}</a></li> -->
-						                    <li><a href="#" >{{currentList.name}}</a></li>
-	                  					</ul>
-	                				</div>
-	                			</div>
-							</div>
+							<h3 class="box-title">Active To-Do Lists <small>(Click on list name to expand)</small> </h3>
 						</div>
 						<div class="box-body">
-							<div ng-repeat="list in activeTodoLists">
-								{{list.name}}
-								<div class="progress progress-md progress-striped active">
-									<div class="progress-bar progress-bar-primary" style="width:{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}%">{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}% complete</div>
-	                        		({{list.completed_count}}/{{list.remaining_count + list.completed_count}} todo's)
-	                        	</div>
-                        	</div>
+				            <div class="box-group" id="accordion">
+				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+				                <div class="panel box box-warning" ng-repeat="list in activeTodoLists">
+						            <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-{{list.id}}" target="_self" style="text-decoration:none; color:black;">
+						                <div class="progress progress-md progress-striped active" style="height: 30px;">
+						                	<div class="box-header with-border progress-bar progress-bar-warning" style="width:{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}%"></div>
+						                	<h4 class="box-title todoTitle">
+					                    		{{list.name}}
+						                    </h4>
+						                    <h6 class="pull-right">
+						                    	{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}% complete
+						                    </h6>
+						                </div>
+						            </a>
+
+				                	<div id="todoCollapse-{{list.id}}" class="panel-collapse collapse">
+				                    	<div class="box-body">
+				                    		<h4 ng-show="list.description.length > 0">{{list.description}}</h4>
+				                    		<table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
+				                    			<tr>
+										            <th>Task To Do</th>
+										            <th style="width: 150px;">Assigned To</th>
+										        </tr>
+				                    			<tr ng-repeat="todo in list.todos.remaining">
+				                    				<td valign="middle">
+				                    					<h5>{{todo.content}}</h5>
+										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
+										            </td>
+										            <td align="center" valign="middle">
+										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
+											                <a href="/itracker/people/{{todo.assignee.id}}/"><img src="{{person.avatar_url}}" class="img-circle" title="{{todo.assignee.name}}" alt="{{todo.assignee.name}}">
+																<h5>{{todo.assignee.name}}</h5>
+															</a>
+											            </span>
+										            </td>
+				                    			</tr>
+				                    			<tr ng-repeat="todo in list.todos.completed">
+				                    				<td valign="middle">
+				                    					<h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">{{todo.content}}</span></h5>
+										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
+										            </td>
+										            <td align="center" valign="middle">
+										               <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
+											                <a href="/itracker/people/{{todo.assignee.id}}/"><img src="{{person.avatar_url}}" class="img-circle" title="{{todo.assignee.name}}" alt="{{todo.assignee.name}}">
+																<h5>{{todo.assignee.name}}</h5>
+															</a>
+											            </span>
+										            </td>
+				                    			</tr>
+				                    		</table>
+				                    		<span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
+				                    			<h5>No items in this list yet!</h5>
+				                    		</span>
+				                    	</div>
+				                  	</div>
+				                </div>
+				            </div>
 						</div>
 					</div>
 					<div class="box box-primary" ng-show="project.todolists.completed_count > 0">
 						<div class="box-header with-border">
-							<h3 class="box-title">Completed To-Do Lists</h3>
-							<div class="box-tools pull-right">
-								<div class="btn-group">
-                					<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                    				<i class="fa fa-bars"></i></button>
-                  					<ul class="dropdown-menu pull-right" role="menu">
-					                    <li><a href="#" ng-repeat="list in completedTodoLists">{{list.name}}</a></li>
-                  					</ul>
-                				</div>
-							</div>
+							<h3 class="box-title">Completed To-Do Lists <small>(Click on list name to expand)</small> </h3>
 						</div>
 						<div class="box-body">
-							!!!
+				            <div class="box-group" id="accordion">
+				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+				                <div class="panel box box-success" ng-repeat="list in completedTodoLists">
+						            <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-{{list.id}}" target="_self" style="text-decoration:none; color:black;">
+						                <div class="progress progress-md progress-striped active" style="height: 30px;">
+						                	<div class="box-header with-border progress-bar progress-bar-success" style="width:100%"></div>
+						                	<h4 class="box-title todoTitle">
+					                    		{{list.name}}
+						                    </h4>
+						                    <h6 class="pull-right">
+						                    	100% complete
+						                    </h6>
+						                </div>
+						            </a>
+
+				                	<div id="todoCollapse-{{list.id}}" class="panel-collapse collapse">
+				                    	<div class="box-body">
+				                    		<h4 ng-show="list.description.length > 0">{{list.description}}</h4>
+				                    		<table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
+				                    			<tr>
+										            <th>Task To Do</th>
+										            <th>Assigned To</th>
+										        </tr>
+				                    			<tr ng-repeat="todo in list.todos.remaining">
+				                    				<td valign="middle">
+				                    					<h5>{{todo.content}}</h5>
+										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
+										            </td>
+										            <td align="center" valign="middle">
+										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
+											                <a href="/itracker/people/{{todo.assignee.id}}/"><img src="{{person.avatar_url}}" class="img-circle" title="{{todo.assignee.name}}" alt="{{todo.assignee.name}}">
+																<h5>{{todo.assignee.name}}</h5>
+															</a>
+											            </span>
+										            </td>
+				                    			</tr>
+				                    			<tr ng-repeat="todo in list.todos.completed">
+				                    				<td valign="middle">
+				                    					<h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">{{todo.content}}</span></h5>
+										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
+										            </td>
+										            <td align="center" valign="middle">
+										            	<span ng-show="todo.assignee.length != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
+											                <a href="/itracker/people/{{todo.assignee.id}}/"><img src="{{person.avatar_url}}" class="img-circle" title="{{todo.assignee.name}}" alt="{{todo.assignee.name}}">
+																<h5>{{todo.assignee.name}}</h5>
+															</a>
+											            </span>
+										            </td>
+				                    			</tr>
+				                    		</table>
+				                    		<span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
+				                    			<h5>No items in this list yet!</h5>
+				                    		</span>
+				                    	</div>
+				                  	</div>
+				                </div>
+				            </div>
 						</div>
 					</div>
-					<div class="box box-primary" ng-show="(project.attachments.count + project.documents.count) > 0">
+					<div class="box box-primary" ng-show="project.attachments.count > 0">
 						<div class="box-header with-border">
 							<h3 class="box-title">Documents</h3>
 						</div>
 						<div class="box-body">
-							!!!
+							<table class="table table-bordered">
+                    			<tr>
+						            <th>Document</th>
+						            <th>Added By</th>
+						            <th></th>
+						        </tr>
+                    			<tr ng-repeat="doc in attachments">
+                    				<td valign="middle">
+                    					<h5>{{doc.name}}</h5>
+						                <h6>Created: {{doc.created_at | date}} | Last update: {{doc.updated_at | date}}</h6>
+						            </td>
+						            <td align="center" valign="middle">
+					                    <a href="/itracker/people/{{doc.creator.id}}/">
+					                    	<img src="{{doc.creator.avatar_url}}" class="img-circle" title="{{doc.creator.name}}" alt="{{doc.creator.name}}">
+											<h5>{{doc.creator.name}}</h5>
+										</a>
+						            </td>
+	                    			<td>
+	                    				<h5>{{doc.content_type}}</h5>
+	                    				<a class="btn btn-app" ng-show="doc.link_url != null" href="{{doc.link_url}}">
+	                    					<i class="fa" ng-class="{'fa-file-image-o':docType(doc.content_type), 'fa-refresh': !docType(doc.content_type)}"></i>
+	                    					<i class="fa {{getClass(doc.content_type)}}" ></i>
+	                    					<h5>Download</h5>
+	                    				</a>
+	                    			</td>
+	                    		</tr>
+                    		</table>
 						</div>
 					</div>
 				</div> <!-- /.col -->
 				<div class="col-md-7">
-					<ul class="timeline" >
+					<ul class="timeline">
 						<li class="time-label" ng-repeat="event in events | limitTo: limit" >
 							<span class="bg-red" ng-show ='event.created_at.length > 0'> 
 								{{event.created_at}}
@@ -180,8 +280,7 @@
 							</div>
 						</li>
 						<li>
-							<button type="button" class="btn btn-primary" ng-hide = "!more" 
-									ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
+							<button type="button" class="btn btn-primary" ng-hide = "!more" ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
 						</li>
 					</ul>
 					

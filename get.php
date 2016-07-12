@@ -1,7 +1,7 @@
 <?php
 
 // Username and Password of a basecamp user you wish to connect with
-include "/afs/umbc.edu/public/web/sites/sga/dev/cgi-bin/bc_cred.php";
+include "../../cgi-bin/bc_cred.php";
 
 $url = $_GET['url'];
 

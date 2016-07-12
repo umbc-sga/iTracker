@@ -424,7 +424,8 @@ angular.module('basecamp', ['ngSanitize'])
                         var personProj = [];
 
                         $scope.getPersonInfo(person.id).success(function (data, status, headers, config) {
-                            // if (angular.isArray(data)) {
+                 			var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
+							if (badEmails.indexOf(data.email_address) == -1) {
                                 personInfo = data;
                                 basecampConfig.debug && console.log('Person Info:', personInfo);
 
@@ -436,7 +437,7 @@ angular.module('basecamp', ['ngSanitize'])
                                         $scope.main.people.push( { 'info' : personInfo, 'proj' : personProj } );
                                     // }
                                 })
-                            // }
+                            }
                         }) 
                     })                    
                 }

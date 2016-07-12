@@ -29,8 +29,9 @@
 							<ul class="list-group list-group-unbordered" style="">
 								<li class="list-group-item" ng-show="depts.length > 0" style="border-bottom:0px;">
 									<b ng-show="depts.length == 1">Department</b>
-									<b ng-show="depts.length > 1">Departments</b><br/>
-									<a href="/itracker/departments/{{dept.id}}"><li ng-repeat="dept in depts">{{dept.name}}</li></a>
+									<b ng-show="depts.length > 1">Departments</b>
+									<br/>
+									<a href="/itracker/departments/{{dept.id}}" ng-repeat="dept in depts">{{dept.name}}<br></a>
 								</li>
 								<li class="list-group-item">
 									<b>E-Mail Address</b><br/>
@@ -49,116 +50,82 @@
 						<div class="box-body">
 							<strong><i class="fa fa-user"></i> Bio</strong>
 							<p class="text-muted">
-								This is a bio about how awesome I am
+								{{person.bio}}
 							</p>
 							<hr>
 							<strong><i class="fa fa-book margin-r-5"></i> Major and Class Standing</strong>
 							<p class="text-muted">
-								Junior, Computer Science (B.S.)
+								{{person.classStanding}}, {{person.major}}
 							</p>
 							<hr>
 							<strong><i class="fa fa-map-marker margin-r-5"></i> Hometown</strong>
-							<p class="text-muted">Catonsville, Maryland</p>
-							<!-- <hr>
-							<strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-							<p>
-								<span class="label label-danger">UI Design</span>
-								<span class="label label-success">Coding</span>
-								<span class="label label-info">Javascript</span>
-								<span class="label label-warning">PHP</span>
-								<span class="label label-primary">Node.js</span>
-							</p> -->
+							<p class="text-muted">{{person.hometown}}</p>
 							<hr>
 							<strong><i class="fa fa-question-circle"></i> One thing I really want to share with the world is...</strong>
-							<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+							<p class="text-muted">{{person.fact}}</p>
 						</div>	<!-- /.box-body -->
 					</div>	<!-- /.box -->
 				</div>	<!-- /.col -->
-				<div class="col-md-9">
+				<div class="col-md-5">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">Projects </h3>
+						</div>
+						<div class="box-body">
+							<div class="box-group" id="accordion">
+				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+				                <div class="panel box box-warning" ng-repeat="project in projs">
+				                	<a data-toggle="collapse" data-parent="#accordion" href="#projectCollapse-{{project.id}}" target="_self" style="text-decoration:none; color:black;">
+					                	<h4 class="box-title">
+					                		{{project.name}}
+					                	</h4>
+				                	</a>
+				                	<div id="projectCollapse-{{project.id}}" class="panel-collapse collapse">
+				                		<div class="box-body">
+				                			<table class="table table-responsive table-condensed">
+				                				<tr ng-show="project.description.length != 0">
+					                				<td>Decription</td>
+					                				<td>{{project.description}}</td>
+				                				</tr>
+				                				<tr>
+				                					<td>Creator</td>
+				                					<td><a href="/itracker/people/{{project.creatorId}}">{{project.creator}}</a><br></td>
+				                				</tr>
+				                				<tr></tr>
+				                				<tr>
+				                				<td></td>
+				                				<td><a href="/itracker/projects/{{project.id}}"><button type="button" class="btn btn-primary">read More</button></a></td>
+				                				</tr>
+				                			</table>
+				                		</div>
+				                	</div>
+				                </div>
+				             </div>
+				        </div>
+					</div>
+				</div> <!-- /.col -->
+				<div class="col-md-4" id="timeline">
+					<!-- The timeline -->
+					<ul class="timeline timeline-inverse" >
+						<li class="time-label" ng-repeat="event in events | limitTo: limit ">
+							<span class="bg-red" ng-show ='event.created_at.length > 0'> 
+								{{event.created_at}}
+							</span>
+							<i ng-class="{timeline_afterDate: event.created_at.length > 0, timeline_otherwise: event.created_at.length == 0}" class="fa fa-user bg-blue"></i>
 
-					<div class="nav-tabs-custom" ng-init="tab=1">
-						<ul class="nav nav-tabs">
-							<li class="active" ng-click="tab = 1"><a class="no-link" data-toggle="tab">Projects and Tasks</a></li>
-							<li ng-click="tab = 2"><a class="no-link" data-toggle="tab">Timeline</a></li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane" ng-class="{active: tab == 1}" id="activity">
-								
-							</div>	<!-- /.tab-pane -->
-							<div ng-class="{active: tab == 2}" class="tab-pane" id="timeline">
-								<!-- The`timeline -->
-								<ul class="timeline timeline-inverse" >
-									<li class="time-label" ng-repeat="event in events | limitTo: limit ">
-										<span class="bg-red" ng-show ='event.created_at.length > 0'> 
-											{{event.created_at}}
-										</span>
-										<i ng-class="{timeline_afterDate: event.created_at.length > 0, timeline_otherwise: event.created_at.length == 0}" class="fa fa-user bg-blue"></i>
-
-										<div class="timeline-item" style="margin-top:10px;">
-											<span class="time">
-												<!-- <i class="fa fa-clock-o"></i> TIME -->
-											</span>
-											<h3 class="timeline-header">
-												{{person.name}} <span ng-bind-html="event.summary"></span>
-											</h3>
-										</div>
-									</li>
-									<li>
-										<button type="button" class="btn btn-primary" ng-hide = "!more"  ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
-									</li>
-								</ul>
-							</div>	<!-- /.tab-pane -->
-
-							<div class="tab-pane" id="settings">
-								<form class="form-horizontal">
-									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">Name</label>
-										<div class="col-sm-10">
-											<input type="email" class="form-control" id="inputName" placeholder="Name">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputEmail" class="col-sm-2 control-label">Email</label>
-										<div class="col-sm-10">
-											<input type="email" class="form-control" id="inputEmail" placeholder="Email">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputName" class="col-sm-2 control-label">Name</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control" id="inputName" placeholder="Name">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-										<div class="col-sm-10">
-											<textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-										<div class="col-sm-10">
-											<input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-2 col-sm-10">
-											<div class="checkbox">
-												<label>
-													<input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-												</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-2 col-sm-10">
-											<button type="submit" class="btn btn-danger">Submit</button>
-										</div>
-									</div>
-								</form>
-							</div>	<!-- /.tab-pane -->
-						</div>	<!-- /.tab-content -->
-					</div>	<!-- /.nav-tabs-custom -->
+							<div class="timeline-item" style="margin-top:10px;">
+								<!-- <span class="time">
+									<i class="fa fa-clock-o"></i> TIME
+								</span> -->
+								<h3 class="timeline-header">
+									{{person.name}} <span ng-bind-html="event.summary"></span>
+								</h3>
+							</div>
+						</li>
+						<li>
+							<button type="button" class="btn btn-primary" ng-hide = "!more"  ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
+						</li>
+					</ul>
 				</div>	<!-- /.col -->
 			</div>	<!-- /.row -->
 		</section>	<!-- /.content -->
