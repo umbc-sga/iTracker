@@ -294,6 +294,13 @@ angular.module('basecamp', ['ngSanitize'])
                 })
         }
 
+        $scope.getRole = function(id){
+            return $http.get('getRecord.php?table=role&id=' + id)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                })   
+        }
+
         $scope.getRolePerson = function(roleId, departmentId){
             return $http.get('getRoleHolder.php?dept=' + departmentId + "&role=" + roleId)
                 .error(function (data, status, headers, config) {
@@ -389,4 +396,592 @@ angular.module('basecamp', ['ngSanitize'])
 
                 // Increment main counters
                 $scope.main.activeTodoListsCompletedCount += todoList.completed_count;
-                $s
+                $scope.main.activeTodoListsRemainingCount += todoList.remaining_count;
+            })
+        }, true);
+
+        /**
+         * Recalculate main counters when main completed todo lists change
+         */
+        $scope.$watch('main.completedTodoLists', function (completedTodoLists, oldCompletedTodoLists) {
+
+            // Do nothing of nothing changed
+            if (completedTodoLists === oldCompletedTodoLists) {
+                return;
+            }
+
+            basecampConfig.debug && console.log('Recalculate main completed todo list counters');
+
+            // Reset counters
+            $scope.main.completedTodoListsCompletedCount = 0;
+            $scope.main.completedTodoListsRemainingCount = 0;
+
+            // Increment counters
+            angular.forEach(completedTodoLists, function (todoList) {
+                $scope.main.completedTodoListsCompletedCount += todoList.completed_count;
+                $scope.main.completedTodoListsRemainingCount += todoList.remaining_count;
+            })
+        }, true);
+
+        /**
+         * Bootstrap data
+         *
+         * Get projects and if it succeeds also get the todo lists
+         */
+        $scope.bootstrapData = function(){
+            
+            $scope.getProjects().success(function (data, status, headers, config) {
+                if (angular.isArray(data)) {
+                    $scope.main.projects = data;
+                    basecampConfig.debug && console.log('Projects:', data);
+
+                    $scope.getActiveTodoLists().success(function (data, status, headers, config) {
+                        if (angular.isArray(data)) {
+                            $scope.main.activeTodoLists = data;
+                            basecampConfig.debug && console.log('Active todo lists:', data);
+                        }
+                    });
+
+                    $scope.getCompletedTodoLists().success(function (data, status, headers, config) {
+                        if (angular.isArray(data)) {
+                            $scope.main.completedTodoLists = data;
+                            basecampConfig.debug && console.log('Completed todo lists:', data);
+                        }
+                    });
+                }
+            });
+
+            $scope.getPeople().success(function (data, status, headers, config) {
+                if (angular.isArray(data)) {
+                    var rawPeople = data;   
+                    // basecampConfig.debug && console.log('People:', rawPeople);
+
+                    angular.forEach (rawPeople, function (person) {
+                        var personInfo = [];
+                        var personProj = [];
+                        $http.get('newRecord.php?table=person&id=' + person.id)
+                            .error(function (data, status, headers, config) {
+                                basecampConfig.debug && console.log('Error while inserting new person ' + data);
+                            });
+                        $scope.getPersonInfo(person.id).success(function (data, status, headers, config) {
+                            var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
+                            if (badEmails.indexOf(data.email_address) == -1) {
+                                personInfo = data;
+                                basecampConfig.debug && console.log('Person Info:', personInfo);
+
+                                $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
+                                    // if (angular.isArray(data)) {
+                                        personProj = data;
+                                        basecampConfig.debug && console.log('Person Info:', personInfo);
+
+                                        $scope.main.people.push( { 'info' : personInfo, 'proj' : personProj } );
+                                    // }
+                                })
+                            }
+                        }) 
+                    })                    
+                }
+            });
+
+            $scope.getGroups().success(function (data, status, headers, config) {
+                if (angular.isArray(data)) {
+                    var rawGroups = data;
+
+                    angular.forEach (rawGroups, function (group) {
+                        $http.get('newRecord.php?table=department&id=' + group.id)
+                            .error(function (data, status, headers, config) {
+                                basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                            });
+
+                        $scope.getGroup(group.id).success(function (data, status, headers, config) {
+                            var groupInfo = data;
+                            var group_href = replace_All(replace_All(groupInfo.name.toLowerCase()," ", "-") , "&", "and");
+                            groupInfo.group_href = group_href;
+
+                            basecampConfig.debug && console.log('Group Info:', groupInfo);
+
+                            $scope.main.groups.push( groupInfo );
+                        })
+                    })
+                }
+            });
+        }
+
+        $scope.bootstrapData();
+
+    }])
+
+/**
+ * Controller for the home page that displays the project overview
+ */
+    .controller('HomeController', ['$scope','$http', function ($scope, $http) {
+        $scope.featuredProjs = [];
+        
+        $scope.getProjects().success(function (data, status, headers, config) {
+            if (angular.isArray(data)) {
+                var rawProjects = data;
+
+                angular.forEach(rawProjects, function (project) {
+                    if (project.starred == true) {
+                        $scope.featuredProjs.push(project);
+                    }
+                })
+            }
+        })
+    }])
+
+/**
+ * Controller for the page that displays project details
+ */
+    .controller('ProjectController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+
+        $scope.project = {};
+        $scope.events = [];
+
+        $scope.activeTodoLists = [];
+        $scope.completedTodoLists = [];
+
+        $scope.activeTodoListsCompletedCount = 0;
+        $scope.activeTodoListsRemainingCount = 0;
+
+        $scope.completedTodoListsCompletedCount = 0;
+        $scope.completedTodoListsRemainingCount = 0;
+
+        $scope.prettyDate = function(dateTime){
+          var dateStr = dateTime.substring(0,dateTime.indexOf('T'));
+          var year = dateStr.substring(0,dateStr.indexOf('-'));
+          var rest = dateStr.substring(dateStr.indexOf('-') + 1);
+          var month = monthNames[parseInt(rest.substring(0,rest.indexOf('-'))) - 1];
+          rest = rest.substring(rest.indexOf('-') + 1);
+          var day = rest;
+          var prettyDate = day + ' ' + month + ' ' + year; 
+          return prettyDate;
+        }
+        $http.get('get.php?url=projects/' + $routeParams.projectId + '.json')
+            .success(function (data, status, headers, config) {
+                // console.log('SUCCESS');
+                // this callback will be called asynchronously
+                // when the response is available
+                var project = angular.fromJson(data);
+                if (angular.isObject(project)) {
+                    $scope.project = project;
+                    // console.log(project);
+                    $scope.project.created_at = $scope.prettyDate($scope.project.created_at);
+                    $scope.project.updated_at = $scope.prettyDate($scope.project.updated_at);
+
+                }
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log('ERROR');
+            })
+        
+        $scope.page = 0;
+        $scope.more = true;
+        $scope.limit = 10;
+        $scope.getEventSet = function(){
+            if($scope.limit >= $scope.events.length){
+                var curDate = '';
+                $scope.getProjectEvents($routeParams.projectId, $scope.page).success(function (data, status, headers, config) {
+                    if (data.length > 0) {
+                        angular.forEach(data,function (event){
+                            event.created_at = $scope.prettyDate(event.created_at);
+                            event.updated_at = $scope.prettyDate(event.updated_at);
+
+                            var date = event.created_at;
+                            if (date === curDate){
+                                event.created_at = '';
+                            }
+
+                            curDate = date;
+                            $scope.events.push(event);
+                        })
+                    }else{
+                        $scope.more = false;
+                    }
+                })
+                $scope.page++;
+            }
+        }
+        $scope.getEventSet();
+
+        $scope.getProjectAccesses($routeParams.projectId).success(function (data, status, headers, config) {
+          $scope.people = data;
+        })
+
+
+        // Get active todo lists
+        $scope.activeTodoLists = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists.json')
+            .success(function (data, status, headers, config) {
+                // console.log('SUCCESS');
+                // this callback will be called asynchronously
+                // when the response is available
+                var activeTodoLists = angular.fromJson(data);
+                if (angular.isArray(activeTodoLists)) {
+                    $scope.activeTodoLists = activeTodoLists;
+                    // console.log(activeTodoLists);
+                }
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log('ERROR');
+            })
+
+        // Get active todo lists
+        $scope.completedTodoLists = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists/completed.json')
+            .success(function (data, status, headers, config) {
+                // console.log('SUCCESS');
+                // this callback will be called asynchronously
+                // when the response is available
+                var completedTodoLists = angular.fromJson(data);
+                if (angular.isArray(completedTodoLists)) {
+                    $scope.completedTodoLists = completedTodoLists;
+                    // console.log(completedTodoLists);
+                }
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log('ERROR');
+            })
+
+
+        $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
+
+            if (activeTodoLists === oldActiveTodoLists) {
+                return;
+            }
+
+            $scope.activeTodoListsCompletedCount = 0;
+            $scope.activeTodoListsRemainingCount = 0;
+
+            angular.forEach(activeTodoLists, function (todoList) {
+                $scope.activeTodoListsCompletedCount += todoList.completed_count;
+                $scope.activeTodoListsRemainingCount += todoList.remaining_count;
+            })
+
+        }, true);
+
+        $scope.$watch('completedTodoLists', function (completedTodoLists, oldCompletedTodoLists) {
+
+            if (completedTodoLists === oldCompletedTodoLists) {
+                return;
+            }
+
+            $scope.completedTodoListsCompletedCount = 0;
+            $scope.completedTodoListsRemainingCount = 0;
+
+            angular.forEach(completedTodoLists, function (todoList) {
+                $scope.completedTodoListsCompletedCount += todoList.completed_count;
+                $scope.completedTodoListsRemainingCount += todoList.remaining_count;
+            })
+
+        }, true);
+    }])
+
+/**
+ * Controller for the page that shows the todo lists for a certain project
+ */
+    .controller('TodoListController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+
+        $scope.projectId = $routeParams.projectId;
+        $scope.todoListId = $routeParams.todoListId;
+        $scope.todoList = {};
+
+        $scope.project = $http.get('get.php?url=projects/' + $routeParams.projectId + '.json')
+            .success(function (data, status, headers, config) {
+                console.log('SUCCESS');
+                // this callback will be called asynchronously
+                // when the response is available
+                var project = angular.fromJson(data);
+                if (angular.isObject(project)) {
+                    $scope.project = project;
+                    console.log(project);
+                }
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log('ERROR');
+            })
+
+        // Get todo list including todo's
+        $scope.todoList = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists/' + $routeParams.todoListId + '.json')
+            .success(function (data, status, headers, config) {
+                console.log('SUCCESS');
+                // this callback will be called asynchronously
+                // when the response is available
+                var todoList = angular.fromJson(data);
+                if (angular.isObject(todoList)) {
+                    $scope.todoList = todoList;
+                    console.log(todoList);
+                }
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+                console.log('ERROR');
+            })
+    }])
+
+    .controller('PeopleByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.depts = [];
+        $scope.scrollTo = function(id) {
+            console.log('go yo ' + id);
+            $anchorScroll(id);
+        }
+        var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
+        $scope.getGroups().success(function (data, status, headers, config) {
+            angular.forEach(data,function(dept){
+                var department = {};
+                $scope.getGroup(dept.id).success(function (data, status, headers, config) {
+                    department.name = data.name;
+                    department.id = data.id;
+                    
+                    var people = [];
+                    angular.forEach(data.memberships, function(person){
+                        if(badEmails.indexOf(person.email_address) == -1)
+                            people.push($scope.getPersonPack(person.id));
+                    })
+                    department.people = people;
+                    $scope.depts.push(department);
+                })
+            })
+        })
+    }])
+
+    .controller('PeopleByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.people = {}
+        var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
+        $scope.scrollTo = function(id) {
+            $anchorScroll(id);
+        }
+        $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        angular.forEach($scope.alpha, function(letter){
+            $scope.people[letter] = [];
+        })
+        $scope.getPeople().success(function(data, status, headers, config) {
+            angular.forEach(data, function(person){
+                if(badEmails.indexOf(person.email_address) == -1){
+                    var letter = person.name[0].toUpperCase();
+                    $scope.people[letter].push($scope.getPersonPack(person.id));
+                }
+            })
+        })
+    }])
+
+    .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.depts = [];
+        $scope.scrollTo = function(id){
+            $anchorScroll(id);
+        }
+        $scope.getGroups().success(function (data, status, headers, config) {
+            angular.forEach(data,function(dept){
+                var department = {};
+                $scope.getGroup(dept.id).success(function (data, status, headers, config) {
+                    department.name = data.name;
+                    department.id = data.id;
+                    
+                    var projects = [];
+                    angular.forEach(data.memberships, function(person){
+                        $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
+                            angular.forEach(data, function(proj){
+                                if(!proj.template)
+                                    projects.push($scope.getProjectPack(proj.id));
+                            })
+                        })
+                    })
+                    department.projects = projects;
+                    $scope.depts.push(department);
+                })
+            })
+        })
+    }])
+
+    .controller('ProjectsByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.projects = {};
+        $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        angular.forEach($scope.alpha, function(letter){
+            $scope.projects[letter] = [];
+        })
+        $scope.getProjects().success(function(data, status, headers, config) {
+            angular.forEach(data,function(proj){
+                var letter = proj.name[0];
+                if(!proj.template)
+                    $scope.projects[letter].push($scope.getProjectPack(proj.id));
+            })
+        })
+    }])
+
+    .controller('PersonController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.events = [];
+
+        $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
+            $scope.person = data;    
+            $scope.getExtraPersonInfo($scope.person.id).success(function(data, status, headers, config) {
+                $scope.person.bio = data.bio;
+                $scope.person.major = data.mojor;
+                $scope.person.classStanding = data.classStanding;
+                $scope.person.hometown = data.hometown;
+                $scope.person.fact = data.fact;
+                $scope.person.position = data.personIdtion;
+            })
+        })
+        
+        $scope.depts = $scope.getPersonDepts($routeParams.personId);
+        $scope.projs = [];
+        $scope.getPersonProj($routeParams.personId).success(function(data, status, headers, config) {
+            angular.forEach(data, function(proj){
+                if(!proj.template)
+                    $scope.projs.push($scope.getProjectPack(proj.id));
+            }) 
+        })
+
+        $scope.prettyDate = function(dateTime){
+            var dateStr = dateTime.substring(0,dateTime.indexOf('T'));
+            var year = dateStr.substring(0,dateStr.indexOf('-'));
+            var rest = dateStr.substring(dateStr.indexOf('-') + 1);
+
+            var month = monthNames[parseInt(rest.substring(0,rest.indexOf('-'))) - 1];
+            rest = rest.substring(rest.indexOf('-') + 1);
+            var day = rest;
+            var prettyDate = day + ' ' + month + ' ' + year; 
+            return prettyDate;
+        }
+
+        $scope.page = 1;
+        $scope.more = true;
+        $scope.limit = 10;
+        $scope.getEventSet = function(){
+            if($scope.limit >= $scope.events.length){
+                var curDate = '';
+                $scope.getPersonEvents($routeParams.personId, $scope.page).success(function (data, status, headers, config) {
+                    if (data.length > 0) {
+                        angular.forEach(data,function (event){
+                            event.created_at = $scope.prettyDate(event.created_at);
+                            event.updated_at = $scope.prettyDate(event.updated_at);
+
+                            var date = event.created_at;
+                            if (date === curDate) {
+                                event.created_at = '';
+                            }
+
+                            curDate = date;
+                            $scope.events.push(event);
+                        })
+                    }else{
+                        $scope.more = false;
+                    }
+                })
+            }
+            $scope.page++;
+        }
+        $scope.getEventSet();
+
+    }])
+
+    .controller('ErrorController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        // do we really need anything here?
+    }])
+
+    .controller('DepartmentController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+        $scope.id = 0;
+
+        $scope.getGroups().success(function (data, status, headers, config) {
+            angular.forEach(data, function(group){
+                var group_href = replace_All(replace_All(group.name.toLowerCase()," ", "-") , "&", "and");
+                if($routeParams.departmentName == group_href){
+                    $scope.id = group.id;
+                }
+            })
+            $scope.getGroup($scope.id).success(function (data, status, headers, config) {
+                $scope.department = data;
+            })
+        })
+    }])
+
+    .controller('DashboardController',  ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+
+
+        $scope.getPersonInfo($routeParams.personId).success(function (data, status, headers, config) {
+            $scope.person = data;
+        })
+        $scope.getPersonRoles($routeParams.personId).success(function (data, status, headers, config) {
+            $scope.role = data;
+        })
+
+
+        $scope.depts = $scope.getPersonDepts($routeParams.personId);
+        $scope.roles = {1813624: [1, 2, 3]};  //dept id : [roleids, name]
+        $scope.heads = {}
+        $scope.rolenamesId = {}
+        $scope.getGroups().success(function(data, status, headers, config) {
+            angular.forEach(data,function(dept){
+                $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                    angular.forEach(data.memberships, function(person){
+                        var deptId = data.id
+                        if($routeParams.personId == person.id){
+                            $scope.heads[data.id] = {};
+                            var roleids = [];
+                            if(data.id in $scope.roles){
+                                roleids = $scope.roles[data.id];
+                            }else{
+                                roleids = [4,5];
+                            }
+                            angular.forEach( roleids, function(roleId){
+                                $scope.getRole(roleId).success(function(data, status, headers, config) {
+                                    var nameRole = data.name;
+                                    $scope.rolenamesId[nameRole] = roleId;
+                                    $scope.getRolePerson(roleId, deptId).success(function(data, status, headers, config) {
+                                        if(data.personId != undefined){
+                                            $scope.heads[deptId][nameRole] = data.personId;
+                                        }
+                                        else
+                                            $scope.heads[deptId][nameRole] = 0;
+                                    })
+                                })
+                            })
+                        }
+                    })
+                })
+            })
+        })
+
+        $scope.personalUpdate = false;
+        $scope.UpdatePersonal = function(){
+            $scope.personalUpdate = true;
+            var args = 'id=' + $scope.person.id;
+            args += '&bio=' + $scope.role.bio;
+            args += '&major=' + $scope.role.major;
+            args += '&classStanding=' + $scope.role.classStanding;
+            args += '&hometown=' + $scope.role.hometown;
+            args += '&fact=' + $scope.role.fact;
+            args += '&position=' + $scope.role.position;
+            $http.get('updatePerson.php?' + args)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting role: ' + data);
+                })
+        }
+
+        $scope.changeOfficer= function(){
+            angular.forEach($scope.depts, function(dept){
+                angular.forEach($scope.heads[dept.id], function(personId, name){
+                    var roleId = $scope.rolenamesId[name];
+                    $scope.getRolePerson(roleId, dept.id).success(function(data, status, headers, config) {
+                        if(personId != data.personId && personId != 0){
+                            
+                        }
+                    })
+                })
+            })
+            //each role
+            //compare value in object to db 
+            //if not equal
+            //pull db person 
+            //chenge to 7
+            //change person in arr to role in db
+        }
+
+    }])

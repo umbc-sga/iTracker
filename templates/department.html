@@ -1,0 +1,47 @@
+<div ng-controller="DepartmentController">
+
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				Profile: {{department.name}}
+			</h1>
+			<ol class="breadcrumb">
+				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+				<li class="active">{{department.name}}</li>
+			</ol>
+		</section>
+
+		<!-- Main content -->
+		<section class="content">
+
+			<div class="row">
+				<div class="col-md-7">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								More Information
+							</h3>
+						</div>
+						<div class="box-body">
+					
+						</div>
+					</div>
+				</div>
+				<div class="col-md-5">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								Meet the Department
+							</h3>
+							<div class="box-body">
+								<a ng-repeat="person in department.memberships | orderBy:'name'" href="/itracker/people/{{person.id}}"><img src="{{person.avatar_url}}" class="img-circle people-list" title="{{person.name}}" alt="{{person.name}}"></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
