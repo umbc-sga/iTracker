@@ -498,6 +498,12 @@ angular.module('basecamp', ['ngSanitize'])
                             var group_href = replace_All(replace_All(groupInfo.name.toLowerCase()," ", "-") , "&", "and");
                             groupInfo.group_href = group_href;
 
+                            angular.forEach(data.memberships, function(person){
+                                $http.get('newRole.php?personId=' + person.id + '&deptId=' + data.id)
+                                    .error(function (data, status, headers, config) {
+                                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                                    });
+                            })
                             basecampConfig.debug && console.log('Group Info:', groupInfo);
 
                             $scope.main.groups.push( groupInfo );
@@ -976,11 +982,7 @@ angular.module('basecamp', ['ngSanitize'])
                     })
                 })
             })
-            //each role
-            //compare value in object to db 
-            //if not equal
-            //pull db person 
-            //chenge to 7
+            //chenge to 6
             //change person in arr to role in db
         }
 
