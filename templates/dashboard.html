@@ -51,7 +51,6 @@
  						</div>
  						<div class="box-footer">
  							<button type="submit" class="btn btn-primary" ng-click="UpdatePersonal()">Update</button>
- 
  						</div>
  					</div>
  					<div class="box box-primary" ng-show = "role.addOfficer">
@@ -64,13 +63,17 @@
  							<div class="form-group" ng-class="{'has-success':personalUpdate}" ng-repeat="dept in depts">
  								{{dept.name}}<br>
  								<div class="form-group" ng-repeat="(role, personId) in heads[dept.id]">
+ 								{{heads[dept.id][role]}}
  									<label>{{role}}</label>
  									<select ng-model="heads[dept.id][role]">
  										<option ng-selected="personId == 0"></option>
- 										<option ng-repeat="per in dept.memberships" ng-selected="per.id == personId"></option>
+ 										<option ng-repeat="per in dept.memberships" value="{{per.id}}" ng-selected="per.id == personId">{{per.name}}</option>
  									</select>
  								</div>
  							</div>
+ 						</div>
+ 						<div class="box-footer">
+ 							<button type="submit" class="btn btn-primary" ng-click="changeOfficer()">Update</button>
  						</div>
  					</div>
  				</div>

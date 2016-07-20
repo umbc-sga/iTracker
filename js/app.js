@@ -977,7 +977,7 @@ angular.module('basecamp', ['ngSanitize'])
                     var roleId = $scope.rolenamesId[name];
                     $scope.getRolePerson(roleId, dept.id).success(function(data, status, headers, config) {
                         if(personId != data.personId && personId != 0){
-                            
+                            alert("chenge " + personId);
                         }
                     })
                 })
