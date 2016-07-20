@@ -307,6 +307,10 @@ angular.module('basecamp', ['ngSanitize'])
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
         }
+
+        $scope.changeRole = function(person, dept, role){
+        	$http.get("changeRole.php?person=" + person + "&dept=" + dept + "&role=" + role);
+        }
         /**
          * Get project counts
          *
@@ -971,19 +975,27 @@ angular.module('basecamp', ['ngSanitize'])
                 })
         }
 
-        $scope.changeOfficer= function(){
+        $scope.updateOfficer = false;
+        $scope.changeOfficer = function(){
             angular.forEach($scope.depts, function(dept){
                 angular.forEach($scope.heads[dept.id], function(personId, name){
                     var roleId = $scope.rolenamesId[name];
                     $scope.getRolePerson(roleId, dept.id).success(function(data, status, headers, config) {
                         if(personId != data.personId && personId != 0){
-                            alert("chenge " + personId);
+                            $scope.changeRole(personId, dept.id, roleId);
+                            $scope.changeRole(data.personId, dept.id, 6);
                         }
                     })
                 })
             })
+            $scope.updateOfficer = true;
             //chenge to 6
             //change person in arr to role in db
         }
 
+        $scope.addAd = false;
+        $scope.addAdmin = function(){
+        	$scope.addAd = true;
+        	$scope.changeRole($scope.newAdmin,0,7);
+        }
     }])
