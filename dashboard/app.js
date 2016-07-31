@@ -63,6 +63,12 @@ angular.module('dashboard', ['ngSanitize'])
             }
         }
 
+        $scope.getDeptPositions = function(dept){
+            return $http.get('../getPositions.php?dept=' + dept)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting groups: ' + data);
+                })
+        }
         $scope.getGroups = function(){
             return $http.get('../get.php?url=groups.json')
                 .error(function (data, status, headers, config) {
@@ -253,9 +259,18 @@ angular.module('dashboard', ['ngSanitize'])
             $scope.depts = $scope.getPersonDepts(personId);
             $scope.roles = {1813624: [1, 2, 3]};  //dept id : [roleids, name]
             $scope.heads = {}
+            $scope.positions = [];
             $scope.rolenamesId = {}
             $scope.getGroups().success(function(data, status, headers, config) {
                 angular.forEach(data,function(dept){
+                    $scope.getDeptPositions(dept.id).success(function(data, status, headers, config) {
+                        angular.forEach(data, function(position){
+                            var pos = {};
+                            pos.id = position.positionId;
+                            pos.name = position.position;
+                            $scope.positions.push(pos);
+                        })
+                    })
                     $scope.getGroup(dept.id).success(function(data, status, headers, config) {
                         angular.forEach(data.memberships, function(person){
                             var deptId = data.id
@@ -297,6 +312,7 @@ angular.module('dashboard', ['ngSanitize'])
             args += '&hometown=' + $scope.role.hometown;
             args += '&fact=' + $scope.role.fact;
             args += '&position=' + $scope.role.position;
+            $scope.arg = args;
             $http.get('../updatePerson.php?' + args)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);

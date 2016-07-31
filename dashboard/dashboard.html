@@ -4,7 +4,7 @@
   	<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     	<section class="content-header">
-      		<h1></h1>
+      		<h1>{{person.name}}'s Dashboard</h1>
       		<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
 				<li class="active">{{person.name}}</li>
@@ -33,7 +33,10 @@
 							</div>
 		      				<div class="form-group" ng-class="{'has-success':personalUpdate}">
 								<label for="position">Position:</label>
-								<input type="text" id="position" class="form-control" ng-model="role.position">
+								{{role.positionId}}
+								<select id="position" class="form-control" ng-model="role.positionId">
+									<option ng-repeat="pos in positions" value="{{pos.id}}" >{{pos.name}}</option>
+								</select>
 							</div>
 		      				<div class="form-group" ng-class="{'has-success':personalUpdate}">
 								<label for="hometown">Hometown:</label>
