@@ -52,7 +52,7 @@
         <script src="app.js"></script>
     </head>
     <body class="hold-transition skin-yellow sidebar-mini" ng-controller="MainController">
-        <div id="userInfo"><?php echo $_SERVER['email'];?>
+        <div id="userInfo" hidden><?php echo $_SERVER['mail'];?></div>
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -286,4 +286,4 @@
         </script>
 
     </body>
-</html>
+</html>                                                                                                 

@@ -238,7 +238,7 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.getPeople().success(function (data, status, headers, config) {
             var personId = 0;
             angular.forEach(data, function(person){
-                if(person.email == email){
+                if(person.email_address == email){
                     personId = person.id;
                 }
             })
