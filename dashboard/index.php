@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app="basecamp">
+<html ng-app="dashboard">
     <head>
-        <base href="/itracker/">
+        <base href="/itracker/dashboard/">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -44,15 +44,15 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"> 
 
         <title>UMBC SGA iTracker</title>
-        <!-- <script>document.write('<base href="' + document.location + '" />');</script> -->
+        <!-- <script>do,cument.write('<base href="' + document.location + '" />');</script> -->
         <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
         <!-- <link rel="stylesheet" href="css/style.css"> -->
-        <script src="components/angular/angular.js"></script>
-        <script src="components/angular/angular-sanitize.js"></script>
-        <script src="js/app.js"></script>
-        <base href="/itracker/">
+        <script src="/itracker/components/angular/angular.js"></script>
+        <script src="/itracker/components/angular/angular-sanitize.js"></script>
+        <script src="app.js"></script>
     </head>
     <body class="hold-transition skin-yellow sidebar-mini" ng-controller="MainController">
+        <div id="userInfo"><?php echo $_SERVER['email'];?>
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -90,9 +90,6 @@
                             </li>
                             <li class="hidden-s">
                                 <a href="http://umbc.edu/search"><small>Search</small></a>
-                            </li>
-                            <li class="hidden-s">
-                                <a href = "dashboard" target = "_self"> Login</a>
                             </li>
                         </ul>
                     </div>
