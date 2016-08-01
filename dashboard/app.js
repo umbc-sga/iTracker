@@ -238,6 +238,13 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.changeRole = function(person, dept, role){
             $http.get("../changeRole.php?person=" + person + "&dept=" + dept + "&role=" + role);
         }
+
+        $scope.getPosition = function(pos, dept){
+            return $http.get('../getPositionHolder.php?dept=' + dept + '&position=' + pos)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting role: ' + data);
+                })
+        }
     }])
     .controller('DashboardController',  ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         var email = document.getElementById('userInfo').innerHTML;
@@ -255,47 +262,33 @@ angular.module('dashboard', ['ngSanitize'])
                 $scope.role = data;
             })
 
-
-            $scope.depts = $scope.getPersonDepts(personId);
-            $scope.roles = {1813624: [1, 2, 3]};  //dept id : [roleids, name]
-            $scope.heads = {}
+            $scope.depts = [];
+            $scope.getGroups().success(function(data, status, headers, config) {
+                angular.forEach(data, function(dept){
+                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                        $scope.depts.push(data);
+                    })
+                })
+            })
             $scope.positions = [];
-            $scope.rolenamesId = {}
+            $scope.departmentPositions = {};
             $scope.getGroups().success(function(data, status, headers, config) {
                 angular.forEach(data,function(dept){
+                    $scope.departmentPositions[dept.id] = [];
                     $scope.getDeptPositions(dept.id).success(function(data, status, headers, config) {
                         angular.forEach(data, function(position){
                             var pos = {};
                             pos.id = position.positionId;
                             pos.name = position.position;
-                            $scope.positions.push(pos);
-                        })
-                    })
-                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
-                        angular.forEach(data.memberships, function(person){
-                            var deptId = data.id
-                            if(personId == person.id){
-                                $scope.heads[data.id] = {};
-                                var roleids = [];
-                                if(data.id in $scope.roles){
-                                    roleids = $scope.roles[data.id];
+                            pos.needPermission = position.needPermission;
+                            $scope.getPosition(pos.id, dept.id).success(function(data, status, headers, config) {
+                                pos.holder = data.id;
+                                if(pos.needPermission){
+                                    $scope.departmentPositions[dept.id].push(pos);
                                 }else{
-                                    roleids = [4,5];
+                                    $scope.positions.push(pos);
                                 }
-                                angular.forEach( roleids, function(roleId){
-                                    $scope.getRole(roleId).success(function(data, status, headers, config) {
-                                        var nameRole = data.name;
-                                        $scope.rolenamesId[nameRole] = roleId;
-                                        $scope.getRolePerson(roleId, deptId).success(function(data, status, headers, config) {
-                                            if(data.personId != undefined){
-                                                $scope.heads[deptId][nameRole] = data.personId;
-                                            }
-                                            else
-                                                $scope.heads[deptId][nameRole] = 0;
-                                        })
-                                    })
-                                })
-                            }
+                            })
                         })
                     })
                 })

@@ -33,9 +33,8 @@
 							</div>
 		      				<div class="form-group" ng-class="{'has-success':personalUpdate}">
 								<label for="position">Position:</label>
-								{{role.positionId}}
 								<select id="position" class="form-control" ng-model="role.positionId">
-									<option ng-repeat="pos in positions" value="{{pos.id}}" >{{pos.name}}</option>
+									<option ng-repeat="pos in positions" value="{{pos.id}}" ng-selected="pos.id = role.positionId">{{pos.name}}</option>
 								</select>
 							</div>
 		      				<div class="form-group" ng-class="{'has-success':personalUpdate}">
@@ -64,11 +63,12 @@
 	    			<div class="box-body">
 	      				<div class="form-group" ng-repeat="dept in depts" ng-class="{'has-success':updateOfficer}">
 							<h4>{{dept.name}}</h4><br>
-							<div class="form-group" ng-repeat="(role, personId) in heads[dept.id] | orderBy: role">
-	  							<label for="role">{{role}}</label>
-  								<select id="role" ng-model="heads[dept.id][role]" class="form-control">
+							{{departmentPositions[dept.id].length}}
+							<div class="form-group" ng-repeat="pos in departmentPositions[dept.id]">
+	  							<label for="role">{{pos.name}}</label>
+  								<select id="role" ng-model="pos.holder" class="form-control">
 							    <!-- <option ng-selected="personId == 0"></option> -->
-							    	<option ng-repeat="per in dept.memberships | orderBy: name" value="{{per.id}}" ng-selected="per.id == personId">{{per.name}}</option>
+							    	<option ng-repeat="per in dept.memberships | orderBy: name" value="{{per.id}}" ng-selected="per.id == pos.holder">{{per.name}}</option>
 	    						</select>
 	  						</div>
 						</div>

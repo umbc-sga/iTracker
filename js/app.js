@@ -268,6 +268,8 @@ angular.module('basecamp', ['ngSanitize'])
                     $scope.getGroup(dept.id).success(function(data, status, headers, config) {
                         angular.forEach(data.memberships, function(person){
                             if(person.id == id){
+                                var group_href = replace_All(replace_All(data.name.toLowerCase()," ", "-") , "&", "and");
+                                data.href = group_href;
                                 departments.push(data);
                             }
                         })
@@ -834,7 +836,7 @@ angular.module('basecamp', ['ngSanitize'])
                 $scope.person.classStanding = data.classStanding;
                 $scope.person.hometown = data.hometown;
                 $scope.person.fact = data.fact;
-                $scope.person.position = data.personIdtion;
+                $scope.person.position = data.position;
             })
         })
         
