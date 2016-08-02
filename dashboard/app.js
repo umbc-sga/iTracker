@@ -245,6 +245,20 @@ angular.module('dashboard', ['ngSanitize'])
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
         }
+
+        $scope.changePosition = function(person, position){
+            $http.get('../changePosition.php?person=' + person + '&position=' + position)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while changePosition: ' + data);
+                })
+        }
+
+        $scope.newPosition = function(pos, isElevated, dept){
+            return $http.get('newPosition.php?position=' + pos + '&elevated=' + isElevated + '&dept=' + dept)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while changePosition: ' + data);
+                })
+        }
     }])
     .controller('DashboardController',  ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         var email = document.getElementById('userInfo').innerHTML;
@@ -260,6 +274,16 @@ angular.module('dashboard', ['ngSanitize'])
             })
             $scope.getPersonRoles(personId).success(function (data, status, headers, config) {
                 $scope.role = data;
+                $scope.positionDepartmentList = [];
+                if($scope.role.addOfficer){
+                    $scope.getGroups().success(function (data, status, headers, config) {
+                        $scope.positionDepartmentList = data;
+                    })
+                }else{
+                    $scope.getPersonDepts(personId).success(function (data, status, headers, config) {
+                        $scope.positionDepartmentList = data;
+                    })
+                }
             })
 
             $scope.depts = [];
@@ -293,8 +317,30 @@ angular.module('dashboard', ['ngSanitize'])
                     })
                 })
             })
+            $scope.newPosition = "";
+            $scope.positionDepartment = "";
+            $scope.isElevated = false;
         })
 
+        $scope.updateOfficer = false;
+        $scope.changeOfficer = function(){
+            $scope.getGroups().success(function(data, status, headers, config) {
+                angular.forEach(data, function(dept){
+                    angular.forEach($scope.departmentPositions[dept.id], function(position){
+                        $scope.getPosition(position.id, dept.id).success(function(data, status, headers, config) {
+                            if(position.holder != data.id){
+                                if(data.id != undefined)
+                                    $scope.changePosition(data.id, 5);
+                                $scope.changePosition(position.holder, position.id);
+                            }
+                        })
+                    })
+                })
+            })
+            $scope.updateOfficer = true;
+            //chenge to 6
+            //change person in arr to role in db
+        }
         $scope.personalUpdate = false;
         $scope.UpdatePersonal = function(){
             $scope.personalUpdate = true;
@@ -312,27 +358,34 @@ angular.module('dashboard', ['ngSanitize'])
                 })
         }
 
-        $scope.updateOfficer = false;
-        $scope.changeOfficer = function(){
-            angular.forEach($scope.depts, function(dept){
-                angular.forEach($scope.heads[dept.id], function(personId, name){
-                    var roleId = $scope.rolenamesId[name];
-                    $scope.getRolePerson(roleId, dept.id).success(function(data, status, headers, config) {
-                        if(personId != data.personId && personId != 0){
-                            $scope.changeRole(personId, dept.id, roleId);
-                            $scope.changeRole(data.personId, dept.id, 6);
-                        }
-                    })
-                })
-            })
-            $scope.updateOfficer = true;
-            //chenge to 6
-            //change person in arr to role in db
-        }
+        
 
         $scope.addAd = false;
         $scope.addAdmin = function(){
             $scope.addAd = true;
             $scope.changeRole($scope.newAdmin,0,7);
+        }
+
+        $scope.newPos = false;
+        $scope.createPosition = function(){
+            $scope.newPosition = function(pos, isElevated, dept){
+                return $http.get('../newPosition.php?position=' + pos + '&elevated=' + isElevated + '&dept=' + dept)
+                    .error(function (data, status, headers, config) {
+                        basecampConfig.debug && console.log('Error while changePosition: ' + data);
+                    })
+            }($scope.newPosition, $scope.isElevated, $scope.positionDepartment).success(function(data, status, headers, config) {
+                var pos = {
+                    id:data,
+                    name:$scope.newPosition,
+                    needPermission: $scope.isElevated,
+                    holder:0
+                }
+                if(pos.needPermission){
+                    $scope.departmentPositions[dept.id].push(pos);
+                }else{
+                    $scope.positions.push(pos);
+                }
+            })
+            $scope.newPos = true;
         }
     }])

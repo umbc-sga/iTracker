@@ -503,6 +503,7 @@ angular.module('basecamp', ['ngSanitize'])
                             groupInfo.group_href = group_href;
 
                             angular.forEach(data.memberships, function(person){
+                                
                                 $http.get('newRole.php?personId=' + person.id + '&deptId=' + data.id)
                                     .error(function (data, status, headers, config) {
                                         basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
