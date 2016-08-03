@@ -368,12 +368,13 @@ angular.module('dashboard', ['ngSanitize'])
 
         $scope.newPos = false;
         $scope.createPosition = function(){
-            $scope.newPosition = function(pos, isElevated, dept){
-                return $http.get('../newPosition.php?position=' + pos + '&elevated=' + isElevated + '&dept=' + dept)
-                    .error(function (data, status, headers, config) {
-                        basecampConfig.debug && console.log('Error while changePosition: ' + data);
-                    })
-            }($scope.newPosition, $scope.isElevated, $scope.positionDepartment).success(function(data, status, headers, config) {
+            var elev;
+            if($scope.isElevated){
+                elev = 1;
+            }else{
+                elev = 0;
+            }
+            $http.get('../newPosition.php?position=' + $scope.newPosition + '&elevated=' + elev + '&dept=' + $scope.positionDepartment).success(function(data, status, headers, config) {
                 var pos = {
                     id:data,
                     name:$scope.newPosition,
@@ -381,11 +382,12 @@ angular.module('dashboard', ['ngSanitize'])
                     holder:0
                 }
                 if(pos.needPermission){
-                    $scope.departmentPositions[dept.id].push(pos);
+                alert(JSON.stringify(pos));
+                    $scope.departmentPositions[$scope.positionDepartment].push(pos);
                 }else{
                     $scope.positions.push(pos);
                 }
+                $scope.newPos = true;
             })
-            $scope.newPos = true;
         }
     }])

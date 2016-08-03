@@ -69,6 +69,7 @@
   								<select id="role" ng-model="pos.holder" class="form-control">
 							    	<option ng-repeat="per in dept.memberships | orderBy: name" value="{{per.id}}" ng-selected="per.id == pos.holder">{{per.name}}</option>
 	    						</select>
+	    						
 	  						</div>
 						</div>
 	      			</div>
@@ -87,17 +88,31 @@
 	    			<div class="box-body" >
 	    				<div class="form-group" ng-class="{'has-success':newPos}">
 	    					<label for="posdepts">Department to add to:</label>
-	    					<select id="posdepts" class="form-control">
+	    					<select id="posdepts" class="form-control" ng-model="positionDepartment">
 	    						<option ng-repeat="dept in positionDepartmentList | orderBy: name" value="{{dept.id}}">{{dept.name}}</option>
 	    					</select>
 		    				<label for="newPosition">New Position</label>
-		    				<input type="text" ng-model="newPosition" class="form-control">
+		    				<input type="text" ng-model="newPosition" class="form-control"><br>
+		    				<input type="checkbox" ng-model="isElevated"  ng-readonly="role.addOfficer"> Is this an officer position?</input>
 	    				</div>
 	    			</div>
 	    			<div class="box-footer">
 	      				<button type="submit" class="btn btn-primary" ng-click="createPosition()">Update</button>
 	      			</div>
 	    		</div>
+	    		<div class="box box-primary" ng-show = "role.removePosition">
+	    			<div class="box-header with-border">
+	      				<h3 class="box-title">
+							Remove Position
+						</h3>
+	      			</div>
+	    			<div class="box-body" >
+
+	    			</div>
+	    			<div class="box-footer">
+	      				<button type="submit" class="btn btn-primary" ng-click="">Update</button>
+	      			</div>
+	      		</div>
 	  			<div class="box box-primary" ng-show = "role.makeAdmin">
 	    			<div class="box-header with-border">
 	      				<h3 class="box-title">
@@ -116,26 +131,20 @@
 	      				<button type="submit" class="btn btn-primary" ng-click="addAdmin()">Update</button>
 	      			</div>
 	    		</div>
-	  			<!-- <div class="box box-primary" ng-show = "role.addDepartmentPicture">
+	    		<div class="box box-primary" ng-show = "role.makeExec">
 	    			<div class="box-header with-border">
 	      				<h3 class="box-title">
-							Add Department Picture
+							Add Executive
 						</h3>
 	      			</div>
-	    			<div class="box-body">
-	      				<div class="form-group">
+	    			<div class="box-body" >
 
-						</div>
+	    			</div>
+	    			<div class="box-footer">
+	      				<button type="submit" class="btn btn-primary" ng-click="">Update</button>
 	      			</div>
-	    		</div>
-	  			<div class="box box-primary" ng-show = "role.addProjectPicture">
-	    			<div class="box-header with-border">
-	      				<h3 class="box-title">
-							Add Project Picture
-						</h3>
-					</div>
-				</div> -->
-			</div>
+	      		</div>
+	  		</div>
 		</div>
 	</section>
 </div>
