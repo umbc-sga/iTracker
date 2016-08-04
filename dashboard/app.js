@@ -284,44 +284,56 @@ angular.module('dashboard', ['ngSanitize'])
                         $scope.positionDepartmentList = data;
                     })
                 }
-            })
+            
 
-            $scope.depts = [];
-            $scope.getGroups().success(function(data, status, headers, config) {
-                angular.forEach(data, function(dept){
-                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
-                        $scope.depts.push(data);
-                    })
-                })
-            })
-            $scope.positions = [];
-            $scope.departmentPositions = {};
-            $scope.getGroups().success(function(data, status, headers, config) {
-                angular.forEach(data,function(dept){
-                    $scope.departmentPositions[dept.id] = [];
-                    $scope.getDeptPositions(dept.id).success(function(data, status, headers, config) {
-                        angular.forEach(data, function(position){
-                            var pos = {};
-                            pos.id = position.positionId;
-                            pos.name = position.position;
-                            pos.needPermission = position.needPermission;
-                            $scope.getPosition(pos.id, dept.id).success(function(data, status, headers, config) {
-                                pos.holder = data.id;
-                                if(pos.needPermission){
-                                    $scope.departmentPositions[dept.id].push(pos);
-                                }else{
-                                    $scope.positions.push(pos);
-                                }
-                            })
+                $scope.depts = [];
+                $scope.getGroups().success(function(data, status, headers, config) {
+                    angular.forEach(data, function(dept){
+                        $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                            $scope.depts.push(data);
                         })
                     })
                 })
+                $scope.positions = [];
+                $scope.removePositions = {};
+                $scope.departmentPositions = {};
+                $scope.getGroups().success(function(data, status, headers, config) {
+                    angular.forEach(data,function(dept){
+                        $scope.getDeptPositions(dept.id).success(function(data, status, headers, config) {
+                            $scope.departmentPositions[dept.id] = [];
+                            $scope.removePositions[dept.id] = {};
+                            $scope.removePositions[dept.id].name = dept.name;
+                            $scope.removePositions[dept.id].positions = [];
+                            angular.forEach(data, function(position){
+                                var pos = {};
+                                pos.id = position.positionId;
+                                pos.name = position.position;
+                                pos.needPermission = position.needPermission;
+                                $scope.getPosition(pos.id, dept.id).success(function(data, status, headers, config) {
+                                    pos.holder = data.id;
+                                    pos.dept = dept.id;
+                                    if(pos.needPermission){
+                                        if($scope.role.addOfficer){
+                                            $scope.removePositions[dept.id].positions.push(pos);
+                                        }
+                                        $scope.departmentPositions[dept.id].push(pos);
+                                    }else{
+                                        $scope.removePositions[dept.id].positions.push(pos);
+                                        $scope.positions.push(pos);
+                                    }
+                                })
+                            })
+                            // if($scope.removePositions[dept.id].positions.length == 0 ){
+                            //     delete $scope.removePositions[dept.id];
+                            // }
+                        })
+                    })
+                })
+                $scope.newPosition = "";
+                $scope.positionDepartment = "";
+                $scope.isElevated = false;
             })
-            $scope.newPosition = "";
-            $scope.positionDepartment = "";
-            $scope.isElevated = false;
         })
-
         $scope.updateOfficer = false;
         $scope.changeOfficer = function(){
             $scope.getGroups().success(function(data, status, headers, config) {
@@ -382,12 +394,45 @@ angular.module('dashboard', ['ngSanitize'])
                     holder:0
                 }
                 if(pos.needPermission){
-                alert(JSON.stringify(pos));
+                    if($scope.role.addOfficer){
+                        $scope.removePositions[$scope.positionDepartment].positions.push(pos);
+                    }
                     $scope.departmentPositions[$scope.positionDepartment].push(pos);
                 }else{
+                    $scope.removePositions[$scope.positionDepartment].positions.push(pos);
                     $scope.positions.push(pos);
                 }
                 $scope.newPos = true;
+            })
+        }
+
+        $scope.removePosition = false;
+        $scope.removedDept = 0;
+        $scope.removedPos = 0;
+        $scope.deletaDepartment = function(){
+            //$http.get('removePosition.php?positionId=' + $scope.removedPos + '&departmentId=' + removedDept);
+            var i = 0;
+            angular.forEach($scope.departmentPositions[$scope.removedDept],function(pos){
+                if(pos.id == $scope.removedPos){
+                    $scope.departmentPositions[$scope.removedDept].splice(i,1);
+                }
+                i++;
+            })
+            i = 0;
+            angular.forEach($scope.positions,function(pos){
+                alert(pos.dept); 
+                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept){
+                    $scope.positions.splice(i,1);
+                }
+                i++;
+            })
+            i = 0;
+            angular.forEach($scope.removePositions[$scope.removedDept].positions,function(pos){
+              alert(pos.dept); 
+                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept){
+                    $scope.removePositions[$scope.removedDept].positions.splice(i,1);
+                }
+                i++;  
             })
         }
     }])

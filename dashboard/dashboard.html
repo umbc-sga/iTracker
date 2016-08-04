@@ -85,7 +85,7 @@
 							Add Position
 						</h3>
 	      			</div>
-	    			<div class="box-body" >
+	    			<div class="box-body" ng-init="removePos">
 	    				<div class="form-group" ng-class="{'has-success':newPos}">
 	    					<label for="posdepts">Department to add to:</label>
 	    					<select id="posdepts" class="form-control" ng-model="positionDepartment">
@@ -107,10 +107,19 @@
 						</h3>
 	      			</div>
 	    			<div class="box-body" >
-
+	    				<div class="form-group" ng-class="{'has-success':removePosition}">
+		    				<label for="remove">Remove from which department?</label>
+		    				<select id="remove" ng-model="removedDept" class="form-control" >
+		    					<option ng-repeat="(dept, data) in removePositions" value="{{dept}}" ng-show="data.positions.length > 0">{{data.name}}</option>
+		    				</select>
+		    				<label for="nullpos">What Position should be removed</label>
+		    				<select id="nullpos" ng-model="removedPos" class="form-control">
+		    					<option ng-repeat="pos in removePositions[removedDept].positions" value="{{pos.id}}">{{pos.name}}</option>
+		    				</select>
+		    			</div>
 	    			</div>
 	    			<div class="box-footer">
-	      				<button type="submit" class="btn btn-primary" ng-click="">Update</button>
+	      				<button type="submit" class="btn btn-primary" ng-click="deletaDepartment()">Update</button>
 	      			</div>
 	      		</div>
 	  			<div class="box box-primary" ng-show = "role.makeAdmin">
