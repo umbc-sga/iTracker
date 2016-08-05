@@ -263,6 +263,7 @@ angular.module('dashboard', ['ngSanitize'])
     .controller('DashboardController',  ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         var email = document.getElementById('userInfo').innerHTML;
         $scope.getPeople().success(function (data, status, headers, config) {
+            $scope.people = data;
             var personId = 0;
             angular.forEach(data, function(person){
                 if(person.email_address == email){
@@ -323,9 +324,6 @@ angular.module('dashboard', ['ngSanitize'])
                                     }
                                 })
                             })
-                            // if($scope.removePositions[dept.id].positions.length == 0 ){
-                            //     delete $scope.removePositions[dept.id];
-                            // }
                         })
                     })
                 })
@@ -375,7 +373,7 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.addAd = false;
         $scope.addAdmin = function(){
             $scope.addAd = true;
-            $scope.changeRole($scope.newAdmin,0,7);
+            $scope.changeRole($scope.newAdmin,0,1);
         }
 
         $scope.newPos = false;
@@ -410,7 +408,7 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.removedDept = 0;
         $scope.removedPos = 0;
         $scope.deletaDepartment = function(){
-            //$http.get('removePosition.php?positionId=' + $scope.removedPos + '&departmentId=' + removedDept);
+            $http.get('../removePosition.php?positionId=' + $scope.removedPos + '&departmentId=' + $scope.removedDept);
             var i = 0;
             angular.forEach($scope.departmentPositions[$scope.removedDept],function(pos){
                 if(pos.id == $scope.removedPos){
@@ -420,19 +418,30 @@ angular.module('dashboard', ['ngSanitize'])
             })
             i = 0;
             angular.forEach($scope.positions,function(pos){
-                alert(pos.dept); 
-                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept){
+                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept && pos.holder == 0){
                     $scope.positions.splice(i,1);
                 }
                 i++;
             })
             i = 0;
             angular.forEach($scope.removePositions[$scope.removedDept].positions,function(pos){
-              alert(pos.dept); 
-                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept){
+                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept  && pos.holder == 0){
                     $scope.removePositions[$scope.removedDept].positions.splice(i,1);
                 }
                 i++;  
             })
+            $scope.removePosition = true;
+        }
+
+        $scope.addExec = false;
+        $scope.addExecutive = function(){
+            $scope.addExec = true;
+            $scope.changeRole($scope.newExec,0,2);
+        }
+
+        $scope.removeRoles = false;
+        $scope.RemoveAllRoles = function(){
+            $scope.removeRoles = true;
+            $scope.changeRole($scope.normalRole,0,3);
         }
     }])
