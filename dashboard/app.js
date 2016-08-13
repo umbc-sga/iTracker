@@ -1,3 +1,11 @@
+function replace_All(str, find, replace){
+    while(str.indexOf(find) != -1){
+        str = str.replace(find, replace);
+    }
+    return str;
+}
+
+
 angular.module('dashboard', ['ngSanitize'])
 
     .config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
@@ -14,26 +22,49 @@ angular.module('dashboard', ['ngSanitize'])
         debug: false // Set to false to disable logging to console
     })
 
-/**
- * Main controller that holds some global data
- *
- * Fetches and stores some initial data in the main property to display global statistics
- */
+    /**
+     * Main controller that holds some global data
+     *
+     * Fetches and stores some initial data in the main property to display global statistics
+     */
     .controller('MainController', ['$scope', '$http', 'basecamp.config', function ($scope, $http, basecampConfig) {
+
+    	$scope.contains = function(person, arr){
+    		JSON.stringify(arr);
+			angular.forEach(arr,function(member){
+				if(member.id == person.id){
+					return true;
+				}
+			})
+			return false;
+		}
+    	$scope.getPerson = function(personId){
+    		var person = {};
+    		$scope.getPersonInfo(personId).success(function (data, status, headers, config) {
+                person = data;
+                $scope.getExtraPersonInfo(personId).success(function(data, status, headers, config) {
+                    person.bio = data.bio;
+                    person.major = data.major;
+                    person.classStanding = data.classStanding;
+                    person.hometown = data.hometown;
+                   	person.fact = data.fact;
+                    person.position = data.position;
+                })
+            })
+            return person;
+    	}
 
         /**
          * Get all people
          *
          * Returns promise so additional callbacks can be attached
          */
-        $scope.getPeople = function () {
+        $scope.getPeople = function() {
             return $http.get('../get.php?url=people.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
         }
-
-        
 
         $scope.getPersonInfo = function(personID) {
             return $http.get('../get.php?url=people/' + personID +'.json')
@@ -63,38 +94,39 @@ angular.module('dashboard', ['ngSanitize'])
             }
         }
 
-        $scope.getDeptPositions = function(dept){
+        $scope.getDeptPositions = function(dept) {
             return $http.get('../getPositions.php?dept=' + dept)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting groups: ' + data);
                 })
         }
-        $scope.getGroups = function(){
+        $scope.getGroups = function() {
             return $http.get('../get.php?url=groups.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting groups: ' + data);
                 })
         }
 
-        $scope.getGroup = function(groupId){
+        $scope.getGroup = function(groupId) {
             return $http.get('../get.php?url=groups/' + groupId + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting group : ' + groupId + data);
                 })
         }
+        
         /**
          * Get all projects
          *
          * Returns promise so additional callbacks can be attached
          */
-        $scope.getProjects = function () {
+        $scope.getProjects = function() {
             return $http.get('../get.php?url=projects.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
         }
 
-        $scope.getProject = function (id) {
+        $scope.getProject = function(id) {
             return $http.get('../get.php?url=projects/' + id + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
@@ -106,7 +138,7 @@ angular.module('dashboard', ['ngSanitize'])
          *
          * Returns promise so additional callbacks can be attached
          */
-        $scope.getActiveTodoLists = function () {
+        $scope.getActiveTodoLists = function() {
             return $http.get('../get.php?url=todolists.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting active todo lists: ' + data);
@@ -118,35 +150,35 @@ angular.module('dashboard', ['ngSanitize'])
          *
          * Returns promise so additional callbacks can be attached
          */
-        $scope.getCompletedTodoLists = function () {
+        $scope.getCompletedTodoLists = function() {
             return $http.get('../get.php?url=todolists/completed.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
         }
 
-        $scope.getProjectAccesses = function(id){
+        $scope.getProjectAccesses = function(id) {
             return $http.get("../get.php?url=projects/" + id + "/accesses.json")
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting project accesses: ' + data);
                 })
         }
 
-        $scope.getExtraPersonInfo = function(id){
+        $scope.getExtraPersonInfo = function(id) {
             return $http.get("../getRecord.php?table=person&id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
         }
 
-        $scope.getExtraDeptInfo = function(id){
+        $scope.getExtraDeptInfo = function(id) {
             return $http.get('../getRecord.php?table=department&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
         }
 
-        $scope.getPersonPack = function(id){
+        $scope.getPersonPack = function(id) {
             var per = {};
             $scope.getPersonInfo(id).success(function(data, status, headers, config) {
                 per.id = data.id;
@@ -173,7 +205,7 @@ angular.module('dashboard', ['ngSanitize'])
         }
 
 
-        $scope.getProjectPack = function(id){
+        $scope.getProjectPack = function(id) {
             var proj = {};
             $scope.getProject(id).success(function(data, status, headers, config) {
                 proj.id = data.id;
@@ -191,13 +223,15 @@ angular.module('dashboard', ['ngSanitize'])
             return proj;
         }
 
-        $scope.getPersonDepts = function(id){
+        $scope.getPersonDepts = function(id) {
             var departments = [];
             $scope.getGroups().success(function(data, status, headers, config) {
                 angular.forEach(data,function(dept){
                     $scope.getGroup(dept.id).success(function(data, status, headers, config) {
                         angular.forEach(data.memberships, function(person){
                             if(person.id == id){
+                                var group_href = replace_All(replace_All(data.name.toLowerCase()," ", "-") , "&", "and");
+                                data.href = group_href;
                                 departments.push(data);
                             }
                         })
@@ -207,80 +241,112 @@ angular.module('dashboard', ['ngSanitize'])
             return departments;
         }
 
-        $scope.getProjectEvents= function(id, page){
+        $scope.getProjectEvents = function(id, page) {
             return $http.get("../get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
         }
 
-        $scope.getPersonRoles = function(id){
+        $scope.getPersonRoles = function(id) {
             return $http.get("../getRole.php?id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
         }
 
-        $scope.getRole = function(id){
+        $scope.getRole = function(id) {
             return $http.get('../getRecord.php?table=role&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })   
         }
 
-        $scope.getRolePerson = function(roleId, departmentId){
+        $scope.getRolePerson = function(roleId, departmentId) {
             return $http.get('../getRoleHolder.php?dept=' + departmentId + "&role=" + roleId)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
         }
 
-        $scope.changeRole = function(person, dept, role){
+        $scope.changeRole = function(person, dept, role) {
             $http.get("../changeRole.php?person=" + person + "&dept=" + dept + "&role=" + role);
         }
 
-        $scope.getPosition = function(pos, dept){
+        $scope.getPosition = function(pos, dept) {
             return $http.get('../getPositionHolder.php?dept=' + dept + '&position=' + pos)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
         }
 
-        $scope.changePosition = function(person, position){
+        $scope.changePosition = function(person, position) {
             $http.get('../changePosition.php?person=' + person + '&position=' + position)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while changePosition: ' + data);
                 })
         }
 
-        $scope.newPosition = function(pos, isElevated, dept){
+        $scope.newPosition = function(pos, isElevated, dept) {
             return $http.get('newPosition.php?position=' + pos + '&elevated=' + isElevated + '&dept=' + dept)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while changePosition: ' + data);
                 })
         }
     }])
+
     .controller('DashboardController',  ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         var email = document.getElementById('userInfo').innerHTML;
         $scope.getPeople().success(function (data, status, headers, config) {
             $scope.people = data;
             var personId = 0;
-            angular.forEach(data, function(person){
-                if(person.email_address == email){
+            angular.forEach(data, function(person) {
+                if (person.email_address == email) {
                     personId = person.id;
                 }
             })
-            $scope.getPersonInfo(personId).success(function (data, status, headers, config) {
-                $scope.person = data;
+            
+            $scope.person = $scope.getPerson(personId);
+
+            $scope.personDepts = $scope.getPersonDepts(personId);
+
+// alert(member.name + ' ' + JSON.stringify(ids) + ' ' + ids.includes(member.id));
+
+
+			//update all userds in your departments
+			$scope.members = [];
+			$scope.getGroups().success(function(data, status, headers, config) {
+                angular.forEach(data,function(dept){
+                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                        angular.forEach(data.memberships, function(person){
+                            if(person.id == personId){
+                            	angular.forEach(data.memberships,function(member){
+                   					$scope.getExtraPersonInfo(member.id).success(function(data, status, headers, config) {
+					                    var personInfo = member;
+					                    personInfo.bio = data.bio;
+					                    personInfo.major = data.major;
+					                    personInfo.classStanding = data.classStanding;
+  					                    personInfo.hometown = data.hometown;
+					                   	personInfo.fact = data.fact;
+					                    personInfo.position = data.position;
+					                    if(!$scope.contains(personInfo, $scope.members))
+					                    	$scope.members.push(personInfo);	
+					                })
+                            	})
+                            }
+                        })
+                    })
+                })
             })
+
             $scope.getPersonRoles(personId).success(function (data, status, headers, config) {
                 $scope.role = data;
                 $scope.positionDepartmentList = [];
-                if($scope.role.addOfficer){
+                if ($scope.role.addOfficer) {
                     $scope.getGroups().success(function (data, status, headers, config) {
                         $scope.positionDepartmentList = data;
                     })
-                }else{
+                } else {
                     $scope.getPersonDepts(personId).success(function (data, status, headers, config) {
                         $scope.positionDepartmentList = data;
                     })
@@ -305,7 +371,7 @@ angular.module('dashboard', ['ngSanitize'])
                             $scope.removePositions[dept.id] = {};
                             $scope.removePositions[dept.id].name = dept.name;
                             $scope.removePositions[dept.id].positions = [];
-                            angular.forEach(data, function(position){
+                            angular.forEach(data, function(position) {
                                 var pos = {};
                                 pos.id = position.positionId;
                                 pos.name = position.position;
@@ -404,6 +470,9 @@ angular.module('dashboard', ['ngSanitize'])
             })
         }
 
+       	$scope.memberUpdate = false;
+       	$scope.memberChanged = 0;
+
         $scope.removePosition = false;
         $scope.removedDept = 0;
         $scope.removedPos = 0;
@@ -418,7 +487,9 @@ angular.module('dashboard', ['ngSanitize'])
             })
             i = 0;
             angular.forEach($scope.positions,function(pos){
+
                 if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept && pos.holder == 0){
+                    alert(pos.holder);
                     $scope.positions.splice(i,1);
                 }
                 i++;
@@ -444,4 +515,5 @@ angular.module('dashboard', ['ngSanitize'])
             $scope.removeRoles = true;
             $scope.changeRole($scope.normalRole,0,3);
         }
+
     }])

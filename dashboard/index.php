@@ -70,26 +70,29 @@
                     </a>    <!-- Control Sidebar Toggle Button -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://50.umbc.edu/"><small>UMBC50</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/umbc-azindex"><small>A-Z Index</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://my.umbc.edu/"><small>myUMBC</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://my.umbc.edu/events"><small>Events</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/directory"><small>Directory</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/go/maps"><small>Maps</small></a>
                             </li>
-                            <li class="hidden-s">
+                            <li class="hidden-xs">
                                 <a href="http://umbc.edu/search"><small>Search</small></a>
+                            </li>
+                            <li>
+                                <a href="https://webauth.umbc.edu/umbcLogin?action=logout"><small>Logout</small></a>
                             </li>
                         </ul>
                     </div>
@@ -281,9 +284,3 @@
 
             function TwitterShare() {
                 var tw = "https://twitter.com/home?status=Check%20this%20out%20on%20the%20UMBC%20SGA%20iTracker!%20";
-                window.open(tw.concat(document.URL));
-            }
-        </script>
-
-    </body>
-</html>                                                                                                 
