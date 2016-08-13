@@ -30,9 +30,8 @@ angular.module('dashboard', ['ngSanitize'])
     .controller('MainController', ['$scope', '$http', 'basecamp.config', function ($scope, $http, basecampConfig) {
 
     	$scope.contains = function(person, arr){
-    		JSON.stringify(arr);
-			angular.forEach(arr,function(member){
-				if(member.id == person.id){
+			angular.forEach(arr,function(id,member){
+				if(id == person.id){
 					return true;
 				}
 			})
@@ -314,7 +313,7 @@ angular.module('dashboard', ['ngSanitize'])
 
 
 			//update all userds in your departments
-			$scope.members = [];
+			$scope.members = {};
 			$scope.getGroups().success(function(data, status, headers, config) {
                 angular.forEach(data,function(dept){
                     $scope.getGroup(dept.id).success(function(data, status, headers, config) {
@@ -330,7 +329,7 @@ angular.module('dashboard', ['ngSanitize'])
 					                   	personInfo.fact = data.fact;
 					                    personInfo.position = data.position;
 					                    if(!$scope.contains(personInfo, $scope.members))
-					                    	$scope.members.push(personInfo);	
+					                    	$scope.members[member.id] = personInfo;	
 					                })
                             	})
                             }
@@ -472,6 +471,21 @@ angular.module('dashboard', ['ngSanitize'])
 
        	$scope.memberUpdate = false;
        	$scope.memberChanged = 0;
+       	$scope.UpdateDeptMember = function(){
+       		$scope.memberUpdate = true;
+       		var args = 'id=' + $scope.memberChanged;
+            args += '&bio=' + $scope.members[$scope.memberChanged].bio;
+            args += '&major=' + $scope.members[$scope.memberChanged].major;
+            args += '&classStanding=' + $scope.members[$scope.memberChanged].classStanding;
+            args += '&hometown=' + $scope.members[$scope.memberChanged].hometown;
+            args += '&fact=' + $scope.members[$scope.memberChanged].fact;
+            args += '&position=' + $scope.members[$scope.memberChanged].position;
+            $scope.arg = args;
+            $http.get('../updatePerson.php?' + args)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting role: ' + data);
+                })
+       	}
 
         $scope.removePosition = false;
         $scope.removedDept = 0;

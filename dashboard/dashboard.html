@@ -53,7 +53,7 @@
 								</div>	<!-- /.box-header -->
 								<div class="box-body">
 									<strong><i class="fa fa-user"></i> Bio</strong>
-									<p class="text-muted">
+										<p class="text-muted">
 										{{role.bio}}
 									</p>
 									<hr>
@@ -123,11 +123,10 @@
 							<div class="tab-pane" id="deptuser" ng-show="role.updateMembersInfo">
 								<div class="form-group" ng-class="{'has-success':memberUpdate}">
 									<label for="member"> Select the member to update</label>
-									{{members[memberChanged]}}
 									<select id="member" ng-model="memberChanged" class="form-control">
 										<option ng-repeat="person in members" value="{{person.id}}">{{person.name}}</option>
 									</select>
-
+									{{arg}}
 									<div class="form-group" ng-class="{'has-success':memberUpdate}">
 										<label for="bio">Bio:</label>
 										<textarea id="bio" class="form-control" ng-model="members[memberChanged].bio"></textarea>
@@ -160,7 +159,7 @@
 										<label for="fact">Interesting Fact:</label>
 										<textarea id="fact" class="form-control" ng-model="members[memberChanged].fact"></textarea>
 									</div>
-									<button type="submit" class="btn btn-primary" ng-click="UpdatePersonal()">Update</button>
+									<button type="submit" class="btn btn-primary" ng-click="UpdateDeptMember()">Update</button>
 								</div>
 							</div>
 
