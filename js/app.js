@@ -222,7 +222,8 @@ angular.module('basecamp', ['ngSanitize'])
                 per.id = data.id;
                 per.name = data.name;
                 per.email = data.email_address;
-                per.assigned = data.assigned_todos.count;
+                per.todoCount = data.assigned_todos.count;
+                per.eventCount = data.events.count;
                 per.avatar_url = data.avatar_url;
                 per.active = 0;
                 per.archive = 0;
@@ -230,13 +231,21 @@ angular.module('basecamp', ['ngSanitize'])
                 $scope.getPersonProj(id).success(function(data, status, headers, config) {
                     angular.forEach(data, function(proj){
                         if (!proj.template) {
-                            if(!proj.trashed) {
+                            if(!proj.archived) {
                                 per.active++;
                             }else{
                                 per.archive++;
                             }
                         }
                     })
+                })
+                $scope.getExtraPersonInfo(id).success(function(data, status, headers, config) {
+                    per.bio = data.bio;
+                    per.major = data.major;
+                    per.classStanding = data.classStanding;
+                    per.hometown = data.hometown;
+                    per.fact = data.fact;
+                    per.position = data.position;
                 })
             })
             return per;
@@ -252,11 +261,15 @@ angular.module('basecamp', ['ngSanitize'])
                 proj.creator = data.creator.name;
                 proj.events = data.calendar_events.count
                 proj.docs = data.documents.count;
+                proj.created_at = data.created_at;
+                proj.updated_at = data.updated_at;
+                
                 if(data.archived){
                     proj.status = "Archived";
                 }else{
                     proj.status = "Active";
                 }
+
             })
             return proj;
         }
@@ -753,8 +766,9 @@ angular.module('basecamp', ['ngSanitize'])
                     
                     var people = [];
                     angular.forEach(data.memberships, function(person){
-                        if(badEmails.indexOf(person.email_address) == -1)
+                        if(badEmails.indexOf(person.email_address) == -1) {
                             people.push($scope.getPersonPack(person.id));
+                        }
                     })
                     department.people = people;
                     $scope.depts.push(department);
@@ -764,20 +778,13 @@ angular.module('basecamp', ['ngSanitize'])
     }])
 
     .controller('PeopleByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
-        $scope.people = {}
+        $scope.people = [];
         var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
-        $scope.scrollTo = function(id) {
-            $anchorScroll(id);
-        }
-        $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        angular.forEach($scope.alpha, function(letter){
-            $scope.people[letter] = [];
-        })
+        
         $scope.getPeople().success(function(data, status, headers, config) {
             angular.forEach(data, function(person){
                 if(badEmails.indexOf(person.email_address) == -1){
-                    var letter = person.name[0].toUpperCase();
-                    $scope.people[letter].push($scope.getPersonPack(person.id));
+                    $scope.people.push($scope.getPersonPack(person.id));
                 }
             })
         })
@@ -785,9 +792,6 @@ angular.module('basecamp', ['ngSanitize'])
 
     .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
         $scope.depts = [];
-        $scope.scrollTo = function(id){
-            $anchorScroll(id);
-        }
         $scope.getGroups().success(function (data, status, headers, config) {
             angular.forEach(data,function(dept){
                 var department = {};
@@ -799,7 +803,7 @@ angular.module('basecamp', ['ngSanitize'])
                     angular.forEach(data.memberships, function(person){
                         $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
                             angular.forEach(data, function(proj){
-                                if(!proj.template)
+                                if(!proj.template && proj.id != 9793820)
                                     projects.push($scope.getProjectPack(proj.id));
                             })
                         })
@@ -812,16 +816,12 @@ angular.module('basecamp', ['ngSanitize'])
     }])
 
     .controller('ProjectsByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
-        $scope.projects = {};
-        $scope.alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        angular.forEach($scope.alpha, function(letter){
-            $scope.projects[letter] = [];
-        })
+        $scope.projects = [];
+        
         $scope.getProjects().success(function(data, status, headers, config) {
             angular.forEach(data,function(proj){
-                var letter = proj.name[0];
-                if(!proj.template)
-                    $scope.projects[letter].push($scope.getProjectPack(proj.id));
+                if(!proj.template && proj.id != 9793820)
+                    $scope.projects.push($scope.getProjectPack(proj.id));
             })
         })
     }])

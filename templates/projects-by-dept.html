@@ -1,5 +1,5 @@
 <div ng-controller='ProjectsByDeptController'>
-<!-- Content Wrapper. Contains page content -->
+	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
@@ -14,13 +14,8 @@
 		</section>
 		<!-- Main content -->
 		<section class="content">
-			<!-- <h6>
-				<span ng-repeat="dept in depts | orderBy: 'name'">
-					<a ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a> | 
-				</span>
-			</h6> -->
-			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by department name" />
-			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'">
+			<input type="text" ng-model="search.name" class="form-control" placeholder="Filter by department name" />
+			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'" ng-show="dept.projects.length > 0">
 				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
 				<div class="row">
 					<div class="col-md-4" ng-repeat="proj in dept.projects | orderBy: 'name'">
@@ -33,11 +28,10 @@
 							</a>
 							<div class="box-footer no-padding">
 								<ul class="nav nav-stacked">
-									<li><a href="#">Creator<span class="pull-right badge bg-blue">{{proj.creator}}</span></a></li>
-									<li><a href="#">Status<span class="pull-right badge bg-aqua"> {{proj.status}}</span></a></li>
-									<li><a href="#">Number of Events<span class="pull-right badge bg-green">{{proj.events}}</span></a></li>
-									<li><a href="#">Number of documents<span class="pull-right badge bg-green">{{proj.docs}}</span></a></li>
-									<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+									<li><a>Creator<span class="pull-right badge bg-blue">{{proj.creator}}</span></a></li>
+									<li><a>Status<span class="pull-right badge bg-aqua"> {{proj.status}}</span></a></li>
+									<li><a>Created At<span class="pull-right badge bg-green">{{proj.created_at | date}}</span></a></li>
+									<li><a>Last Updated<span class="pull-right badge bg-red">{{proj.updated_at | date}}</span></a></li>
 								</ul>
 							</div>
 						</div>

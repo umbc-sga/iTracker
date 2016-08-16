@@ -14,31 +14,26 @@
 		</section>
 		<!-- Main content -->
 		<section class="content">
-			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by project name" />
-			<div ng-repeat="letter in alpha">
-				<h2 ng-show="projects[letter].length != 0">{{letter}}</h2>
-				<div class="row">
-					<div class="col-md-4" ng-repeat="proj in projects[letter] | filter: search | orderBy : 'name'">
-						<div class="box box-widget widget-user">
-							<a href="/itracker/projects/{{proj.id}}/">
-								<div class="widget-user-header bg-blue">
-									<h3 class="widget-user-username">{{proj.name}}</h3>
-									<h5 class="widget-user-desc">{{proj.description}}</h5>
-								</div>
-							</a>
-							<div class="box-footer no-padding">
-								<ul class="nav nav-stacked">
-									<li><a href="#">Creator<span class="pull-right badge bg-blue">{{proj.creator}}</span></a></li>
-									<li><a href="#">Status<span class="pull-right badge bg-aqua"> {{proj.status}}</span></a></li>
-									<li><a href="#">Number of Events<span class="pull-right badge bg-green">{{proj.events}}</span></a></li>
-									<li><a href="#">Number of documents<span class="pull-right badge bg-green">{{proj.docs}}</span></a></li>
-									<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
-								</ul>
+			<input type="text" ng-model="search.name" class="form-control" placeholder="Filter by project name" />
+			<div class="row" style="margin-top:20px">
+				<div class="col-md-4" ng-repeat="proj in projects | filter: search | orderBy : 'name'">
+					<div class="box box-widget widget-user">
+						<a href="/itracker/projects/{{proj.id}}/">
+							<div class="widget-user-header bg-blue">
+								<h3 class="widget-user-username">{{proj.name}}</h3>
+								<h5 class="widget-user-desc">{{proj.description}}</h5>
 							</div>
+						</a>
+						<div class="box-footer no-padding">
+							<ul class="nav nav-stacked">
+								<li><a>Creator<span class="pull-right badge bg-blue">{{proj.creator}}</span></a></li>
+								<li><a>Status<span class="pull-right badge bg-aqua"> {{proj.status}}</span></a></li>
+								<li><a>Created At<span class="pull-right badge bg-green">{{proj.created_at | date}}</span></a></li>
+								<li><a>Last Updated<span class="pull-right badge bg-red">{{proj.updated_at | date}}</span></a></li>
+							</ul>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</section>
 	</div>

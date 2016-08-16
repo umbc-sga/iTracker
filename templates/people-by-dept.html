@@ -16,14 +16,8 @@
 
 		<!-- Main content -->
 		<section class="content">
-			<!-- <h6>
-				Jump to:
-				<span ng-repeat="dept in depts | orderBy: 'name'">
-					<a href ="" ng-click="scrollTo('{{dept.id}}')">{{dept.name}}</a> | 
-				</span>
-			</h6> -->
-			<input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by department name" />
-			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'">
+			<input type="text" ng-model="search.name" class="form-control" placeholder="Filter by department name" />
+			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'" ng-show="dept.people.length > 0">
 				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
 				<div class="row">
 					<div class="col-md-4" ng-repeat="person in dept.people | orderBy : 'name'">
@@ -40,10 +34,9 @@
 							</a>
 							<div class="box-footer no-padding">
 								<ul class="nav nav-stacked">
-									<li><a href="#">Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>
-									<li><a href="#">Tasks <span class="pull-right badge bg-aqua"> {{person.assigned}}</span></a></li>
-									<li><a href="#">Archived Projects <span class="pull-right badge bg-green">{{person.archive}}</span></a></li>
-									<!-- <li><a href="#">Followers <span class="pull-right badge bg-red">!!!</span></a></li> -->
+									<li><a>Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>
+									<li><a>Assigned Tasks <span class="pull-right badge bg-aqua"> {{person.todoCount}}</span></a></li>
+									<li><a>Events Created <span class="pull-right badge bg-green">{{person.eventCount}}</span></a></li>
 								</ul>
 							</div>
 						</div>

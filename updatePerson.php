@@ -9,5 +9,6 @@
 	$fact = $_GET['fact'];
 	$position = $_GET['position'];
 	$sql = "UPDATE `person` SET `bio`= '$bio',`major`= '$major',`classStanding`= '$class',`hometown`= '$home',`fact`='$fact',`positionId`= $position WHERE `id` = $id";
+	echo($sql);
 	$results = mysqli_query($link, $sql);
 ?>

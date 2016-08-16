@@ -304,8 +304,10 @@ angular.module('dashboard', ['ngSanitize'])
                     personId = person.id;
                 }
             })
-            
-            $scope.person = $scope.getPerson(personId);
+            $scope.id = personId;
+            $scope.getPersonInfo(personId).success(function(data, status, headers, config) {
+            	$scope.person = data;
+            })
 
             $scope.personDepts = $scope.getPersonDepts(personId);
 
@@ -328,6 +330,7 @@ angular.module('dashboard', ['ngSanitize'])
   					                    personInfo.hometown = data.hometown;
 					                   	personInfo.fact = data.fact;
 					                    personInfo.position = data.position;
+					                    personInfo.positionId = data.positionId;
 					                    if(!$scope.contains(personInfo, $scope.members))
 					                    	$scope.members[member.id] = personInfo;	
 					                })
@@ -419,13 +422,13 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.personalUpdate = false;
         $scope.UpdatePersonal = function(){
             $scope.personalUpdate = true;
-            var args = 'id=' + $scope.person.id;
+            var args =	 'id=' + $scope.id;
             args += '&bio=' + $scope.role.bio;
             args += '&major=' + $scope.role.major;
             args += '&classStanding=' + $scope.role.classStanding;
             args += '&hometown=' + $scope.role.hometown;
             args += '&fact=' + $scope.role.fact;
-            args += '&position=' + $scope.role.position;
+            args += '&position=' + $scope.role.positionId;
             $scope.arg = args;
             $http.get('../updatePerson.php?' + args)
                 .error(function (data, status, headers, config) {
@@ -479,7 +482,7 @@ angular.module('dashboard', ['ngSanitize'])
             args += '&classStanding=' + $scope.members[$scope.memberChanged].classStanding;
             args += '&hometown=' + $scope.members[$scope.memberChanged].hometown;
             args += '&fact=' + $scope.members[$scope.memberChanged].fact;
-            args += '&position=' + $scope.members[$scope.memberChanged].position;
+            args += '&position=' + $scope.members[$scope.memberChanged].positionId;
             $scope.arg = args;
             $http.get('../updatePerson.php?' + args)
                 .error(function (data, status, headers, config) {
