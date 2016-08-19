@@ -6,6 +6,11 @@
 		<section class="content-header">
 			<h1>
 				{{project.name}}
+				<form action="/itracker/join" method="post" style="display:inline;">
+					<input type="text" name="proj" value="{{project.id}}" hidden="">
+					<input type="text" name="projname" value="{{project.name}}" hidden="">
+					<button type="submit" class="btn btn-primary btn-block btn-flat">Join the team on Basecamp!</button>
+				</form>
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>

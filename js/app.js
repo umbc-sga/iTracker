@@ -869,6 +869,7 @@ angular.module('basecamp', ['ngSanitize'])
             if($scope.limit >= $scope.events.length){
                 var curDate = '';
                 $scope.getPersonEvents($routeParams.personId, $scope.page).success(function (data, status, headers, config) {
+                    alert(data.length + ' ' + $scope.page);
                     if (data.length > 0) {
                         angular.forEach(data,function (event){
                             event.created_at = $scope.prettyDate(event.created_at);

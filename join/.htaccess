@@ -1,0 +1,4 @@
+AuthType shibboleth
+ShibRequireSession on
+ShibUseHeaders on
+require valid-user

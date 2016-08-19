@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app="dashboard">
+<html ng-app="basecamp">
     <head>
-        <base href="/itracker/dashboard/">
+        <base href="/itracker/">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -44,15 +44,15 @@
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"> 
 
         <title>UMBC SGA iTracker</title>
-        <!-- <script>do,cument.write('<base href="' + document.location + '" />');</script> -->
+        <!-- <script>document.write('<base href="' + document.location + '" />');</script> -->
         <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
         <!-- <link rel="stylesheet" href="css/style.css"> -->
-        <script src="/itracker/components/angular/angular.js"></script>
-        <script src="/itracker/components/angular/angular-sanitize.js"></script>
-        <script src="app.js"></script>
+        <script src="../components/angular/angular.js"></script>
+        <script src="../components/angular/angular-sanitize.js"></script>
+        <script src="../js/app.js"></script>
+        <base href="/itracker/">
     </head>
     <body class="hold-transition skin-yellow sidebar-mini" ng-controller="MainController">
-        <div id="userInfo" hidden><?php echo $_SERVER['mail'];?></div>
         <div class="wrapper">
             <header class="main-header">
                 <!-- Logo -->
@@ -92,7 +92,7 @@
                                 <a href="http://umbc.edu/search"><small>Search</small></a>
                             </li>
                             <li>
-                                <a href="https://webauth.umbc.edu/umbcLogin?action=logout"><small>Logout</small></a>
+                                <a href="dashboard" target="_self"><small>Login</small></a>
                             </li>
                         </ul>
                     </div>
@@ -212,8 +212,18 @@
             </aside>
 
             <!-- Main content -->
-            <div ng-view></div>
-            
+            <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+                <section class="content-header">
+                
+
+                </section>
+
+                <section class="content"> 
+                thanks for joining <?php var_dump($_POST); echo $_POST['projname']; ?><br>
+                <?php echo $_SERVER['mail'];?>
+                </section>
+            </div>
             <footer class="main-footer">
                 <div class="pull-right hidden-xs">
                     <!-- <b>Version</b> 2.3.0 -->
@@ -289,4 +299,4 @@
         </script>
 
     </body>
-</html>                                                                                     
+</html>
