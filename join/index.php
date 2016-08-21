@@ -1,3 +1,8 @@
+<?php
+    include "registrationResources.php";
+    addToBasecamp('/projects/' . $_GET['proj'] . '/accesses.json', $_SERVER['mail']);
+?>
+
 <!DOCTYPE html>
 <html ng-app="basecamp">
     <head>
@@ -220,8 +225,7 @@
                 </section>
 
                 <section class="content"> 
-                thanks for joining <?php var_dump($_POST); echo $_POST['projname']; ?><br>
-                <?php echo $_SERVER['mail'];?>
+                thanks for joining <?php echo $_GET['projname']; ?><br>
                 </section>
             </div>
             <footer class="main-footer">
