@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html ng-app="basecamp">
     <head>
-        <base href="/itracker/">
+        <base href="/itracker/join/">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -52,9 +52,9 @@
         <!-- <script>document.write('<base href="' + document.location + '" />');</script> -->
         <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
         <!-- <link rel="stylesheet" href="css/style.css"> -->
-        <script src="../components/angular/angular.js"></script>
-        <script src="../components/angular/angular-sanitize.js"></script>
-        <script src="../js/app.js"></script>
+        <script src="/itracker/components/angular/angular.js"></script>
+        <script src="/itracker/components/angular/angular-sanitize.js"></script>
+        <script src="app.js"></script>
         <base href="/itracker/">
     </head>
     <body class="hold-transition skin-yellow sidebar-mini" ng-controller="MainController">
@@ -220,12 +220,18 @@
             <div class="content-wrapper">
             <!-- Content Header (Page header) -->
                 <section class="content-header">
-                
+                    <h1>
+                        Thanks for joining <?php echo $_GET['projname']; ?>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
+                        <li class="active">Join the team!</li>
+                    </ol>
 
                 </section>
 
                 <section class="content"> 
-                thanks for joining <?php echo $_GET['projname']; ?><br>
+                
                 </section>
             </div>
             <footer class="main-footer">
