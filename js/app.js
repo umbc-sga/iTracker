@@ -145,6 +145,23 @@ angular.module('basecamp', ['ngSanitize'])
                     basecampConfig.debug && console.log('Error while getting group : ' + groupId + data);
                 })
         }
+        $scope.getDepsrtmentProjects = function(id){
+            var projects = [];
+            $scope.getGroup(id).success(function (data, status, headers, config) {
+                angular.forEach(data.memberships, function(person){
+                    $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
+                        angular.forEach(data, function(proj){
+                            if(!proj.template && proj.id != 9793820)
+                                $scope.getProject(proj.id).success(function (data, status, headers, config) {
+                                    projects.push(data);
+                                })
+                        })
+                    })
+                })
+            })
+            return projects;
+        }
+
         /**
          * Get all projects
          *
@@ -618,6 +635,9 @@ angular.module('basecamp', ['ngSanitize'])
                         $scope.events.push(event);
                     })
                     $scope.page++;
+                    if($scope.limit >= $scope.events.length){
+                        $scope.more = false;
+                    }
                 })
             }else if($scope.limit >= $scope.events.length){
                 $scope.more = false;
@@ -636,11 +656,14 @@ angular.module('basecamp', ['ngSanitize'])
                 // console.log('SUCCESS');
                 // this callback will be called asynchronously
                 // when the response is available
-                var activeTodoLists = angular.fromJson(data);
-                if (angular.isArray(activeTodoLists)) {
-                    $scope.activeTodoLists = activeTodoLists;
-                    // console.log(activeTodoLists);
-                }
+                $scope.activeTodoLists = [];
+                angular.forEach(data, function(list){
+                    $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists/' + list.id + '.json')
+                    .success(function (data, status, headers, config) {
+                        $scope.activeTodoLists.push(data);
+                    })
+                })
+                    // console.log(activeTodoLists)
             }).
             error(function (data, status, headers, config) {
                 // called asynchronously if an error occurs
@@ -794,16 +817,8 @@ angular.module('basecamp', ['ngSanitize'])
                     department.name = data.name;
                     department.id = data.id;
                     
-                    var projects = [];
-                    angular.forEach(data.memberships, function(person){
-                        $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
-                            angular.forEach(data, function(proj){
-                                if(!proj.template && proj.id != 9793820)
-                                    projects.push($scope.getProjectPack(proj.id));
-                            })
-                        })
-                    })
-                    department.projects = projects;
+                    
+                    department.projects = getDepsrtmentProjects(department.id);
                     $scope.depts.push(department);
                 })
             })
@@ -840,8 +855,11 @@ angular.module('basecamp', ['ngSanitize'])
         $scope.projs = [];
         $scope.getPersonProj($routeParams.personId).success(function(data, status, headers, config) {
             angular.forEach(data, function(proj){
-                if(!proj.template)
-                    $scope.projs.push($scope.getProjectPack(proj.id));
+                if(!proj.template){
+                    $scope.getProject(proj.id).success(function(data, status, headers, config) {
+                        $scope.projs.push(data);
+                    })
+                }
             }) 
         })
 
@@ -869,6 +887,10 @@ angular.module('basecamp', ['ngSanitize'])
                         $scope.pull = false;
                     }
                     angular.forEach(data,function (event){
+                        // alert(JSON.stringify(event));
+                        if(event.bucket.type == 'Project'){
+                            event.summary += " in <a href='/itracker/projects/" + event.bucket.id + ">" + event.bucket.name + "</a>";
+                        }
                         event.created_at = $scope.prettyDate(event.created_at);
                         event.updated_at = $scope.prettyDate(event.updated_at);
 
@@ -881,6 +903,9 @@ angular.module('basecamp', ['ngSanitize'])
                         $scope.events.push(event);
                     })
                     $scope.page++;
+                    if($scope.limit >= $scope.events.length){
+                        $scope.more = false;
+                    }
                 })
             }else if($scope.limit >= $scope.events.length){
                 $scope.more = false;
@@ -906,6 +931,12 @@ angular.module('basecamp', ['ngSanitize'])
             })
             $scope.getGroup($scope.id).success(function (data, status, headers, config) {
                 $scope.department = data;
+                $scope.getExtraDeptInfo($scope.id).success(function (data, status, headers, config) {
+                    $scope.department.description = data.description;
+                })
+                $scope.department.projects = $scope.getDepsrtmentProjects($scope.id);
+
             })
+
         })
     }])

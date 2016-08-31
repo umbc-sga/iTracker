@@ -170,7 +170,29 @@
 								<div class="box box-primary" ng-show="role.addOfficer">
 									<div class="box-header with-border">
 										<h3 class="box-title">
-											Add Officer
+											Change Department Desciption
+										</h3>
+									</div>
+									<div class="box-body">
+										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
+											<label for="deptdesc">Choose department</label>
+											<select id="deptdesc" ng-model="deptChangeId" class="form-control" ng-change="changeDeptDescription = false;">
+												<option ng-repeat="dept in positionDepartmentList | orderBy: name" value="{{dept.id}}" >{{dept.name}}</option>
+											</select>
+										</div>
+										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
+											<label for="descript"></label>
+											<textarea id="descript" class="form-control" ng-model="deptDescriptions[deptChangeId]" ng-change="changeDeptDescription = false;"></textarea>
+										</div>
+									</div>
+									<div class="box-footer">
+										<button type="submit" class="btn btn-primary" ng-click="saveDescription()">Update</button>
+									</div>
+								</div>
+								<div class="box box-primary" ng-show="role.addOfficer">
+									<div class="box-header with-border">
+										<h3 class="box-title">
+											Add Cabinet Member
 										</h3>
 									</div>
 									<div class="box-body">
@@ -238,7 +260,7 @@
 								<div class="box box-primary" ng-show = "role.makeAdmin">
 									<div class="box-header with-border">
 										<h3 class="box-title">
-											Add Administrator
+											Add Presidential Staff	
 										</h3> 
 									</div> 
 									<div class="box-body">

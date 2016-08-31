@@ -44,7 +44,7 @@
 							</h3>
 						</div>
 						<div class="box-body">
-							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}"><img src="{{person.avatar_url}}" class="img-circle people-list" title="{{person.name}}" alt="{{person.name}}"></a>
+							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}" ng-hide="person.email_address == 'sga@umbc.edu'"><img src="{{person.avatar_url}}" class="img-circle people-list" title="{{person.name}}" alt="{{person.name}}"></a>
 						</div>
 					</div>
 					<div class="box box-primary">

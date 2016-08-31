@@ -5,7 +5,7 @@
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				Profile: {{department.name}}
+				{{department.name}}
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
@@ -17,26 +17,118 @@
 		<section class="content">
 
 			<div class="row">
-				<div class="col-md-7">
+				<div class="col-md-4">
 					<div class="box box-primary">
 						<div class="box-header with-border">
 							<h3 class="box-title">
-								More Information
+								About this Department
 							</h3>
 						</div>
 						<div class="box-body">
-					
+							{{department.description}}
 						</div>
 					</div>
 				</div>
-				<div class="col-md-5">
+				<div class="col-md-4">
 					<div class="box box-primary">
 						<div class="box-header with-border">
 							<h3 class="box-title">
 								Meet the Department
 							</h3>
+							<div class="box-body table-responsive no-padding">
+								<table class="table table-hover">
+									<tr ng-repeat="person in department.memberships | orderBy:'name'">
+										<td style="vertical-align:middle;width:65px;">
+											<a href="/itracker/people/{{person.id}}">
+												<img src="{{person.avatar_url}}" class="img-circle" title="{{person.name}}" alt="{{person.name}}">
+											</a>
+										</td>
+										<td>
+											<a href="/itracker/people/{{person.id}}"><h4>{{person.name}}</h4></a>
+											<h5>Position! {{person.position}}</h5>
+											<h5>{{person.email_address}}</h5>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="box box-primary">
+						<div class="box-header with-border">
+							<h3 class="box-title">
+								Departmental Projects
+							</h3>
 							<div class="box-body">
-								<a ng-repeat="person in department.memberships | orderBy:'name'" href="/itracker/people/{{person.id}}"><img src="{{person.avatar_url}}" class="img-circle people-list" title="{{person.name}}" alt="{{person.name}}"></a>
+								<div class="panel box box-warning" ng-repeat="project in department.projects">
+									<a data-toggle="collapse" data-parent="#accordion" href="#projectCollapse-{{project.id}}" target="_self" style="text-decoration:none; color:black;">
+										<div class="progress progress-md progress-striped active" style="height: 30px;">
+						                	<div class="box-header with-border progress-bar progress-bar-warning" style="width: {{(((project.activeTodoListsCompletedCount + project.completedTodoListsCompletedCount) * (100 / (project.activeTodoListsRemainingCount + project.activeTodoListsCompletedCount + project.completedTodoListsRemainingCount + project.completedTodoListsCompletedCount))) || '0') | number:0}}%"></div>
+						                	<h4 class="box-title">
+					                    		{{project.name}}
+						                    </h4>
+						                    <h6 class="pull-right">
+						                    	{{(((project.activeTodoListsCompletedCount + project.completedTodoListsCompletedCount) * (100 / (project.activeTodoListsRemainingCount + project.activeTodoListsCompletedCount + project.completedTodoListsRemainingCount + project.completedTodoListsCompletedCount))) || '0') | number:0}}% complete
+						                    </h6>
+						                </div>
+						            </a>
+									<div id="projectCollapse-{{project.id}}" class="panel-collapse collapse">
+										<div class="box-body">
+											<table class="table table-responsive table-condensed">
+												<tbody>
+													<tr>
+														<td style="width:150px;" align="right">Name</td>
+														<td>{{project.name}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Description</td>
+														<td>{{project.description}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Created By</td>
+														<td>{{project.creator.name}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Created At</td>
+														<td>{{project.created_at}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Last Updated</td>
+														<td>{{project.updated_at}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Topics</td>
+														<td>{{project.topics.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Completed To-Do Lists</td>
+														<td>{{project.todolists.completed_count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Outstanding To-Do Lists</td>
+														<td>{{project.todolists.remaining_count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of People</td>
+														<td>{{project.accesses.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Documents</td>
+														<td>{{project.documents.attachments + project.attachments.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Events</td>
+														<td>{{project.calendar_events.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"></td>
+														<td><a href="/itracker/projects/{{project.id}}"><button type="button" class="btn btn-primary">read More</button></a><				
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

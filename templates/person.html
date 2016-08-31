@@ -73,35 +73,77 @@
 						</div>
 						<div class="box-body">
 							<div class="box-group" id="accordion">
-				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-				                <div class="panel box box-warning" ng-repeat="project in projs">
-				                	<a data-toggle="collapse" data-parent="#accordion" href="#projectCollapse-{{project.id}}" target="_self" style="text-decoration:none; color:black;">
-					                	<h4 class="box-title">
-					                		{{project.name}}
-					                	</h4>
-				                	</a>
-				                	<div id="projectCollapse-{{project.id}}" class="panel-collapse collapse">
-				                		<div class="box-body">
-				                			<table class="table table-responsive table-condensed">
-				                				<tr ng-show="project.description.length != 0">
-					                				<td>Decription</td>
-					                				<td>{{project.description}}</td>
-				                				</tr>
-				                				<tr>
-				                					<td>Creator</td>
-				                					<td><a href="/itracker/people/{{project.creatorId}}">{{project.creator}}</a><br></td>
-				                				</tr>
-				                				<tr></tr>
-				                				<tr>
-				                				<td></td>
-				                				<td><a href="/itracker/projects/{{project.id}}"><button type="button" class="btn btn-primary">read More</button></a></td>
-				                				</tr>
-				                			</table>
-				                		</div>
-				                	</div>
-				                </div>
-				             </div>
-				        </div>
+								<!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+								<div class="panel box box-warning" ng-repeat="project in projs">
+									<a data-toggle="collapse" data-parent="#accordion" href="#projectCollapse-{{project.id}}" target="_self" style="text-decoration:none; color:black;">
+										<div class="progress progress-md progress-striped active" style="height: 30px;">
+						                	<div class="box-header with-border progress-bar progress-bar-warning" style="width: {{(((project.activeTodoListsCompletedCount + project.completedTodoListsCompletedCount) * (100 / (project.activeTodoListsRemainingCount + project.activeTodoListsCompletedCount + project.completedTodoListsRemainingCount + project.completedTodoListsCompletedCount))) || '0') | number:0}}%"></div>
+						                	<h4 class="box-title">
+					                    		{{project.name}}
+						                    </h4>
+						                    <h6 class="pull-right">
+						                    	{{(((project.activeTodoListsCompletedCount + project.completedTodoListsCompletedCount) * (100 / (project.activeTodoListsRemainingCount + project.activeTodoListsCompletedCount + project.completedTodoListsRemainingCount + project.completedTodoListsCompletedCount))) || '0') | number:0}}% complete
+						                    </h6>
+						                </div>
+						            </a>
+									<div id="projectCollapse-{{project.id}}" class="panel-collapse collapse">
+										<div class="box-body">
+											<table class="table table-responsive table-condensed">
+												<tbody>
+													<tr>
+														<td style="width:150px;" align="right">Name</td>
+														<td>{{project.name}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Description</td>
+														<td>{{project.description}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Created By</td>
+														<td>{{project.creator.name}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Created At</td>
+														<td>{{project.created_at}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Last Updated</td>
+														<td>{{project.updated_at}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Topics</td>
+														<td>{{project.topics.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Completed To-Do Lists</td>
+														<td>{{project.todolists.completed_count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right">Outstanding To-Do Lists</td>
+														<td>{{project.todolists.remaining_count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of People</td>
+														<td>{{project.accesses.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Documents</td>
+														<td>{{project.documents.attachments + project.attachments.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"># of Events</td>
+														<td>{{project.calendar_events.count}}</td>
+													</tr>
+													<tr>
+														<td style="width:150px;" align="right"></td>
+														<td><a href="/itracker/projects/{{project.id}}"><button type="button" class="btn btn-primary">read More</button></a><				
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div> <!-- /.col -->
 				<div class="col-md-4" id="timeline">

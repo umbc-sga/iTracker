@@ -29,6 +29,9 @@ angular.module('dashboard', ['ngSanitize'])
      */
     .controller('MainController', ['$scope', '$http', 'basecamp.config', function ($scope, $http, basecampConfig) {
 
+        $scope.main = {
+            groups: []
+        }
     	$scope.contains = function(person, arr){
 			angular.forEach(arr,function(id,member){
 				if(id == person.id){
@@ -279,6 +282,35 @@ angular.module('dashboard', ['ngSanitize'])
                 })
         }
 
+        $scope.getGroups().success(function (data, status, headers, config) {
+                if (angular.isArray(data)) {
+                    var rawGroups = data;
+
+                    angular.forEach (rawGroups, function (group) {
+                        $http.get('newRecord.php?table=department&id=' + group.id)
+                            .error(function (data, status, headers, config) {
+                                basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                            });
+
+                        $scope.getGroup(group.id).success(function (data, status, headers, config) {
+                            var groupInfo = data;
+                            var group_href = replace_All(replace_All(groupInfo.name.toLowerCase()," ", "-") , "&", "and");
+                            groupInfo.group_href = group_href;
+
+                            angular.forEach(data.memberships, function(person){
+                                
+                                $http.get('newRole.php?personId=' + person.id + '&deptId=' + data.id)
+                                    .error(function (data, status, headers, config) {
+                                        basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
+                                    });
+                            })
+                            basecampConfig.debug && console.log('Group Info:', groupInfo);
+
+                            $scope.main.groups.push( groupInfo );
+                        })
+                    })
+                }
+            });
         $scope.changePosition = function(person, position) {
             $http.get('../changePosition.php?person=' + person + '&position=' + position)
                 .error(function (data, status, headers, config) {
@@ -347,6 +379,7 @@ angular.module('dashboard', ['ngSanitize'])
                 if ($scope.role.addOfficer) {
                     $scope.getGroups().success(function (data, status, headers, config) {
                         $scope.positionDepartmentList = data;
+                        $scope.deotDescriptions = data
                     })
                 } else {
                     $scope.getPersonDepts(personId).success(function (data, status, headers, config) {
@@ -392,6 +425,15 @@ angular.module('dashboard', ['ngSanitize'])
                                     }
                                 })
                             })
+                        })
+                    })
+                })
+
+                $scope.deptDescriptions = {};
+                $scope.getGroups().success(function(data, status, headers, config) {
+                    angular.forEach(data, function(dept){
+                        $scope.getExtraDeptInfo(dept.id).success(function(data, status, headers, config) {
+                            $scope.deptDescriptions[data.id] = data.description;
                         })
                     })
                 })
@@ -533,4 +575,11 @@ angular.module('dashboard', ['ngSanitize'])
             $scope.changeRole($scope.normalRole,0,3);
         }
 
+       $scope.changeDeptDescription = false;
+       $scope.deptChangeId = 0;
+       $scope.saveDescription = function(){
+            $scope.changeDeptDescription = true;
+            $scope.url = '../UpdateDepartment.php?id=' + $scope.deptChangeId +'&description=' + $scope.deptDescriptions[$scope.deptChangeId];
+            $http.get('../UpdateDepartment.php?id=' + $scope.deptChangeId +'&description=' + $scope.deptDescriptions[$scope.deptChangeId])
+       }
     }])
