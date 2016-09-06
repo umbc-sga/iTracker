@@ -10,7 +10,6 @@
 			where roleAssignment.personId = $id";
 	$smlsql .="where roleAssignment.personId = $id";
 	$results = mysqli_query($link, $sql);
-	$data;
 	if($row = mysqli_fetch_assoc($results)){
 		echo json_encode($row);
 	}else{

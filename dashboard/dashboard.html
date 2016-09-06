@@ -14,8 +14,11 @@
 			</ol>
 		</section>
 
+		<section class="content" ng-show="id <= 0">
+			You are not part of basecamp yet
+		</section>
 		<!-- Main content -->
-		<section class="content">
+		<section class="content" ng-show="id > 0">
 			<div class="row">
 				<div class="col-md-3">
 					<div class="box box-primary box-solid">
@@ -76,10 +79,10 @@
 				<div class="col-md-9">
 					<div class="nav-tabs-custom">
 						<ul class="nav nav-tabs">
-							<li class="active"><a data-target="#user" data-toggle="tab">Your Profile Settings</a></li>
-							<li><a data-target="#deptuser" data-toggle="tab">Department's User Profile Settings</a></li>
-							<li><a data-target="#director" data-toggle="tab">Director Settings</a></li>
-							<li><a data-target="#administrator" data-toggle="tab">Administrator Settings</a></li>
+							<li class="active"><a data-target="#user" data-toggle="tab">My Profile</a></li>
+							<li><a data-target="#deptuser" data-toggle="tab"><span ng-show="role.roleId == 1"> All Departments </span> <span ng-hide="role.roleId">My Department </span></a></li>
+							<li ><a data-target="#director" data-toggle="tab">People and Positions</a></li>
+							<li><a data-target="#administrator" data-toggle="tab">Executive Officer Settings</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="active tab-pane" id="user" ng-show="role.updatePersonalInfo">
@@ -121,10 +124,30 @@
 
 							<div class="tab-pane" id="deptuser" ng-show="role.updateMembersInfo">
 								<div class="row">
+									
+									<div class="col-md-4">
+
+										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
+											<label for="deptdesc">Choose department</label>
+											<select id="deptdesc" ng-model="deptChangeId" class="form-control" ng-change="changeDeptDescription = false;">
+												<option ng-repeat="dept in positionDepartmentList | orderBy: 'name'" value="{{dept.id}}" >{{dept.name}}</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
+											<label for="descript">Change Department Desciption</label>
+											<textarea id="descript" class="form-control" ng-model="deptDescriptions[deptChangeId]" ng-change="changeDeptDescription = false;"></textarea>
+										</div>
+										<button type="submit" class="btn btn-primary" ng-click="saveDescription()">Update</button>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
 									<div class="col-md-4">
 										<label for="member"> Select the member to update</label>
-										<select style="width:250px;" size="25" id="member" ng-model="memberChanged" class="form-control" ng-change="memberUpdate = false;">
-											<option ng-repeat="person in members" value="{{person.id}}">{{person.name}}</option>
+										<select  size="25" id="member" ng-model="memberChanged" class="form-control" ng-change="memberUpdate = false;">
+											<option ng-repeat="person in members | orderBy: 'name'" value="{{person.id}}">{{person.name}}</option>
 										</select>
 									</div>
 									<div class="col-md-8">
@@ -167,148 +190,166 @@
 							</div>
 
 							<div class="tab-pane" id="director">
-								<div class="box box-primary" ng-show="role.addOfficer">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Change Department Desciption
-										</h3>
-									</div>
-									<div class="box-body">
-										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
-											<label for="deptdesc">Choose department</label>
-											<select id="deptdesc" ng-model="deptChangeId" class="form-control" ng-change="changeDeptDescription = false;">
-												<option ng-repeat="dept in positionDepartmentList | orderBy: name" value="{{dept.id}}" >{{dept.name}}</option>
-											</select>
+								<div class="row">
+									<div class="col-md-5">
+										<div class="box box-primary box-solid" ng-show = "role.createPosition">
+											<div class="box-header with-border">
+												<h3 class="box-title">
+													Add Position
+												</h3>
+											</div>
+											<div class="box-body" ng-init="removePos">
+												<div class="form-group" ng-class="{'has-success':newPos}">
+													<label for="posdepts">Department to add to:</label>
+													<select id="posdepts" class="form-control" ng-model="positionDepartment" ng-change="newPos = false;">
+														<option ng-repeat="dept in positionDepartmentList | orderBy: 'name'" value="{{dept.id}}">{{dept.name}}</option>
+													</select>
+												</div>
+												<div class="form-group" ng-class="{'has-success':newPos}">
+													<label for="newPosition">New Position</label>
+													<input type="text" ng-model="newPosition" class="form-control" ng-change="newPos = false;"><br>
+													<input type="checkbox" ng-model="isElevated"  ng-disabled=" 	!role.addOfficer" ng-change="newPos = false;"> Is this an Cabinet-level position?
+												</div>
+											</div>
+											<div class="box-footer">
+												<button type="submit" class="btn btn-primary" ng-click="createPosition()">Update</button>
+											</div>
 										</div>
-										<div class="form-group" ng-class="{'has-success':changeDeptDescription}">
-											<label for="descript"></label>
-											<textarea id="descript" class="form-control" ng-model="deptDescriptions[deptChangeId]" ng-change="changeDeptDescription = false;"></textarea>
-										</div>
-									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="saveDescription()">Update</button>
-									</div>
-								</div>
-								<div class="box box-primary" ng-show="role.addOfficer">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Add Cabinet Member
-										</h3>
-									</div>
-									<div class="box-body">
-										<div class="form-group" ng-repeat="dept in depts | orderBy: 'name'" ng-class="{'has-success':updateOfficer}">
-											<h4>{{dept.name}}</h4><br>
-											<div class="form-group" ng-repeat="pos in departmentPositions[dept.id] | orderBy: 'name'">
-												<label for="role">{{pos.name}}</label>
-												<select id="role" ng-model="pos.holder" class="form-control" ng-change="updateOfficer = false;">
-													<option ng-repeat="per in dept.memberships | orderBy: name" value="{{per.id}}" ng-selected="per.id == pos.holder">{{per.name}}</option>
-												</select>
+
+										<div class="box box-primary box-solid" ng-show = "role.removePosition">
+											<div class="box-header with-border">
+												<h3 class="box-title">
+													Remove Position
+												</h3>
+											</div>
+											<div class="box-body" >
+												<div class="alert alert-danger alert-dismissible" ng-show="errorPosition">
+									                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+									                <h4><i class="icon fa fa-ban"></i> Alert!</h4>
+									                Action not allowed. You need to remove person from this position first
+									              </div>
+												<div class="form-group" ng-class="{'has-success':removePosition, 'has-error':errorPosition}">
+													<label for="remove">Remove from which department?</label>
+													<select id="remove" ng-model="removedDept" class="form-control" ng-change="removePosition = false; errorPosition = false;">
+														<option ng-repeat="(dept, data) in removePositions | orderBy : 'data.name'" value="{{dept}}" ng-show="data.positions.length > 0">{{data.name}}</option>
+													</select>
+												</div>
+												<div class="form-group" ng-class="{'has-success':removePosition, 'has-error':errorPosition}">
+													<label for="nullpos">What Position should be removed?</label>
+													<select id="nullpos" ng-model="removedPos" class="form-control" ng-change="removePosition = false; errorPosition = false;">
+														<option ng-repeat="pos in removePositions[removedDept].positions |orderBy: 'name'" value="{{pos.id}}">{{pos.name}}</option>
+													</select>
+												</div>
+												
+											</div>
+											<div class="box-footer">
+												<button type="submit" class="btn btn-primary" ng-click="deletaDepartment()">Update</button>
 											</div>
 										</div>
 									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="changeOfficer()">Update</button>
-									</div>
-								</div>
-								<div class="box box-primary" ng-show = "role.createPosition">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Add Position
-										</h3>
-									</div>
-									<div class="box-body" ng-init="removePos">
-										<div class="form-group" ng-class="{'has-success':newPos}">
-											<label for="posdepts">Department to add to:</label>
-											<select id="posdepts" class="form-control" ng-model="positionDepartment" ng-change="newPos = false;">
-												<option ng-repeat="dept in positionDepartmentList | orderBy: 'name'" value="{{dept.id}}">{{dept.name}}</option>
-											</select>
-											<label for="newPosition">New Position</label>
-											<input type="text" ng-model="newPosition" class="form-control" ng-change="newPos = false;"><br>
-											<input type="checkbox" ng-model="isElevated"  ng-disabled=" 	role.addOfficer" ng-change="newPos = false;"> Is this an Cabinet-level position?
+									<div class="col-md-7">
+										<div class="box box-primary box-solid" ng-show="role.addOfficer">
+											<div class="box-header with-border">
+												<h3 class="box-title">
+													Assign Cabinet Position
+												</h3>
+											</div>
+											<div class="box-body">
+												<div class="form-group" ng-repeat="dept in depts | orderBy: 'name'" ng-class="{'has-success':updateOfficer}">
+													<h4>{{dept.name}}</h4>
+													<span ng-show="departmentPositions[dept.id].length == 0">There are no Cabinet-level positions in this department</span>
+													<div class="form-group" ng-repeat="pos in departmentPositions[dept.id] | orderBy: 'name'">
+														<label for="role">{{pos.name}}</label>
+														<select id="role" ng-model="pos.holder" class="form-control" ng-change="updateOfficer = false;">
+															<option ng-repeat="per in dept.memberships | orderBy: name" value="{{per.id}}" ng-selected="per.id == pos.holder">{{per.name}}</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="box-footer">
+												<button type="submit" class="btn btn-primary" ng-click="changeOfficer()">Update</button>
+											</div>
 										</div>
 									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="createPosition()">Update</button>
-									</div>
-								</div>
+								</div>	<!-- /.tab-pane -->
+							</div>
 
-								<div class="box box-primary" ng-show = "role.removePosition">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Remove Position
-										</h3>
-									</div>
-									<div class="box-body" >
-										<div class="form-group" ng-class="{'has-success':removePosition}">
-											<label for="remove">Remove from which department?</label>
-											<select id="remove" ng-model="removedDept" class="form-control" ng-change="removePosition = false;">
-												<option ng-repeat="(dept, data) in removePositions | orderBy:'data.name'" value="{{dept}}" ng-show="data.positions.length > 0">{{data.name}}</option>
-											</select>
-											<label for="nullpos">What Position should be removed</label>
-											<select id="nullpos" ng-model="removedPos" class="form-control" ng-change="removePosition = false;">
-												<option ng-repeat="pos in removePositions[removedDept].positions |orderBy: 'name'" value="{{pos.id}}">{{pos.name}}</option>
-											</select>
+							<div class="tab-pane" id="administrator">
+							<div class="row">
+								<div class="col-md-4">
+									<div class="box box-primary box-solid" ng-show = "role.makeAdmin">
+										<div class="box-header with-border">
+											<h3 class="box-title">
+												Add Executive Officer
+											</h3> 
+										</div> 
+										<div class="box-body">
+											<div class="form-group" ng-class="{'has-success':addAd}">
+												<label for="admin">Person to upgrade</label>
+												<select ng-model="newAdmin" class="form-control" ng-change="addAd = false;">
+													<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}" ng-show="!executiveOfficers.includes(per.name)">{{per.name}}</option>
+												</select>
+											</div>
+											<button type="submit" class="btn btn-primary" ng-click="addAdmin()">Update</button>
 										</div>
 									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="deletaDepartment()">Update</button>
+									<div class="box box-primary box-solid">
+										<div class="box-header with-border">
+											<h3 class="box-title">
+												List of Executive Officers
+											</h3>
+										</div>
+										<div class="box-body">
+											<h5 ng-repeat="officer in executiveOfficers">{{officer}}</h5>
+										</div>
 									</div>
 								</div>
-							</div>	<!-- /.tab-pane -->
-
-							<div class="tab-pane" id="administrator">	
-								<div class="box box-primary" ng-show = "role.makeAdmin">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Add Presidential Staff	
-										</h3> 
-									</div> 
-									<div class="box-body">
-										<div class="form-group" ng-class="{'has-success':addAd}">
-											<label for="admin">Person to upgrade</label>
-											<select ng-model="newAdmin" class="form-control" ng-change="addAd = false;">
-												<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}" >{{per.name}}</option>
-											</select>
+								<div class="col-md-4">
+									<div class="box box-primary box-solid" ng-show = "role.makeExec">
+										<div class="box-header with-border">
+											<h3 class="box-title">
+												Add Cabinet-Level Officer
+											</h3>
+										</div>
+										<div class="box-body">
+											<div class="form-group" ng-class="{'has-success':addExec}">
+												<label for="admin">Person to upgrade</label>
+												<select ng-model="newExec" class="form-control" ng-change="addExec = false;">
+													<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}" ng-show="!cabinetOfficers.includes(per.name)">{{per.name}}</option>
+												</select>
+											</div>
+											<button type="submit" class="btn btn-primary" ng-click="addExecutive()">Update</button>
 										</div>
 									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="addAdmin()">Update</button>
+									<div class="box box-primary box-solid">
+										<div class="box-header with-border">
+											<h3 class="box-title">
+												List of Cabinet-Level Officers
+											</h3>
+										</div>
+										<div class="box-body">
+											<h5 ng-repeat="officer in cabinetOfficers">{{officer}}</h5>
+										</div>
 									</div>
 								</div>
-								<div class="box box-primary" ng-show = "role.makeExec">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Add Executive
-										</h3>
-									</div>
-									<div class="box-body" >
-										<div class="form-group" ng-class="{'has-success':addExec}">
-											<label for="admin">Person to upgrade</label>
-											<select ng-model="newExec" class="form-control" ng-change="addExec = false;">
-												<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}">{{per.name}}</option>
-											</select>
+								<div class="col-md-4">
+									<div class="box box-primary box-solid" ng-show = "role.demotePerson">
+										<div class="box-header with-border">
+											<h3 class="box-title">
+												Remove Elevated Roles
+											</h3> 
+										</div> 
+										<div class="box-body">
+											<div class="form-group" ng-class="{'has-success':removeRoles}">
+												<label for="admin">Person to Remove Roles</label>
+												<select ng-model="normalRole" class="form-control" ng-change="removeRoles = false;">
+													<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}" ng-show="executiveOfficers.includes(per.name) || cabinetOfficers.includes(per.name)">{{per.name}}</option>
+												</select>
+											</div>
 										</div>
-									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="addExecutive()">Update</button>
-									</div>
-								</div>
-								<div class="box box-primary" ng-show = "role.demotePerson">
-									<div class="box-header with-border">
-										<h3 class="box-title">
-											Remove Elevated Roles
-										</h3> 
-									</div> 
-									<div class="box-body">
-										<div class="form-group" ng-class="{'has-success':removeRoles}">
-											<label for="admin">Person to Remove Roles</label>
-											<select ng-model="normalRole" class="form-control" ng-change="removeRoles = false;">
-												<option ng-repeat="per in people | orderBy: 'name'" value="{{per.id}}">{{per.name}}</option>
-											</select>
+										<div class="box-footer">
+											<button type="submit" class="btn btn-primary" ng-click="RemoveAllRoles()">Update</button>
 										</div>
-									</div>
-									<div class="box-footer">
-										<button type="submit" class="btn btn-primary" ng-click="RemoveAllRoles()">Update</button>
 									</div>
 								</div>
 							</div>	<!-- /.tab-pane -->

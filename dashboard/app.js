@@ -166,6 +166,12 @@ angular.module('dashboard', ['ngSanitize'])
                 })
         }
 
+        $scope.getPeopleInRole = function(role){
+            return $http.get('../getPeopleByRole.php?id=' + role)
+                .error(function (data, status, headers, config) {
+                    basecampConfig.debug && console.log('Error while getting people in role: ' + data);
+                })
+        }
         $scope.getExtraPersonInfo = function(id) {
             return $http.get("../getRecord.php?table=person&id=" + id)
                 .error(function (data, status, headers, config) {
@@ -346,35 +352,57 @@ angular.module('dashboard', ['ngSanitize'])
 // alert(member.name + ' ' + JSON.stringify(ids) + ' ' + ids.includes(member.id));
 
 
-			//update all userds in your departments
-			$scope.members = {};
-			$scope.getGroups().success(function(data, status, headers, config) {
-                angular.forEach(data,function(dept){
-                    $scope.getGroup(dept.id).success(function(data, status, headers, config) {
-                        angular.forEach(data.memberships, function(person){
-                            if(person.id == personId){
-                            	angular.forEach(data.memberships,function(member){
-                   					$scope.getExtraPersonInfo(member.id).success(function(data, status, headers, config) {
-					                    var personInfo = member;
-					                    personInfo.bio = data.bio;
-					                    personInfo.major = data.major;
-					                    personInfo.classStanding = data.classStanding;
-  					                    personInfo.hometown = data.hometown;
-					                   	personInfo.fact = data.fact;
-					                    personInfo.position = data.position;
-					                    personInfo.positionId = data.positionId;
-					                    if(!$scope.contains(personInfo, $scope.members))
-					                    	$scope.members[member.id] = personInfo;	
-					                })
-                            	})
-                            }
-                        })
-                    })
-                })
-            })
+			
 
             $scope.getPersonRoles(personId).success(function (data, status, headers, config) {
                 $scope.role = data;
+
+                //update all userds in your departments
+                $scope.members = {};
+                if($scope.role.addOfficer){
+                    $scope.getPeople().success(function(data, status, headers, config) {
+                        angular.forEach(data,function(member){
+                            $scope.getExtraPersonInfo(member.id).success(function(data, status, headers, config) {
+                                var personInfo = member;
+                                personInfo.bio = data.bio;
+                                personInfo.major = data.major;
+                                personInfo.classStanding = data.classStanding;
+                                personInfo.hometown = data.hometown;
+                                personInfo.fact = data.fact;
+                                personInfo.position = data.position;
+                                personInfo.positionId = data.positionId;
+                                if(!$scope.contains(personInfo, $scope.members))
+                                    $scope.members[member.id] = personInfo; 
+                            })
+                        })
+                    })
+                }else{
+                    $scope.getGroups().success(function(data, status, headers, config) {
+                        angular.forEach(data,function(dept){
+                            $scope.getGroup(dept.id).success(function(data, status, headers, config) {
+                                angular.forEach(data.memberships, function(person){
+                                    if(person.id == personId){
+                                        angular.forEach(data.memberships,function(member){
+                                            $scope.getExtraPersonInfo(member.id).success(function(data, status, headers, config) {
+                                                var personInfo = member;
+                                                personInfo.bio = data.bio;
+                                                personInfo.major = data.major;
+                                                personInfo.classStanding = data.classStanding;
+                                                personInfo.hometown = data.hometown;
+                                                personInfo.fact = data.fact;
+                                                personInfo.position = data.position;
+                                                personInfo.positionId = data.positionId;
+                                                if(!$scope.contains(personInfo, $scope.members))
+                                                    $scope.members[member.id] = personInfo; 
+                                            })
+                                        })
+                                    }
+                                })
+                            })
+                        })
+                    })
+                }
+            
                 $scope.positionDepartmentList = [];
                 if ($scope.role.addOfficer) {
                     $scope.getGroups().success(function (data, status, headers, config) {
@@ -437,6 +465,39 @@ angular.module('dashboard', ['ngSanitize'])
                         })
                     })
                 })
+
+                $scope.execIIds = [];
+                $scope.executiveOfficers = [];
+                $scope.getPeopleInRole(1).success(function(data, status, headers, config) {
+                    angular.forEach(data, function(person){
+                        if(!$scope.execIIds.includes(person.personId)){
+                            $scope.execIIds.push(person.personId);
+                        }
+                    })
+                    angular.forEach($scope.execIIds, function(per){
+                        $scope.getPersonInfo(per).success(function(data, status, headers, config) {
+                            $scope.executiveOfficers.push(data.name);
+                        })
+                    })
+                })
+
+                $scope.cabinetIds = [];
+                $scope.cabinetOfficers = [];
+                $scope.getPeopleInRole(2).success(function(data, status, headers, config) {
+                    angular.forEach(data, function(person){
+                        if(!$scope.cabinetIds.includes(person.personId)){
+                            $scope.cabinetIds.push(person.personId);
+                        }
+                    })
+
+                    angular.forEach($scope.cabinetIds,function(per){
+                        $scope.getPersonInfo(per).success(function(data, status, headers, config) {
+                            $scope.cabinetOfficers.push(data.name);
+                        })
+                    })
+                })
+
+
                 $scope.newPosition = "";
                 $scope.positionDepartment = "";
                 $scope.isElevated = false;
@@ -483,6 +544,9 @@ angular.module('dashboard', ['ngSanitize'])
         $scope.addAd = false;
         $scope.addAdmin = function(){
             $scope.addAd = true;
+            $scope.getPersonInfo($scope.newAdmin).success(function(data, status, headers, config) {
+            	$scope.executiveOfficers.push(data.name);
+            })
             $scope.changeRole($scope.newAdmin,0,1);
         }
 
@@ -533,23 +597,34 @@ angular.module('dashboard', ['ngSanitize'])
        	}
 
         $scope.removePosition = false;
+        $scope.errorPosition = false;
         $scope.removedDept = 0;
         $scope.removedPos = 0;
         $scope.deletaDepartment = function(){
+            $scope.removePosition = true;
+            $scope.errorPosition = false;
             $http.get('../removePosition.php?positionId=' + $scope.removedPos + '&departmentId=' + $scope.removedDept);
             var i = 0;
             angular.forEach($scope.departmentPositions[$scope.removedDept],function(pos){
                 if(pos.id == $scope.removedPos){
-                    $scope.departmentPositions[$scope.removedDept].splice(i,1);
+                    if(pos.holder <= 0){
+                        $scope.departmentPositions[$scope.removedDept].splice(i,1);
+                    }else{
+                        $scope.removePosition = false;
+                        $scope.errorPosition = true;
+                    }
                 }
                 i++;
             })
             i = 0;
             angular.forEach($scope.positions,function(pos){
-
-                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept && pos.holder == 0){
-                    alert(pos.holder);
-                    $scope.positions.splice(i,1);
+                if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept ){
+                    if(pos.holder == 0){
+                       $scope.positions.splice(i,1);
+                   }else{
+                       $scope.removePosition = false;
+                       $scope.errorPosition = true;
+                   }
                 }
                 i++;
             })
@@ -560,18 +635,28 @@ angular.module('dashboard', ['ngSanitize'])
                 }
                 i++;  
             })
-            $scope.removePosition = true;
         }
 
         $scope.addExec = false;
         $scope.addExecutive = function(){
             $scope.addExec = true;
+            $scope.getPersonInfo($scope.newExec).success(function(data, status, headers, config) {
+            	$scope.cabinetOfficers.push(data.name);
+            })
             $scope.changeRole($scope.newExec,0,2);
         }
 
         $scope.removeRoles = false;
         $scope.RemoveAllRoles = function(){
             $scope.removeRoles = true;
+            $scope.getPersonInfo($scope.normalRole).success(function(data, status, headers, config) {
+            	if($scope.cabinetOfficers.indexOf(data.name) >=0){
+            		$scope.cabinetOfficers.splice($scope.cabinetOfficers.indexOf(data.name), 1);
+            	}
+            	if($scope.executiveOfficers.indexOf(data.name) >= 0){
+	            	$scope.executiveOfficers.splice($scope.executiveOfficers.indexOf(data.name), 1);
+	            }
+            })
             $scope.changeRole($scope.normalRole,0,3);
         }
 

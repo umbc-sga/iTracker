@@ -125,6 +125,22 @@ angular.module('basecamp', ['ngSanitize'])
                 })
         }
 
+        $scope.getPerson = function(personId){
+            var person = {};
+            $scope.getPersonInfo(personId).success(function (data, status, headers, config) {
+                person = data;
+                $scope.getExtraPersonInfo(personId).success(function(data, status, headers, config) {
+                    person.bio = data.bio;
+                    person.major = data.major;
+                    person.classStanding = data.classStanding;
+                    person.hometown = data.hometown;
+                    person.fact = data.fact;
+                    person.position = data.position;
+                })
+            })
+            return person;
+        }
+
         $scope.getPersonEvents= function(personID, page) {
             return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
@@ -145,16 +161,20 @@ angular.module('basecamp', ['ngSanitize'])
                     basecampConfig.debug && console.log('Error while getting group : ' + groupId + data);
                 })
         }
-        $scope.getDepsrtmentProjects = function(id){
+        $scope.getDepartmentProjects = function(id){
+            var projIDs = [];
             var projects = [];
             $scope.getGroup(id).success(function (data, status, headers, config) {
                 angular.forEach(data.memberships, function(person){
                     $scope.getPersonProj(person.id).success(function (data, status, headers, config) {
                         angular.forEach(data, function(proj){
-                            if(!proj.template && proj.id != 9793820)
+                            if((!proj.template) && (proj.id != 9793820) && (projIDs.indexOf(proj.id) == -1)) {
+                                projIDs.push(proj.id);
                                 $scope.getProject(proj.id).success(function (data, status, headers, config) {
                                     projects.push(data);
                                 })
+                            }
+                            
                         })
                     })
                 })
@@ -599,10 +619,6 @@ angular.module('basecamp', ['ngSanitize'])
                 var project = angular.fromJson(data);
                 if (angular.isObject(project)) {
                     $scope.project = project;
-                    // console.log(project);
-                    $scope.project.created_at = $scope.prettyDate($scope.project.created_at);
-                    $scope.project.updated_at = $scope.prettyDate($scope.project.updated_at);
-
                 }
             }).
             error(function (data, status, headers, config) {
@@ -818,7 +834,7 @@ angular.module('basecamp', ['ngSanitize'])
                     department.id = data.id;
                     
                     
-                    department.projects = getDepsrtmentProjects(department.id);
+                    department.projects = $scope.getDepartmentProjects(department.id);
                     $scope.depts.push(department);
                 })
             })
@@ -889,7 +905,7 @@ angular.module('basecamp', ['ngSanitize'])
                     angular.forEach(data,function (event){
                         // alert(JSON.stringify(event));
                         if(event.bucket.type == 'Project'){
-                            event.summary += " in <a href='/itracker/projects/" + event.bucket.id + ">" + event.bucket.name + "</a>";
+                            event.summary += " in <a href=\"/itracker/projects/" + event.bucket.id + "/\">" + event.bucket.name + "</a>";
                         }
                         event.created_at = $scope.prettyDate(event.created_at);
                         event.updated_at = $scope.prettyDate(event.updated_at);
@@ -931,10 +947,24 @@ angular.module('basecamp', ['ngSanitize'])
             })
             $scope.getGroup($scope.id).success(function (data, status, headers, config) {
                 $scope.department = data;
+                var people = [];
+                angular.forEach(data.memberships,function(person){
+                    $scope.getExtraPersonInfo(person.id).success(function(data, status, headers, config) {
+                        var personInfo = person;
+                        personInfo.bio = data.bio;
+                        personInfo.major = data.major;
+                        personInfo.classStanding = data.classStanding;
+                        personInfo.hometown = data.hometown;
+                        personInfo.fact = data.fact;
+                        personInfo.position = data.position;
+                        people.push(personInfo);
+                    })
+                })
+                $scope.department.memberships = people;
                 $scope.getExtraDeptInfo($scope.id).success(function (data, status, headers, config) {
                     $scope.department.description = data.description;
                 })
-                $scope.department.projects = $scope.getDepsrtmentProjects($scope.id);
+                $scope.department.projects = $scope.getDepartmentProjects($scope.id);
 
             })
 

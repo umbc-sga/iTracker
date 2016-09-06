@@ -6,11 +6,6 @@
 		<section class="content-header">
 			<h1>
 				{{project.name}}
-				<form action="/itracker/join" method="get" style="display:inline;">
-					<input type="text" name="proj" value="{{project.id}}" hidden="">
-					<input type="text" name="projname" value="{{project.name}}" hidden="">
-					<button type="submit" class="btn btn-primary btn-block btn-flat " style="width:200px; display:inline-block; margin-left:20px;">Join the team on Basecamp!</button>
-				</form>
 			</h1>
 			<ol class="breadcrumb">
 				<li><a href="/itracker/"><i class="fa fa-home"></i> Home</a></li>
@@ -32,7 +27,7 @@
 						<div class="box-body">
 							<div class="progress progress-xl progress-striped active" style="height:30px;">
 		                    	<div class="progress-bar progress-bar-primary" style="width: {{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">
-		                    		{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%
+		                    		<h6>{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%</h6>
 		                    	</div>
 		                    </div>
 						</div>
@@ -44,7 +39,14 @@
 							</h3>
 						</div>
 						<div class="box-body">
-							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}" ng-hide="person.email_address == 'sga@umbc.edu'"><img src="{{person.avatar_url}}" class="img-circle people-list" title="{{person.name}}" alt="{{person.name}}"></a>
+							<a ng-repeat="person in people | orderBy:'name'" href="/itracker/people/{{person.id}}" ng-hide="person.email_address == 'sga@umbc.edu'"><img src="{{person.avatar_url}}" class="img-circle" style="margin-bottom:15px;margin-right:15px;" title="{{person.name}}" alt="{{person.name}}"></a>
+						</div>
+						<div class="box-footer">
+							<form action="/itracker/join" method="get" style="display:inline;">
+								<input type="text" name="proj" value="{{project.id}}" hidden="">
+								<input type="text" name="projname" value="{{project.name}}" hidden="">
+								<button type="submit" class="btn btn-primary btn-block btn-flat ">Join the team!</button>
+							</form>
 						</div>
 					</div>
 					<div class="box box-primary">
@@ -70,11 +72,11 @@
 									</tr>
 									<tr>
 										<td style="width:150px;" align="right">Created At</td>
-										<td>{{project.created_at}}</td>
+										<td>{{project.created_at | date}}</td>
 									</tr>
 									<tr>
 										<td style="width:150px;" align="right">Last Updated</td>
-										<td>{{project.updated_at}}</td>
+										<td>{{project.updated_at | date}}</td>
 									</tr>
 									<tr>
 										<td style="width:150px;" align="right"># of Topics</td>
@@ -111,9 +113,9 @@
 						<div class="box-body">
 				            <div class="box-group" id="accordion">
 				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-				                <div class="panel box box-warning" ng-repeat="list in activeTodoLists">
+				                <div class="panel box box-warning box-solid" ng-repeat="list in activeTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
 						            <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-{{list.id}}" target="_self" style="text-decoration:none; color:black;">
-						                <div class="progress progress-md progress-striped active" style="height: 30px;">
+						                <div class="progress progress-md progress-striped active" style="height: 30px; margin-bottom: 0px;">
 						                	<div class="box-header with-border progress-bar progress-bar-warning" style="width:{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}%"></div>
 						                	<h4 class="box-title todoTitle">
 					                    		{{list.name}}
@@ -125,7 +127,7 @@
 						            </a>
 
 				                	<div id="todoCollapse-{{list.id}}" class="panel-collapse collapse">
-				                    	<div class="box-body">
+				                    	<div class="box-body no-padding">
 				                    		<h4 ng-show="list.description.length > 0">{{list.description}}</h4>
 				                    		<table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
 				                    			<tr>
@@ -135,6 +137,7 @@
 				                    			<tr ng-repeat="todo in list.todos.remaining">
 				                    				<td valign="middle">
 				                    					<h5>{{todo.content}}</h5>
+				                    					<h6 ng-show="todo.due_on != null">Due: {{todo.due_on | date}}</h6>
 										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
 										            </td>
 										            <td align="center" valign="middle">
@@ -148,6 +151,7 @@
 				                    			<tr ng-repeat="todo in list.todos.completed">
 				                    				<td valign="middle">
 				                    					<h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">{{todo.content}}</span></h5>
+										                <h6 ng-show="todo.due_on != null">Due: {{todo.due_on | date}}</h6>
 										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
 										            </td>
 										            <td align="center" valign="middle">
@@ -175,9 +179,9 @@
 						<div class="box-body">
 				            <div class="box-group" id="accordion">
 				                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-				                <div class="panel box box-success" ng-repeat="list in completedTodoLists">
+				                <div class="panel box box-success" ng-repeat="list in completedTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
 						            <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-{{list.id}}" target="_self" style="text-decoration:none; color:black;">
-						                <div class="progress progress-md progress-striped active" style="height: 30px;">
+						                <div class="progress progress-md progress-striped active" style="height: 30px; margin-bottom: 0px;">
 						                	<div class="box-header with-border progress-bar progress-bar-success" style="width:100%"></div>
 						                	<h4 class="box-title todoTitle">
 					                    		{{list.name}}
@@ -189,7 +193,7 @@
 						            </a>
 
 				                	<div id="todoCollapse-{{list.id}}" class="panel-collapse collapse">
-				                    	<div class="box-body">
+				                    	<div class="box-body no-padding">
 				                    		<h4 ng-show="list.description.length > 0">{{list.description}}</h4>
 				                    		<table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
 				                    			<tr>
@@ -199,6 +203,7 @@
 				                    			<tr ng-repeat="todo in list.todos.remaining">
 				                    				<td valign="middle">
 				                    					<h5>{{todo.content}}</h5>
+										                <h6 ng-show="todo.due_on != null">Due: {{todo.due_on | date}}</h6>
 										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
 										            </td>
 										            <td align="center" valign="middle">
@@ -212,6 +217,7 @@
 				                    			<tr ng-repeat="todo in list.todos.completed">
 				                    				<td valign="middle">
 				                    					<h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">{{todo.content}}</span></h5>
+										                <h6 ng-show="todo.due_on != null">Due: {{todo.due_on | date}}</h6>
 										                <h6>Created: {{todo.created_at | date}} | Last update: {{todo.updated_at | date}}</h6>
 										            </td>
 										            <td align="center" valign="middle">
@@ -232,7 +238,7 @@
 				            </div>
 						</div>
 					</div>
-					<div class="box box-primary" ng-show="project.attachments.count > 0">
+					<!-- <div class="box box-primary" ng-show="project.attachments.count > 0">
 						<div class="box-header with-border">
 							<h3 class="box-title">Documents</h3>
 						</div>
@@ -265,7 +271,7 @@
 	                    		</tr>
                     		</table>
 						</div>
-					</div>
+					</div> -->
 				</div> <!-- /.col -->
 				<div class="col-md-7">
 					<ul class="timeline">
@@ -280,7 +286,9 @@
 									<!-- <i class="fa fa-clock-o"></i> TIME -->
 								</span>
 								<h3 class="timeline-header">
-									<a href="/itracker/people/{{event.creator.id}}">{{event.creator.name}} </a><span ng-bind-html="event.summary"></span>
+									<a href="/itracker/people/{{event.creator.id}}" ng-show="event.creator.id != 13421831">{{event.creator.name}} </a>
+									<span ng-show="event.creator.id == 13421831">The Main SGA Account </span>
+									<span ng-bind-html="event.summary"></span>
 								</h3>
 							</div>
 						</li>
