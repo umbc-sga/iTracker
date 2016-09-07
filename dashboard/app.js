@@ -293,7 +293,7 @@ angular.module('dashboard', ['ngSanitize'])
                     var rawGroups = data;
 
                     angular.forEach (rawGroups, function (group) {
-                        $http.get('newRecord.php?table=department&id=' + group.id)
+                        $http.get('../newRecord.php?table=department&id=' + group.id)
                             .error(function (data, status, headers, config) {
                                 basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                             });
@@ -305,7 +305,7 @@ angular.module('dashboard', ['ngSanitize'])
 
                             angular.forEach(data.memberships, function(person){
                                 
-                                $http.get('newRole.php?personId=' + person.id + '&deptId=' + data.id)
+                                $http.get('../newRole.php?personId=' + person.id + '&deptId=' + data.id)
                                     .error(function (data, status, headers, config) {
                                         basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                                     });
@@ -558,6 +558,7 @@ angular.module('dashboard', ['ngSanitize'])
             }else{
                 elev = 0;
             }
+            $scope.url = '../newPosition.php?position=' + $scope.newPosition + '&elevated=' + elev + '&dept=' + $scope.positionDepartment;
             $http.get('../newPosition.php?position=' + $scope.newPosition + '&elevated=' + elev + '&dept=' + $scope.positionDepartment).success(function(data, status, headers, config) {
                 var pos = {
                     id:data,
