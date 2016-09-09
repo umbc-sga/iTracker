@@ -3,7 +3,7 @@
 
 	$id = $_GET['id'];
 
-	$sql = "UPDATE TABLE `person` SET `positionId = NULL WHERE id = $id";
-
+	$sql = "UPDATE `person` SET `positionId` = NULL WHERE `id` = $id";
+	echo($sql);
 	mysqli_query($link, $sql);
 ?>
