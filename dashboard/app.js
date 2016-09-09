@@ -665,7 +665,25 @@ angular.module('dashboard', ['ngSanitize'])
        $scope.deptChangeId = 0;
        $scope.saveDescription = function(){
             $scope.changeDeptDescription = true;
-            $scope.url = '../UpdateDepartment.php?id=' + $scope.deptChangeId +'&description=' + $scope.deptDescriptions[$scope.deptChangeId];
             $http.get('../UpdateDepartment.php?id=' + $scope.deptChangeId +'&description=' + $scope.deptDescriptions[$scope.deptChangeId])
+       }
+
+       $scope.removePosDept = 0;
+       $scope.unassignPerson = false;
+       $scope.removePosId = 0;
+       $scope.UnassignDepartment = function(){
+            var person;
+            var i = 0;
+            var posId = 0;
+            angular.forEach($scope.departmentPositions[$scope.removePosDept], function(pos) {
+                if(pos.id == $scope.removePosId){
+                    person = pos.holder;
+                    posId = i;
+                }
+                i++;
+            })
+            $http.get('../unassignPosition.php?id=' + person);
+            $scope.departmentPositions[$scope.removePosDept][posId].holder = 0;
+            $scope.unassignPerson = true;
        }
     }])
