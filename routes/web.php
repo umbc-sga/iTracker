@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
+
+Route::any('angular/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view']);

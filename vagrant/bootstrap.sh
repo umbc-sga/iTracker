@@ -5,7 +5,7 @@ sudo apt-get update
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
 sudo apt-get install -y mysql-server curl build-essential
-sudo apt-get install -y apache2 php5 php5-common libapache2-mod-php5 php5-mysql php5-curl php5-json php5-mbstring php5-readline php5-dev php5-cli php5-xml php5-zip
+sudo apt-get install -y apache2 php5 php5-common libapache2-mod-php5 php5-mysql php5-curl php5-json php5-readline php5-dev php5-cli
 
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
