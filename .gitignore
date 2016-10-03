@@ -8,3 +8,8 @@ Homestead.yaml
 
 .vagrant
 *.iml
+
+public/js/*.js
+public/css/*.css
+public/fonts/*
+resources/stage
