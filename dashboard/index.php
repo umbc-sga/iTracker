@@ -63,7 +63,7 @@
                     <span class="logo-lg"><b>Initiative</b>Tracker</span>
                 </a>
                 <!-- Header Navbar: style can be found in header.less -->
-                <nav class="navbar navbar-static-top" role="navigation">
+                <nav class="navbar navbar-static-top" role="navigation" style="height:50px;">
                     <!-- Sidebar toggle button-->
                     <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
                         <span class="sr-only">Toggle navigation</span>
