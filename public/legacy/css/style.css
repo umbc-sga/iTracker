@@ -1,0 +1,12 @@
+body {
+  padding-top: 60px;
+  background: white;
+}
+.projectThumbnail {
+  height: 120px;
+}
+.projectThumbnail > h3 {
+  color: #777777;
+  font-size: 1.8em;
+  text-align: center;
+}
