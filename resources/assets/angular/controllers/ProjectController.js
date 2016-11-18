@@ -4,7 +4,8 @@
  * Controller for the page that displays project details
  */
 angular.module('itracker')
-    .controller('ProjectController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('ProjectController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
 
     $scope.project = {};
     $scope.events = [];
@@ -27,7 +28,7 @@ angular.module('itracker')
         var day = rest;
         var prettyDate = day + ' ' + month + ' ' + year;
         return prettyDate;
-    }
+    };
     $http.get('get.php?url=projects/' + $routeParams.projectId + '.json')
         .success(function (data, status, headers, config) {
             // console.log('SUCCESS');
@@ -42,7 +43,7 @@ angular.module('itracker')
         // called asynchronously if an error occurs
         // or server returns response with an error status.
         console.log('ERROR');
-    })
+    });
 
     $scope.page = 1;
     $scope.more = true;
@@ -66,7 +67,7 @@ angular.module('itracker')
 
                     curDate = date;
                     $scope.events.push(event);
-                })
+                });
                 $scope.page++;
                 if($scope.limit >= $scope.events.length){
                     $scope.more = false;
@@ -75,12 +76,12 @@ angular.module('itracker')
         }else if($scope.limit >= $scope.events.length){
             $scope.more = false;
         }
-    }
+    };
     $scope.getEventSet();
 
     $scope.getProjectAccesses($routeParams.projectId).success(function (data, status, headers, config) {
         $scope.people = data;
-    })
+    });
 
 
     // Get active todo lists
@@ -95,14 +96,14 @@ angular.module('itracker')
                     .success(function (data, status, headers, config) {
                         $scope.activeTodoLists.push(data);
                     })
-            })
+            });
             // console.log(activeTodoLists)
         }).
         error(function (data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             console.log('ERROR');
-        })
+        });
 
     // Get active todo lists
     $scope.completedTodoLists = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists/completed.json')
@@ -120,7 +121,7 @@ angular.module('itracker')
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             console.log('ERROR');
-        })
+        });
 
 
     $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
@@ -154,4 +155,4 @@ angular.module('itracker')
         })
 
     }, true);
-}])
+}]);

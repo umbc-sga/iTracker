@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .controller('PersonController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('PersonController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
         $scope.events = [];
 
         $scope.getPersonInfo($routeParams.personId).success(function(data, status, headers, config) {
@@ -14,7 +15,7 @@ angular.module('itracker')
                 $scope.person.fact = data.fact;
                 $scope.person.position = data.position;
             })
-        })
+        });
 
         $scope.depts = $scope.getPersonDepts($routeParams.personId);
         $scope.projs = [];
@@ -26,7 +27,7 @@ angular.module('itracker')
                     })
                 }
             })
-        })
+        });
 
         $scope.prettyDate = function(dateTime){
             var dateStr = dateTime.substring(0,dateTime.indexOf('T'));
@@ -38,7 +39,7 @@ angular.module('itracker')
             var day = rest;
             var prettyDate = day + ' ' + month + ' ' + year;
             return prettyDate;
-        }
+        };
 
         $scope.page = 1;
         $scope.more = true;
@@ -66,7 +67,7 @@ angular.module('itracker')
 
                         curDate = date;
                         $scope.events.push(event);
-                    })
+                    });
                     $scope.page++;
                     if($scope.limit >= $scope.events.length){
                         $scope.more = false;
@@ -75,7 +76,7 @@ angular.module('itracker')
             }else if($scope.limit >= $scope.events.length){
                 $scope.more = false;
             }
-        }
+        };
         $scope.getEventSet();
 
-    }])
+    }]);

@@ -4,19 +4,22 @@
  * Fetches and stores some initial data in the main property to display global statistics
  */
 angular.module('itracker')
-    .controller('DashboardController', ['$scope', '$http', 'basecamp.config', function ($scope, $http, basecampConfig) {
+    .controller('DashboardController', ['$scope', '$http', 'basecamp.config',
+        function ($scope, $http, basecampConfig) {
 
         $scope.main = {
             groups: []
-        }
+        };
+
         $scope.contains = function(person, arr){
             angular.forEach(arr,function(id,member){
                 if(id == person.id){
                     return true;
                 }
-            })
+            });
             return false;
-        }
+        };
+
         $scope.getPerson = function(personId){
             var person = {};
             $scope.getPersonInfo(personId).success(function (data, status, headers, config) {
@@ -29,9 +32,9 @@ angular.module('itracker')
                     person.fact = data.fact;
                     person.position = data.position;
                 })
-            })
+            });
             return person;
-        }
+        };
 
         /**
          * Get all people
@@ -43,21 +46,21 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonInfo = function(personID) {
             return $http.get('../get.php?url=people/' + personID +'.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonProj = function(personID) {
             return $http.get('../get.php?url=people/' + personID +'/projects.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonEvents= function(personID, page) {
             if (page === 1) {
@@ -71,27 +74,28 @@ angular.module('itracker')
                         basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                     })
             }
-        }
+        };
 
         $scope.getDeptPositions = function(dept) {
             return $http.get('../getPositions.php?dept=' + dept)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting groups: ' + data);
                 })
-        }
+        };
+
         $scope.getGroups = function() {
             return $http.get('../get.php?url=groups.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting groups: ' + data);
                 })
-        }
+        };
 
         $scope.getGroup = function(groupId) {
             return $http.get('../get.php?url=groups/' + groupId + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting group : ' + groupId + data);
                 })
-        }
+        };
 
         /**
          * Get all projects
@@ -103,14 +107,14 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getProject = function(id) {
             return $http.get('../get.php?url=projects/' + id + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         /**
          * Get all active todo lists
@@ -122,7 +126,7 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting active todo lists: ' + data);
                 });
-        }
+        };
 
         /**
          * Get all completed todo lists
@@ -134,34 +138,35 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getProjectAccesses = function(id) {
             return $http.get("../get.php?url=projects/" + id + "/accesses.json")
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting project accesses: ' + data);
                 })
-        }
+        };
 
         $scope.getPeopleInRole = function(role){
             return $http.get('../getPeopleByRole.php?id=' + role)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting people in role: ' + data);
                 })
-        }
+        };
+
         $scope.getExtraPersonInfo = function(id) {
             return $http.get("../getRecord.php?table=person&id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getExtraDeptInfo = function(id) {
             return $http.get('../getRecord.php?table=department&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonPack = function(id) {
             var per = {};
@@ -185,9 +190,9 @@ angular.module('itracker')
                         }
                     })
                 })
-            })
+            });
             return per;
-        }
+        };
 
 
         $scope.getProjectPack = function(id) {
@@ -204,9 +209,9 @@ angular.module('itracker')
                 }else{
                     proj.status = "Active";
                 }
-            })
+            });
             return proj;
-        }
+        };
 
         $scope.getPersonDepts = function(id) {
             var departments = [];
@@ -222,48 +227,48 @@ angular.module('itracker')
                         })
                     })
                 })
-            })
+            });
             return departments;
-        }
+        };
 
         $scope.getProjectEvents = function(id, page) {
             return $http.get("../get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonRoles = function(id) {
             return $http.get("../getRole.php?id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
-        }
+        };
 
         $scope.getRole = function(id) {
             return $http.get('../getRecord.php?table=role&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getRolePerson = function(roleId, departmentId) {
             return $http.get('../getRoleHolder.php?dept=' + departmentId + "&role=" + roleId)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
-        }
+        };
 
         $scope.changeRole = function(person, dept, role) {
             $http.get("../changeRole.php?person=" + person + "&dept=" + dept + "&role=" + role);
-        }
+        };
 
         $scope.getPosition = function(pos, dept) {
             return $http.get('../getPositionHolder.php?dept=' + dept + '&position=' + pos)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
-        }
+        };
 
         $scope.getGroups().success(function (data, status, headers, config) {
             if (angular.isArray(data)) {
@@ -299,7 +304,7 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while changePosition: ' + data);
                 })
-        }
+        };
 
         $scope.newPosition = function(pos, isElevated, dept) {
             return $http.get('newPosition.php?position=' + pos + '&elevated=' + isElevated + '&dept=' + dept)
@@ -318,18 +323,13 @@ angular.module('itracker')
                     if (person.email_address == email) {
                         personId = person.id;
                     }
-                })
+                });
                 $scope.id = personId;
                 $scope.getPersonInfo(personId).success(function(data, status, headers, config) {
                     $scope.person = data;
-                })
+                });
 
                 $scope.personDepts = $scope.getPersonDepts(personId);
-
-    // alert(member.name + ' ' + JSON.stringify(ids) + ' ' + ids.includes(member.id));
-
-
-
 
                 $scope.getPersonRoles(personId).success(function (data, status, headers, config) {
                     $scope.role = data;
@@ -397,7 +397,7 @@ angular.module('itracker')
                                 $scope.depts.push(data);
                             })
                         })
-                    })
+                    });
                     $scope.positions = [];
                     $scope.removePositions = {};
                     $scope.departmentPositions = {};
@@ -429,7 +429,7 @@ angular.module('itracker')
                                 })
                             })
                         })
-                    })
+                    });
 
                     $scope.deptDescriptions = {};
                     $scope.getGroups().success(function(data, status, headers, config) {
@@ -438,7 +438,7 @@ angular.module('itracker')
                                 $scope.deptDescriptions[data.id] = data.description;
                             })
                         })
-                    })
+                    });
 
                     $scope.execIIds = [];
                     $scope.executiveOfficers = [];
@@ -447,13 +447,13 @@ angular.module('itracker')
                             if(!$scope.execIIds.includes(person.personId)){
                                 $scope.execIIds.push(person.personId);
                             }
-                        })
+                        });
                         angular.forEach($scope.execIIds, function(per){
                             $scope.getPersonInfo(per).success(function(data, status, headers, config) {
                                 $scope.executiveOfficers.push(data.name);
                             })
                         })
-                    })
+                    });
 
                     $scope.cabinetIds = [];
                     $scope.cabinetOfficers = [];
@@ -462,21 +462,21 @@ angular.module('itracker')
                             if(!$scope.cabinetIds.includes(person.personId)){
                                 $scope.cabinetIds.push(person.personId);
                             }
-                        })
+                        });
 
                         angular.forEach($scope.cabinetIds,function(per){
                             $scope.getPersonInfo(per).success(function(data, status, headers, config) {
                                 $scope.cabinetOfficers.push(data.name);
                             })
                         })
-                    })
+                    });
 
 
                     $scope.newPosition = "";
                     $scope.positionDepartment = "";
                     $scope.isElevated = false;
                 })
-            })
+            });
             $scope.updateOfficer = false;
             $scope.changeOfficer = function(){
                 $scope.getGroups().success(function(data, status, headers, config) {
@@ -491,11 +491,11 @@ angular.module('itracker')
                             })
                         })
                     })
-                })
+                });
                 $scope.updateOfficer = true;
                 //chenge to 6
                 //change person in arr to role in db
-            }
+            };
             $scope.personalUpdate = false;
             $scope.UpdatePersonal = function(){
                 $scope.personalUpdate = true;
@@ -511,7 +511,7 @@ angular.module('itracker')
                     .error(function (data, status, headers, config) {
                         basecampConfig.debug && console.log('Error while getting role: ' + data);
                     })
-            }
+            };
 
 
 
@@ -520,9 +520,9 @@ angular.module('itracker')
                 $scope.addAd = true;
                 $scope.getPersonInfo($scope.newAdmin).success(function(data, status, headers, config) {
                     $scope.executiveOfficers.push(data.name);
-                })
+                });
                 $scope.changeRole($scope.newAdmin,0,1);
-            }
+            };
 
             $scope.newPos = false;
             $scope.createPosition = function(){
@@ -539,7 +539,7 @@ angular.module('itracker')
                         name:$scope.newPosition,
                         needPermission: $scope.isElevated,
                         holder:0
-                    }
+                    };
                     if(pos.needPermission){
                         if($scope.role.addOfficer){
                             $scope.removePositions[$scope.positionDepartment].positions.push(pos);
@@ -551,7 +551,7 @@ angular.module('itracker')
                     }
                     $scope.newPos = true;
                 })
-            }
+            };
 
             $scope.memberUpdate = false;
             $scope.memberChanged = 0;
@@ -569,7 +569,7 @@ angular.module('itracker')
                     .error(function (data, status, headers, config) {
                         basecampConfig.debug && console.log('Error while getting role: ' + data);
                     })
-            }
+            };
 
             $scope.removePosition = false;
             $scope.errorPosition = false;
@@ -588,7 +588,7 @@ angular.module('itracker')
                             $http.get('../removePosition.php?positionId=' + $scope.removedPos + '&departmentId=' + $scope.removedDept);
                         })
                     }
-                })
+                });
 
                 var i = 0;
                 angular.forEach($scope.departmentPositions[$scope.removedDept],function(pos){
@@ -596,14 +596,14 @@ angular.module('itracker')
                         $scope.departmentPositions[$scope.removedDept].splice(i,1);
                     }
                     i++;
-                })
+                });
                 i = 0;
                 angular.forEach($scope.positions,function(pos){
                     if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept ){
                         $scope.positions.splice(i,1);
                     }
                     i++;
-                })
+                });
                 i = 0;
                 angular.forEach($scope.removePositions[$scope.removedDept].positions,function(pos){
                     if(pos.id == $scope.removedPos && pos.dept == $scope.removedDept  && pos.holder == 0){
@@ -611,16 +611,16 @@ angular.module('itracker')
                     }
                     i++;
                 })
-            }
+            };
 
             $scope.addExec = false;
             $scope.addExecutive = function(){
                 $scope.addExec = true;
                 $scope.getPersonInfo($scope.newExec).success(function(data, status, headers, config) {
                     $scope.cabinetOfficers.push(data.name);
-                })
+                });
                 $scope.changeRole($scope.newExec,0,2);
-            }
+            };
 
             $scope.removeRoles = false;
             $scope.RemoveAllRoles = function(){
@@ -632,16 +632,16 @@ angular.module('itracker')
                     if($scope.executiveOfficers.indexOf(data.name) >= 0){
                         $scope.executiveOfficers.splice($scope.executiveOfficers.indexOf(data.name), 1);
                     }
-                })
+                });
                 $scope.changeRole($scope.normalRole,0,3);
-            }
+            };
 
             $scope.changeDeptDescription = false;
             $scope.deptChangeId = 0;
             $scope.saveDescription = function(){
                 $scope.changeDeptDescription = true;
                 $http.get('../UpdateDepartment.php?id=' + $scope.deptChangeId +'&description=' + $scope.deptDescriptions[$scope.deptChangeId])
-            }
+            };
 
             $scope.removePosDept = 0;
             $scope.unassignPerson = false;
@@ -656,9 +656,9 @@ angular.module('itracker')
                         posId = i;
                     }
                     i++;
-                })
+                });
                 $http.get('../unassignPosition.php?id=' + person);
                 $scope.departmentPositions[$scope.removePosDept][posId].holder = 0;
                 $scope.unassignPerson = true;
             }
-        }])
+        }]);

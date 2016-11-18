@@ -35,4 +35,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'basecamp' => [
+        'account' => env('BASECAMP_ACCOUNT'),
+        'token' => env('BASECAMP_SECRET'),
+    ]
+
 ];

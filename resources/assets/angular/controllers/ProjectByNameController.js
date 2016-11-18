@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .controller('ProjectsByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('ProjectsByNameController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
         $scope.projects = [];
 
         $scope.getProjects().success(function(data, status, headers, config) {
@@ -10,4 +11,4 @@ angular.module('itracker')
                     $scope.projects.push($scope.getProjectPack(proj.id));
             })
         })
-    }])
+    }]);

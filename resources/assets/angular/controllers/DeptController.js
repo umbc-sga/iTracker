@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .controller('DepartmentController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('DepartmentController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
         $scope.id = 0;
 
         $scope.getGroups().success(function (data, status, headers, config) {
@@ -10,7 +11,8 @@ angular.module('itracker')
                 if($routeParams.departmentName == group_href){
                     $scope.id = group.id;
                 }
-            })
+            });
+
             $scope.getGroup($scope.id).success(function (data, status, headers, config) {
                 $scope.department = data;
                 var people = [];
@@ -25,14 +27,14 @@ angular.module('itracker')
                         personInfo.position = data.position;
                         people.push(personInfo);
                     })
-                })
+                });
                 $scope.department.memberships = people;
                 $scope.getExtraDeptInfo($scope.id).success(function (data, status, headers, config) {
                     $scope.department.description = data.description;
-                })
+                });
                 $scope.department.projects = $scope.getDepartmentProjects($scope.id);
 
             })
 
         })
-    }])
+    }]);

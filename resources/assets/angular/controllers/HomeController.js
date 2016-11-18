@@ -4,7 +4,9 @@
  * Controller for the home page that displays the project overview
  */
 angular.module('itracker')
-    .controller('HomeController', ['$scope','$http', function ($scope, $http) {
+    .controller('HomeController', ['$scope','$http',
+        function ($scope, $http) {
+
         $scope.featuredProjs = [];
 
         $scope.getProjects().success(function (data, status, headers, config) {
@@ -18,4 +20,4 @@ angular.module('itracker')
                 })
             }
         })
-    }])
+    }]);

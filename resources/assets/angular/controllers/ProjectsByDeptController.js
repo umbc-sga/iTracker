@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('ProjectsByDeptController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
         $scope.depts = [];
         $scope.getGroups().success(function (data, status, headers, config) {
             angular.forEach(data,function(dept){
@@ -16,4 +17,4 @@ angular.module('itracker')
                 })
             })
         })
-    }])
+    }]);

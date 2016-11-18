@@ -6,7 +6,8 @@
  * Fetches and stores some initial data in the main property to display global statistics
  */
 angular.module('itracker')
-    .controller('MainController', ['$scope', '$http', 'basecamp.config', function ($scope, $http, basecampConfig) {
+    .controller('MainController', ['$scope', '$http', 'basecamp.config',
+        function ($scope, $http, basecampConfig) {
 
         /**
          * Container for some global data
@@ -43,7 +44,7 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
 
 
@@ -52,14 +53,14 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonProj = function(personID) {
             return $http.get('get.php?url=people/' + personID +'/projects.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getPerson = function(personId){
             var person = {};
@@ -73,30 +74,31 @@ angular.module('itracker')
                     person.fact = data.fact;
                     person.position = data.position;
                 })
-            })
+            });
             return person;
-        }
+        };
 
         $scope.getPersonEvents= function(personID, page) {
             return $http.get("get.php?url=people/" + personID + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getGroups = function(){
             return $http.get('get.php?url=groups.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting groups: ' + data);
                 })
-        }
+        };
 
         $scope.getGroup = function(groupId){
             return $http.get('get.php?url=groups/' + groupId + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting group : ' + groupId + data);
                 })
-        }
+        };
+
         $scope.getDepartmentProjects = function(id){
             var projIDs = [];
             var projects = [];
@@ -114,9 +116,9 @@ angular.module('itracker')
                         })
                     })
                 })
-            })
+            });
             return projects;
-        }
+        };
 
         /**
          * Get all projects
@@ -128,14 +130,14 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         $scope.getProject = function (id) {
             return $http.get('get.php?url=projects/' + id + '.json')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting projects: ' + data);
                 })
-        }
+        };
 
         /**
          * Get all active todo lists
@@ -147,7 +149,7 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting active todo lists: ' + data);
                 });
-        }
+        };
 
         /**
          * Get all completed todo lists
@@ -159,28 +161,28 @@ angular.module('itracker')
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getProjectAccesses = function(id){
             return $http.get("get.php?url=projects/" + id + "/accesses.json")
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting project accesses: ' + data);
                 })
-        }
+        };
 
         $scope.getExtraPersonInfo = function(id){
             return $http.get("getRecord.php?table=person&id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getExtraDeptInfo = function(id){
             return $http.get('getRecord.php?table=department&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonPack = function(id){
             var per = {};
@@ -204,7 +206,7 @@ angular.module('itracker')
                             }
                         }
                     })
-                })
+                });
                 $scope.getExtraPersonInfo(id).success(function(data, status, headers, config) {
                     per.bio = data.bio;
                     per.major = data.major;
@@ -213,9 +215,9 @@ angular.module('itracker')
                     per.fact = data.fact;
                     per.position = data.position;
                 })
-            })
+            });
             return per;
-        }
+        };
 
 
         $scope.getProjectPack = function(id){
@@ -236,9 +238,9 @@ angular.module('itracker')
                     proj.status = "Active";
                 }
 
-            })
+            });
             return proj;
-        }
+        };
 
         $scope.getPersonDepts = function(id){
             var departments = [];
@@ -254,41 +256,41 @@ angular.module('itracker')
                         })
                     })
                 })
-            })
+            });
             return departments;
-        }
+        };
 
         $scope.getProjectEvents= function(id, page){
             return $http.get("get.php?url=projects/" + id + "/events.json%3Fsince=2015-01-01T00:00:00%26page=" + page)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getPersonRoles = function(id){
             return $http.get("getRole.php?id=" + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
-        }
+        };
 
         $scope.getRole = function(id){
             return $http.get('getRecord.php?table=role&id=' + id)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                 })
-        }
+        };
 
         $scope.getRolePerson = function(roleId, departmentId){
             return $http.get('getRoleHolder.php?dept=' + departmentId + "&role=" + roleId)
                 .error(function (data, status, headers, config) {
                     basecampConfig.debug && console.log('Error while getting role: ' + data);
                 })
-        }
+        };
 
         $scope.changeRole = function(person, dept, role){
             $http.get("changeRole.php?person=" + person + "&dept=" + dept + "&role=" + role);
-        }
+        };
         /**
          * Get project counts
          *
@@ -353,7 +355,7 @@ angular.module('itracker')
             }
 
             return result;
-        }
+        };
 
 
         /**
@@ -486,7 +488,7 @@ angular.module('itracker')
                                     .error(function (data, status, headers, config) {
                                         basecampConfig.debug && console.log('Error while getting completed todo lists: ' + data);
                                     });
-                            })
+                            });
                             basecampConfig.debug && console.log('Group Info:', groupInfo);
 
                             $scope.main.groups.push( groupInfo );
@@ -494,8 +496,8 @@ angular.module('itracker')
                     })
                 }
             });
-        }
+        };
 
         $scope.bootstrapData();
 
-    }])
+    }]);

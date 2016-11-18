@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .controller('PeopleByNameController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('PeopleByNameController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
         $scope.people = [];
         var badEmails = ['sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'];
 
@@ -12,4 +13,4 @@ angular.module('itracker')
                 }
             })
         })
-    }])
+    }]);

@@ -4,7 +4,8 @@
  * Controller for the page that shows the todo lists for a certain project
  */
 angular.module('itracker')
-    .controller('TodoListController', ['$scope','$http', '$routeParams', function ($scope, $http, $routeParams) {
+    .controller('TodoListController', ['$scope','$http', '$routeParams',
+        function ($scope, $http, $routeParams) {
 
         $scope.projectId = $routeParams.projectId;
         $scope.todoListId = $routeParams.todoListId;
@@ -25,7 +26,7 @@ angular.module('itracker')
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
                 console.log('ERROR');
-            })
+            });
 
         // Get todo list including todo's
         $scope.todoList = $http.get('get.php?url=projects/' + $routeParams.projectId + '/todolists/' + $routeParams.todoListId + '.json')
