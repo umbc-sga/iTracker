@@ -19,29 +19,51 @@
 			<input type="text" ng-model="search.name" class="form-control" placeholder="Filter by department name" />
 			<div ng-repeat="dept in depts | filter: search | orderBy: 'name'" ng-show="dept.people.length > 0">
 				<h2 id = "{{dept.id}}"> {{dept.name}}</h2>
-				<div class="row">
-					<div class="col-md-4" ng-repeat="person in dept.people | orderBy : 'name'">
+				<div class="row" ng-repeat="personRow in dept.people">
+					<div class="col-md-3" ng-repeat="person in personRow">
 						<div class="box box-widget widget-user-2">
 							<a href ="/itracker/people/{{person.id}}/">
-								<div class="widget-user-header bg-blue">
+								<div style="min-height:105px;" class="widget-user-header bg-blue">
 									<div class="widget-user-image">
 										<img class="img-circle" src="{{person.avatar_url}}" alt="User Avatar">
 									</div><!-- /.widget-user-image -->
-									<h3 class="widget-user-username">{{person.name}}</h3>
-									<h4 class="widget-user-desc">{{person.position}}</h4>
+									<h4 style="font-size:20px;" class="widget-user-username">{{person.name}}</h4>
+									<h5 style="margin-bottom: 5px;" class="widget-user-desc">{{person.position}}</h5>
 									<h5 class="widget-user-desc">{{person.email}}</h5>
 								</div>
 							</a>
-							<div class="box-footer no-padding">
-								<ul class="nav nav-stacked">
-									<li><a>Projects <span class="pull-right badge bg-blue">{{person.active}}</span></a></li>
-									<li><a>Assigned Tasks <span class="pull-right badge bg-aqua"> {{person.todoCount}}</span></a></li>
-									<li><a>Events Created <span class="pull-right badge bg-green">{{person.eventCount}}</span></a></li>
-								</ul>
+							<div class="box-footer">
+								<div class="row">
+									<div class="col-sm-4 border-right">
+										<div class="description-block">
+											<h5 class="description-header">{{person.active}}</h5>
+											<span class="description-text">Projects</span>
+										</div>
+										<!-- /.description-block -->
+									</div>
+									<!-- /.col -->
+									<div class="col-sm-4 border-right">
+										<div class="description-block">
+											<h5 class="description-header">{{person.todoCount}}</h5>
+											<span class="description-text">Tasks</span>
+										</div>
+										<!-- /.description-block -->
+									</div>
+									<!-- /.col -->
+									<div class="col-sm-4">
+										<div class="description-block">
+											<h5 class="description-header">{{person.eventCount}}</h5>
+											<span class="description-text">Activities</span>
+										</div>
+										<!-- /.description-block -->
+									</div>
+									<!-- /.col -->
+								</div>
+								<!-- /.row -->
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>				
 			</div>
 		</section>
 	</div>

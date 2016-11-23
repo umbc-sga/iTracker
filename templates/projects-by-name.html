@@ -16,11 +16,11 @@
 		<section class="content">
 			<input type="text" ng-model="search.name" class="form-control" placeholder="Filter by project name" />
 			<div class="row" style="margin-top:20px">
-				<div class="col-md-4" ng-repeat="proj in projects | filter: search | orderBy : 'name'">
+				<div class="col-md-3" ng-repeat="proj in projects | filter: search | orderBy : 'name'">
 					<div class="box box-widget widget-user">
 						<a href="/itracker/projects/{{proj.id}}/">
 							<div class="widget-user-header bg-blue">
-								<h3 class="widget-user-username">{{proj.name}}</h3>
+								<h4 class="widget-user-username">{{proj.name}}</h4>
 								<h5 class="widget-user-desc">{{proj.description}}</h5>
 							</div>
 						</a>
