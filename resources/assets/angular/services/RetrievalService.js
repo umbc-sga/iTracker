@@ -1,5 +1,5 @@
 angular.module('itracker')
-    .service('retrievalService', ['$q', 'basecampService', function($q, basecampService) {
+    .service('retrievalService', ['$q', '$log', 'basecampService', function($q, $log, basecampService) {
         this.getPeople = () => {
             return basecampService.getPeople()
                 .catch((err) => $log.error('Error while getting projects', err));
