@@ -12,3 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function(){
+   Route::post('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
+   Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
+});

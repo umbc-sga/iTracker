@@ -7,8 +7,7 @@ angular.module('itracker',[
     function ($routeProvider, $locationProvider, $logProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: '/angular/legacy.home',
-            controller: 'HomeController'
+            templateUrl: '/angular/home',
         })
         .when('/people/by-dept/', {
             templateUrl: '/angular/legacy.people-by-dept',
@@ -47,8 +46,7 @@ angular.module('itracker',[
             controller: 'DepartmentController'
         })
         .otherwise({
-            templateUrl: '/angular/legacy.404-error',
-            controller: 'ErrorController'
+            templateUrl: '/angular/legacy.404-error'
         });
 
     $locationProvider.html5Mode(true);

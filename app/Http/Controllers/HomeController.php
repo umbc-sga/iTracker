@@ -9,6 +9,6 @@ use App\Http\Requests;
 class HomeController extends Controller
 {
     public function index(){
-        return view()->make('legacy.template');
+        return view()->make('templates.payload');
     }
 }
