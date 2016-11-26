@@ -3,7 +3,8 @@
 angular.module('itracker',[
     //'ui.router',
     'ngRoute',
-]).config(['$routeProvider','$locationProvider', function ($routeProvider, $locationProvider) {
+]).config(['$routeProvider','$locationProvider', '$logProvider',
+    function ($routeProvider, $locationProvider, $logProvider) {
     $routeProvider
         .when('/', {
             templateUrl: '/angular/legacy.home',
@@ -52,9 +53,9 @@ angular.module('itracker',[
 
     $locationProvider.html5Mode(true);
 
-}]).value('basecamp.config', {
-    debug: false // Set to false to disable logging to console
-});
+    $logProvider.debugEnabled(window.debug || false);
+
+}]);
 
 var monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
