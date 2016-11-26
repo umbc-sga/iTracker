@@ -1,116 +1,5 @@
 angular.module('itracker')
-    .service('dataService', ['$q', '$log', 'basecampService', function($q, $log, basecampService) {
-
-        let getPeople = () => {
-            return basecampService.getPeople()
-                .catch((err) => $log.error('Error while getting projects', err));
-        };
-
-        let getPersonInfo = function(personID) {
-            return basecampService.getPersonInfo(personID)
-                .catch((err) => $log.error('Error while getting person', personID, err));
-        };
-
-        let getPersonProj = function(personID) {
-            return basecampService.getPersonProjects(personID)
-                .catch((err) => $log.error('Error while getting person projects', personID, err));
-        };
-
-        let getPerson = function(personId){
-            let person = {};
-            basecampService.getPerson(personId).then((response) => {
-                person = response.data;
-            });
-            /*$scope.getPersonInfo(personId).success(function (data, status, headers, config) {
-             person = data;
-             $scope.getExtraPersonInfo(personId).success(function(data, status, headers, config) {
-             person.bio = data.bio;
-             person.major = data.major;
-             person.classStanding = data.classStanding;
-             person.hometown = data.hometown;
-             person.fact = data.fact;
-             person.position = data.position;
-             })
-             });*/
-            return person;
-        };
-
-        let getPersonEvents = function(personID, page) {
-            return basecampService.getPersonEvents(personID, page)
-                .catch((err) => $log.error('Error while getting person events', personID, err));
-        };
-
-        let getGroups = function(){
-            return basecampService.getGroups()
-                .catch((err) => $log.error('Error while getting groups', err));
-        };
-
-        let getGroup = function(groupId){
-            return basecampService.getGroup(groupId)
-                .catch((err) => $log.error('Error while getting group', groupId, err));
-        };
-
-        let getDepartmentProjects = function(id){
-            return $q((resolve, reject) => {
-                basecampService.getDepartmentProjects(id).then((response) => resolve(response.data), (response) => reject(response.data));
-            });
-        };
-
-        let getProjects = function () {
-            return basecampService.getProjects()
-                .catch((err) => $log.error('Error while getting groups', err));
-        };
-
-        let getProject = function (id) {
-            return basecampService.getProject(id)
-                .catch((err) => $log.error('Error while getting project', id, err));
-        };
-
-        let getActiveTodoLists = function () {
-            return basecampService.getActiveTodos()
-                .catch((err) => $log.error('Error while getting active todos', err));
-        };
-
-        let getCompletedTodoLists = function () {
-            return basecampService.getCompletedTodos()
-                .catch((err) => $log.error('Error while getting completed todos', err));
-        };
-
-        let getProjectAccesses = function(id){
-            return basecampService.getProjectAccesses(id)
-                .catch((err) => $log.error('Error while getting project accesses', id, err));
-        };
-
-        let getPersonDepts = function(id){
-            return basecampService.getPersonDepartments(id).then((response) => {
-                return response.data;
-            });
-        };
-
-        let getProjectEvents= function(id, page){
-            return basecampService.getProjectEvents(id,page)
-                .catch((err) => $log.error('Error while getting project events', id, err));
-        };
-
-        let getPersonRoles = function(id){
-            return basecampService.getPersonRoles(id)
-                .catch((err) => $log.error('Error while getting person roles', id, err));
-        };
-
-        let getRole = function(id){
-            return basecampService.getRole(id)
-                .catch((err) => $log.error('Error while getting role', id, err));
-        };
-
-        let getRolePerson = function(roleId, departmentId){
-            return basecampService.getDepartmentPersonWithRole(roleId, departmentId)
-                .catch((err) => $log.error('Error while getting department role', departmentId, err));
-        };
-
-        let changeRole = function(person, dept, role){
-            return basecampService.changeRole(person, dept, role);
-        };
-
+    .factory('dataService', ['$q', '$log', 'retrievalService', function($q, $log, retrievalService) {
         this.main = {
             people: [],
             projects: [],
@@ -139,7 +28,7 @@ angular.module('itracker')
          *     percentComplete
          * }}
          */
-        this.getProjectCounts = function(projectId){
+        let getProjectCounts = (projectId) => {
             let result = {
                 activeTodoListsCompletedCount: 0,
                 activeTodoListsRemainingCount: 0,
@@ -188,8 +77,8 @@ angular.module('itracker')
             return result;
         };
 
-        this.getProjectPack = function(id){
-            return getProject(id).then((response) => {
+        let getProjectPack = (id) => {
+            return retrievalService.getProject(id).then((response) => {
                 let project = response.data;
                 return {
                     id: project.id,
@@ -205,8 +94,8 @@ angular.module('itracker')
             });
         };
 
-        this.getPersonPack = function(id){
-            return getPersonInfo(id).then((response) => {
+        let getPersonPack = (id) => {
+            return retrievalService.getPersonInfo(id).then((response) => {
                 let person = response.data;
                 //Remapped person
                 return {
@@ -228,15 +117,15 @@ angular.module('itracker')
             });
         };
 
-        this.bootstrap = () => {
-            getProjects().then((response) => {
+        let bootstrap = () => {
+            retrievalService.getProjects().then((response) => {
                 let data = response.data;
 
                 if (Array.isArray(data)) {
                     this.main.projects = data;
                     $log.debug('Projects:', data);
 
-                    getActiveTodoLists().then((response) => {
+                    retrievalService.getActiveTodoLists().then((response) => {
                         let data = response.data;
                         if (Array.isArray(data)) {
                             this.main.activeTodoLists = data;
@@ -244,7 +133,7 @@ angular.module('itracker')
                         }
                     });
 
-                    getCompletedTodoLists().then((response) => {
+                    retrievalService.getCompletedTodoLists().then((response) => {
                         let data = response.data;
                         if (Array.isArray(data)) {
                             this.main.completedTodoLists = data;
@@ -254,17 +143,17 @@ angular.module('itracker')
                 }
             });
 
-            getPeople().then((response) => {
+            retrievalService.getPeople().then((response) => {
                 let data = response.data;
                 if (Array.isArray(data)) {
                     for(let person of data){
                         this.main.emails[person.email] = person.id;
-                        getPersonInfo(person.id).then((response) => {
+                        retrievalService.getPersonInfo(person.id).then((response) => {
                             let personInfo = response.data;
 
                             $log.debug('Person Info:', personInfo);
 
-                            getPersonProj(person.id).then((response) => {
+                            retrievalService.getPersonProj(person.id).then((response) => {
                                 let personProject = response.data;
                                 $log.debug('Person proj', personProject);
 
@@ -275,11 +164,11 @@ angular.module('itracker')
                 }
             });
 
-            getGroups().then((response) => {
+            retrievalService.getGroups().then((response) => {
                 let data = response.data;
                 if (Array.isArray(data)) {
                     for(let group of data){
-                        getGroup(group.id).then((response) => {
+                        retrievalService.getGroup(group.id).then((response) => {
                             let groupInfo = response.data;
                             groupInfo.group_href = groupInfo.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
 
@@ -290,4 +179,12 @@ angular.module('itracker')
                 }
             });
         };
+
+        return {
+            getProjectCounts: getProjectCounts,
+            getProjectPack: getProjectPack,
+            getPersonPack: getPersonPack,
+            bootstrap: bootstrap,
+            main: this.main
+        }
     }]);
