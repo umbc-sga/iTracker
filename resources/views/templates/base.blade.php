@@ -15,14 +15,12 @@
     <body class="hold-transition skin-yellow sidebar-mini" data-ng-controller="MainController" data-ng-init="bootstrap()">
         @yield('content')
     </body>
-    @yield('script')
-
     @if(config('app.debug'))
         <script>window.debug = true;</script>
     @endif
     <script src="{{asset('js/core.js')}}?{{ config('app.debug') ? time() : config('app.version')}}"></script>
 
-    @yield('afterangular')
+    @yield('script')
 
-    @include('templates.social')
+    @include('partials.social')
 </html>

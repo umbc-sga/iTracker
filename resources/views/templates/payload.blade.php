@@ -159,6 +159,8 @@
     <script src="{{asset('legacy/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
     <!-- FastClick -->
     <script src="{{asset('legacy/plugins/fastclick/fastclick.min.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{asset('legacy/dist/js/app.min.js')}}"></script>
 @endsection
 
 @section('head')
