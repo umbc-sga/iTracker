@@ -7,7 +7,7 @@ angular.module('itracker',[
     function ($routeProvider, $locationProvider, $logProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: '/angular/home',
+            templateUrl: '/angular/pages.home',
         })
         .when('/people/by-dept/', {
             templateUrl: '/angular/legacy.people-by-dept',
@@ -42,8 +42,7 @@ angular.module('itracker',[
             controller: 'TodoListController'
         })
         .when('/departments/:departmentName', {
-            templateUrl: '/angular/legacy.department',
-            controller: 'DepartmentController'
+            templateUrl: '/angular/pages.department'
         })
         .otherwise({
             templateUrl: '/angular/legacy.404-error'

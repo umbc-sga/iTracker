@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('itracker')
     .factory('basecampService', ['$q', '$http', function($q, $http) {
         let _apiVer = '/api/v1/';

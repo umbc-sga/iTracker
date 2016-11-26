@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('itracker')
     .factory('dataService', ['$q', '$log', 'retrievalService', function($q, $log, retrievalService) {
         this.main = {

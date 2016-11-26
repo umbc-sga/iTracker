@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('itracker')
     .service('retrievalService', ['$q', '$log', 'basecampService', function($q, $log, basecampService) {
         this.getPeople = () => {
