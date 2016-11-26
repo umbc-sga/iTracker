@@ -43,6 +43,7 @@ gulp.task('vendorjs', function(){
         paths.npm+'jquery/dist/jquery.js',
         paths.npm+'bootstrap-sass/assets/javascripts/bootstrap.js',
         paths.npm+'angular/angular.js',
+        paths.npm+'angular-route/angular-route.js',
         paths.npm+'angular-ui-router/release/angular-ui-router.js',
     ])
         .pipe(concat('vendor.js'))
