@@ -1,1 +1,0 @@
-It is now {{ \Carbon\Carbon::now() }} on the server and @{{ now }} on the client.
