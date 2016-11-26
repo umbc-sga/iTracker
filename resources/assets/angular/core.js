@@ -50,6 +50,8 @@ angular.module('itracker',[
             controller: 'ErrorController'
         });
 
+    $locationProvider.html5Mode(true);
+
 }]).value('basecamp.config', {
     debug: false // Set to false to disable logging to console
 });
