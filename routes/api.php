@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function(){
-    Route::post('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
+Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']], function(){
+    Route::any('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
     Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
 });
 

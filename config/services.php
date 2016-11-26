@@ -36,8 +36,10 @@ return [
     ],
 
     'basecamp' => [
-        'account' => env('BASECAMP_ACCOUNT'),
-        'token' => env('BASECAMP_SECRET'),
+        'id' => env('BASECAMP_CLIENT_ID'),
+        'secret' => env('BASECAMP_CLIENT_SECRET'),
+        'authUrl' => 'https://launchpad.37signals.com/authorization/new',
+        'tokenUrl' => 'https://launchpad.37signals.com/authorization/token'
     ]
 
 ];

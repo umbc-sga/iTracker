@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,4 +19,6 @@ Route::group(['prefix' => 'angular'], function(){
     Route::get('/{any}', 'AngularController@NoView')->where('any', '.*');
 });
 
-Route::get('/{any}', ['as' => 'home', 'uses' => 'HomeController@index'])->where('any', '.*');
+Route::get('oauth/endpoint', ['as' => 'bcEndpoint', 'uses' => 'BasecampController@endpoint']);
+
+Route::get('/{any}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');
