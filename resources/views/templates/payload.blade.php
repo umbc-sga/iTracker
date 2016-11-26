@@ -35,7 +35,7 @@
                 <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active">
-                        <a href="itracker/">
+                        <a href="{{url('/')}}">
                             <i class="fa fa-home"></i> <span>Home</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
                         </a>
                     </li>
@@ -46,8 +46,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="itracker/projects/by-name/"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
-                            <li><a href="itracker/projects/by-dept/"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
+                            <li><a href="{{url('/projects/by-name/')}}"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
+                            <li><a href="{{url('itracker/projects/by-dept/')}}"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -57,8 +57,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="itracker/people/by-name/"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
-                            <li><a href="itracker/people/by-dept/"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
+                            <li><a href="{{url('itracker/people/by-name/')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
+                            <li><a href="{{url('itracker/people/by-dept/')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
