@@ -9,7 +9,7 @@
         <title>@yield('title')</title>
         @yield('head')
 
-        <link href="{{asset('css/core.css')}}" rel="stylesheet">
+        <link rel="stylesheet" href="{{asset('css/core.css')}}?{{ config('app.debug') ? time() : config('app.version')}}">
 
     </head>
     <body>
@@ -17,5 +17,8 @@
     </body>
     @yield('script')
 
-    <script src="{{asset('js/core.js')}}"></script>
+    @if(config('app.debug'))
+        <script>window.debug = true;</script>
+    @endif
+    <script src="{{asset('js/core.js')}}?{{ config('app.debug') ? time() : config('app.version')}}"></script>
 </html>
