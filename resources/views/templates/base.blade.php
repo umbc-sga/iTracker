@@ -12,7 +12,7 @@
 
         <link rel="stylesheet" href="{{asset('css/core.css')}}?{{ config('app.debug') ? time() : config('app.version')}}">
     </head>
-    <body class="hold-transition skin-yellow sidebar-mini" data-ng-controller="MainController">
+    <body class="hold-transition skin-yellow sidebar-mini" data-ng-controller="MainController" data-ng-init="bootstrap()">
         @yield('content')
     </body>
     @yield('script')

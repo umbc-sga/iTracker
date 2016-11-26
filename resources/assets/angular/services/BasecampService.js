@@ -10,7 +10,7 @@ angular.module('itracker')
          * @returns {Promise}
          */
         let request = (resource = '', method = 'POST', data = {}) => {
-            return $q((resolve, reject, data) => {
+            return $q((resolve, reject) => {
                 $http({
                     method: method,
                     url: (_apiVer+resource).replace(/\/\//g, '/'),
@@ -29,12 +29,19 @@ angular.module('itracker')
             getPeople: () => request('/people', 'POST'),
             getPerson: (personId) => request('/person/'+personId, 'POST'),
             getPersonProjects: (personId) => request('/person/'+personId+'/projects', 'POST'),
+            getPersonInfo: (personId) => request('/person/'+personId+'/info', 'POST'),
+            getPersonRoles: (personId) => request('/person/'+personId+'/roles', 'POST'),
+            getPersonDepartments: (personId) => request('/person/'+personId+'/departments', 'POST'),
             getPersonEvents: (personId, page) => request('/person/'+personId+'/events/'+page, 'POST'),
             getGroups: () => request('/groups', 'POST'),
             getGroup: (groupdId) => request('/group/'+groupdId, 'POST'),
             getDepartment: (deptId) => request('/dept/'+deptId),
+            getDepartmentPersonWithRole: (roleId, deptId) => request('/dept/'+deptId+'/role/'+roleId),
             getDepartmentProjects: (deptId) => request('/dept/'+deptId+'/projects'),
             getActiveTodos: () => request('/todos/active'),
             getCompletedTodos: () => request('/todos/completed'),
+            getRole: (roleId) => request('/role/'+roleId),
+
+            changeRole: (person, dept, role) => request('/dept/'+dept+'/person/'+person+'/role/'+role, 'PUT')
         };
     }]);

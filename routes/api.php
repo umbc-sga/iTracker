@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function(){
-   Route::post('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
-   Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
+    Route::post('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
+    Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
 });
+
+Route::any('/{any}', 'APIController@NoAPIResponse')->where('any', '.*');
