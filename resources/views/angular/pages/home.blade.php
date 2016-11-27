@@ -26,6 +26,18 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                About the SGA iTracker
+                            </h3>
+                        </div>
+                        <div class="box-footer">
+                            <a href="{{url('/projects/9793947')}}" class="btn btn-success btn-block" role="button">View this Project!</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
                     <div class="numberBox"
                          data-color="bg-aqua"
                          data-title="Active Projects"
@@ -38,7 +50,7 @@
                     <div class="numberBox"
                          data-color="bg-yellow"
                          data-title="Departments"
-                         data-str="@{{main.groups.length}}"
+                         data-str="@{{ main.groups.length }}"
                          data-url="{{url('projects/by-dept')}}"
                          data-description="See Departmental Projects!"
                          data-icon="ion ion-briefcase"></div>
@@ -47,18 +59,10 @@
                     <div class="numberBox"
                          data-color="bg-red"
                          data-title="Active Members"
-                         data-str="@{{main.people.length}}"
+                         data-str="@{{ main.people.length }}"
                          data-url="{{url('projects/by-name')}}"
                          data-description="See Who Is Who!"
                          data-icon="ion ion-person"></div>
-                </div>
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        About the SGA iTracker
-                    </h3>
-                </div> <!-- /.box-header -->
-                <div class="box-footer">
-                    <a href="{{url('/projects/9793947')}}" class="btn btn-success btn-block" role="button">View this Project!</a>
                 </div>
             </div>
         </div>
