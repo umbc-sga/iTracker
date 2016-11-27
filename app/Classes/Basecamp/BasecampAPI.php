@@ -47,7 +47,7 @@ class BasecampAPI
 
         return collect($resp)->filter(function($project){
             return strtolower($project->purpose) == 'topic';
-        });
+        })->values();
     }
 
     public function project($id){
@@ -60,7 +60,7 @@ class BasecampAPI
     public function teams(){
         return collect($this->get('projects.json'))->filter(function($value, $key){
             return strtolower($value->purpose) == 'team';
-        });
+        })->values();
     }
 
     public function people(){

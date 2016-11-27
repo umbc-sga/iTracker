@@ -121,11 +121,10 @@ angular.module('itracker')
 
         let bootstrap = () => {
             retrievalService.getProjects().then((response) => {
-                let data = response.data;
-
-                if (Array.isArray(data)) {
-                    this.main.projects = data;
-                    $log.debug('Projects:', data);
+                let projects = response.data;
+                if (Array.isArray(projects)) {
+                    this.main.projects = projects;
+                    $log.debug('Projects:', projects);
 
                     retrievalService.getActiveTodoLists().then((response) => {
                         let data = response.data;
@@ -146,10 +145,15 @@ angular.module('itracker')
             });
 
             retrievalService.getPeople().then((response) => {
-                let data = response.data;
-                if (Array.isArray(data)) {
-                    for(let person of data){
+                let people = response.data;
+
+                if (Array.isArray(people)) {
+                    for(let person of people){
                         this.main.emails[person.email] = person.id;
+                        this.main.people.push( { 'info' : person } );
+                        $log.debug('Found active person: ', person);
+
+                        /*
                         retrievalService.getPersonInfo(person.id).then((response) => {
                             let personInfo = response.data;
 
@@ -162,14 +166,16 @@ angular.module('itracker')
                                 this.main.people.push( { 'info' : personInfo, 'proj' : personProject } );
                             });
                         });
+                        */
                     }
                 }
             });
 
             retrievalService.getGroups().then((response) => {
-                let data = response.data;
-                if (Array.isArray(data)) {
-                    for(let group of data){
+                let groups = response.data;
+
+                if (Array.isArray(groups)) {
+                    for(let group of groups){
                         retrievalService.getGroup(group.id).then((response) => {
                             let groupInfo = response.data;
                             groupInfo.group_href = groupInfo.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
