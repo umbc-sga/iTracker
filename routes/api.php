@@ -15,8 +15,13 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']], function(){
     Route::post('projects', ['as' => 'projects', 'uses' => 'BasecampController@projects']);
-    Route::post('project/{project}/people', ['as' => 'projects', 'uses' => 'BasecampController@peopleOnProject'])
+    Route::post('project/{project}', ['as' => 'projects', 'uses' => 'BasecampController@project'])
+        ->where('project', '[0-9]+');
+    Route::post('project/{project}/people', ['as' => 'projects', 'uses' => 'BasecampController@peopleInProject'])
             ->where('project', '[0-9]+');
+    Route::post('project/{project}/events/{page?}', ['as' => 'projects', 'uses' => 'BasecampController@projectEvents'])
+        ->where('project', '[0-9]+')
+        ->where('page', '[1-9]+[0-9]*');
 
     Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
     Route::post('person/{person}/info', ['as' => 'people', 'uses' => 'BasecampController@personInfo'])

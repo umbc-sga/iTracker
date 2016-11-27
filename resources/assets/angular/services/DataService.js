@@ -148,10 +148,11 @@ angular.module('itracker')
                 let people = response.data;
 
                 if (Array.isArray(people)) {
+                    $log.debug('People: ', people);
+
                     for(let person of people){
                         this.main.emails[person.email] = person.id;
                         this.main.people.push( { 'info' : person } );
-                        $log.debug('Found active person: ', person);
 
                         /*
                         retrievalService.getPersonInfo(person.id).then((response) => {

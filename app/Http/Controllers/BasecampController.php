@@ -41,12 +41,18 @@ class BasecampController extends Controller
     }
 
     public function project(Request $request, $project){
-
         return response()->json($this->api->project($project));
     }
 
     public function peopleInProject(Request $request, $project){
         return $this->api->peopleInProject($project);
+    }
+
+    public function projectEvents(Request $request, $project, $page = 1){
+        $project = $this->api->project($project);
+
+        $schedule = collect($project->dock)->filter(function($dock){ return $dock->name == 'schedule'; })->first();
+        return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
     }
 
     public function personProject(Request $request, $person){

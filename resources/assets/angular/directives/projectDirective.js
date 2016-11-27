@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('department', ['$routeParams', '$log', 'basecampService',
+    .directive('project', ['$routeParams', '$log', 'basecampService',
         function($routeParams, $log, basecampService){
             return {
                 restrict: 'C',
@@ -29,9 +29,9 @@ angular.module('itracker')
                         return rest + ' ' + month + ' ' + year;
                     };
 
-                    basecampService.getProject(projectId).then((response) => {
-                        $scope.project = response.data;
-                    });
+                    basecampService.getProject(projectId).then((response) => $scope.project = response.data);
+
+                    basecampService.getPeopleInProject(projectId).then((response) => $scope.people = response.data);
 
                     $scope.page = 1;
                     $scope.more = true;
@@ -41,75 +41,37 @@ angular.module('itracker')
                     $scope.getEventSet = function(){
                         if($scope.pull && $scope.limit >= $scope.events.length){
                             var curDate = '';
-                            $scope.getProjectEvents($routeParams.projectId, $scope.page).success(function (data, status, headers, config) {
-                                if(data.length < 50){
+                            basecampService.getProjectEvents(projectId, $scope.page).then((response) => {
+                                let events = response.data;
+
+                                console.log(events);
+                                if(events.length < 50){
                                     $scope.pull = false;
                                 }
-                                angular.forEach(data,function (event){
+
+                                for(let event of events){
                                     event.created_at = $scope.prettyDate(event.created_at);
                                     event.updated_at = $scope.prettyDate(event.updated_at);
 
-                                    var date = event.created_at;
+                                    let date = event.created_at;
                                     if (date === curDate) {
                                         event.created_at = '';
                                     }
 
                                     curDate = date;
                                     $scope.events.push(event);
-                                });
+                                }
+
                                 $scope.page++;
                                 if($scope.limit >= $scope.events.length){
                                     $scope.more = false;
                                 }
-                            })
-                        }else if($scope.limit >= $scope.events.length){
+                            });
+                        } else if($scope.limit >= $scope.events.length){
                             $scope.more = false;
                         }
                     };
                     $scope.getEventSet();
-
-                    $scope.getProjectAccesses($routeParams.projectId).success(function (data, status, headers, config) {
-                        $scope.people = data;
-                    });
-
-                    // Get active todo lists
-                    $scope.activeTodoLists = $http.get('projects/' + $routeParams.projectId + '/todolists.json')
-                        .success(function (data, status, headers, config) {
-                            // console.log('SUCCESS');
-                            // this callback will be called asynchronously
-                            // when the response is available
-                            $scope.activeTodoLists = [];
-                            angular.forEach(data, function(list){
-                                $http.get('projects/' + $routeParams.projectId + '/todolists/' + list.id + '.json')
-                                    .success(function (data, status, headers, config) {
-                                        $scope.activeTodoLists.push(data);
-                                    })
-                            });
-                            // console.log(activeTodoLists)
-                        }).
-                        error(function (data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                            console.log('ERROR');
-                        });
-
-                    // Get active todo lists
-                    $scope.completedTodoLists = $http.get('projects/' + $routeParams.projectId + '/todolists/completed.json')
-                        .success(function (data, status, headers, config) {
-                            // console.log('SUCCESS');
-                            // this callback will be called asynchronously
-                            // when the response is available
-                            var completedTodoLists = angular.fromJson(data);
-                            if (angular.isArray(completedTodoLists)) {
-                                $scope.completedTodoLists = completedTodoLists;
-                                // console.log(completedTodoLists);
-                            }
-                        }).
-                        error(function (data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                            console.log('ERROR');
-                        });
 
                     $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
 

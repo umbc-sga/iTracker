@@ -14,8 +14,5 @@
     </section>
 
     <!-- Main content -->
-    <section class="content project">
-
-
-    </section> <!-- /.content -->
+    <section class="content project"></section> <!-- /.content -->
 </div> <!-- /.content-wrapper -->

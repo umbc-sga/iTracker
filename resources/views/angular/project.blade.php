@@ -21,7 +21,11 @@
                 </h3>
             </div>
             <div class="box-body">
-                <a ng-repeat="person in people | orderBy:'name'" href="{{url('/people')}}/@{{person.id}}" ng-hide="person.email_address == 'sga@umbc.edu'"><img src="@{{person.avatar_url}}" class="img-circle" style="margin-bottom:15px;margin-right:15px;" title="@{{person.name}}" alt="@{{person.name}}"></a>
+                <a ng-repeat="person in people | orderBy:'name'"
+                   data-ng-href="{{url('/people')}}/@{{person.id}}"
+                   ng-hide="person.email_address == 'sga@umbc.edu'">
+                    <img src="@{{person.avatar_url}}" class="img-circle" style="margin-bottom:15px;margin-right:15px;" title="@{{person.name}}" alt="@{{person.name}}">
+                </a>
             </div>
             <div class="box-footer">
                 <form action="{{url('/join')}}" method="get" style="display:inline;">
@@ -48,10 +52,12 @@
                         <td style="width:150px;" align="right">Description</td>
                         <td>@{{project.description}}</td>
                     </tr>
+                    {{--
                     <tr>
                         <td style="width:150px;" align="right">Created By</td>
                         <td>@{{project.creator.name}}</td>
                     </tr>
+                    --}}
                     <tr>
                         <td style="width:150px;" align="right">Created At</td>
                         <td>@{{project.created_at | date}}</td>
@@ -74,7 +80,7 @@
                     </tr>
                     <tr>
                         <td style="width:150px;" align="right"># of People</td>
-                        <td>@{{project.accesses.count}}</td>
+                        <td>@{{people.length}}</td>
                     </tr>
                     <tr>
                         <td style="width:150px;" align="right"># of Documents</td>
@@ -256,28 +262,6 @@
 					</div> -->
     </div> <!-- /.col -->
     <div class="col-md-7">
-        <ul class="timeline">
-            <li class="time-label" ng-repeat="event in events | limitTo: limit" >
-							<span class="bg-red" ng-show ='event.created_at.length > 0'>
-								@{{event.created_at}}
-							</span>
-                <img ng-class="{timeline_afterDate: event.created_at.length > 0, timeline_otherwise: event.created_at.length == 0}" class=" fa fa-user img-circle bg-blue" src="@{{event.creator.avatar_url}}" title = "@{{event.creator.name}}">
-
-                <div class="timeline-item" style="margin-top:10px;">
-								<span class="time">
-									<!-- <i class="fa fa-clock-o"></i> TIME -->
-								</span>
-                    <h3 class="timeline-header">
-                        <a href="{{url('/people')}}/@{{event.creator.id}}" ng-show="event.creator.id != 13421831">@{{event.creator.name}} </a>
-                        <span ng-show="event.creator.id == 13421831">The Main SGA Account </span>
-                        <span ng-bind-html="event.summary"></span>
-                    </h3>
-                </div>
-            </li>
-            <li>
-                <button type="button" class="btn btn-primary" ng-hide = "!more" ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
-            </li>
-        </ul>
-
+        <div class="iTrakertimeline" data-timeline="events"></div>
     </div>
 </div> <!-- /.row -->
