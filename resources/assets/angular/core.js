@@ -34,8 +34,7 @@ angular.module('itracker',[
             controller: 'ProjectController'
         })
         .when('/projects/:projectId/', {
-            templateUrl: '/angular/legacy.project',
-            controller: 'ProjectController'
+            templateUrl: '/angular/pages.project',
         })
         .when('/projects/:projectId/todolists/:todoListId', {
             templateUrl: '/angular/legacy.todo-list',
