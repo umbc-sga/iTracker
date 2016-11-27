@@ -69,6 +69,40 @@ class BasecampController extends Controller
         return $this->project($request, $group);
     }
 
+    public function getDept(Request $request, $dept){
+        $groups = $this->groups($request);
+
+        $groups = $groups->filter(function($group) use ($dept){
+            $convertedName = preg_replace('/&/', 'and', preg_replace('/\\s/', '-', strtolower($group->name)));
+            return $convertedName == $dept;
+        });
+
+        return $groups->count() > 0 ? $groups->first() : null;
+    }
+
+    public function dept(Request $request, $dept){
+        $ret = $this->getDept($request, $dept);
+        $ret->memberships = $this->api->peopleInProject($ret->id);
+        $ret->projects = $this->deptProjects($request, $dept);
+
+        return response()->json($ret);
+    }
+
+    public function deptProjects(Request $request, $dept){
+        $deptId = $this->getDept($request, $dept)->id;
+
+        $peopleInDept = $this->api->peopleInProject($deptId);
+
+        return $this->api->projects()->filter(function($project) use($peopleInDept){
+            $people = $this->api->peopleInProject($project->id)->pluck('id');
+
+            foreach($peopleInDept as $person)
+                return $people->search($person->id) !== false;
+
+            return false;
+        })->values();
+    }
+
     public function people(){
         return $this->api->people();
     }

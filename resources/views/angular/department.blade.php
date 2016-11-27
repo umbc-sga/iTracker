@@ -32,9 +32,9 @@
                     <div class="box-body table-responsive no-padding">
                         <table class="table table-hover">
                             <tr data-ng-repeat="person in department.memberships | orderBy:'name'">
-                                <td style="vertical-align:middle;width:65px;">
+                                <td style="vertical-align:middle;">
                                     <a data-ng-href="{{url('/people')}}/@{{person.id}}">
-                                        <img data-ng-src="@{{person.avatar_url}}" class="img-circle" title="@{{person.name}}" alt="@{{person.name}}">
+                                        <img data-ng-src="@{{person.avatar_url}}" class="img-circle"" title="@{{person.name}}" alt="@{{person.name}}">
                                     </a>
                                 </td>
                                 <td>

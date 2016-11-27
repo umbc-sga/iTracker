@@ -58,9 +58,3 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 
-function replace_All(str, find, replace){
-    while(str.indexOf(find) != -1){
-        str = str.replace(find, replace);
-    }
-    return str;
-}

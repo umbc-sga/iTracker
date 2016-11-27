@@ -2,14 +2,9 @@
 
 namespace App\Classes\Basecamp;
 
-use Carbon\Carbon;
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Cache;
 
-class InvalidRequest extends \Exception{
-}
 
 class BasecampAPI
 {
@@ -59,7 +54,7 @@ class BasecampAPI
         return $this->get('projects/'.$id.'.json');
     }
     public function peopleInProject($id){
-        return $this->get('projects/'.$id.'people.json');
+        return collect($this->get('projects/'.$id.'/people.json'));
     }
 
     public function teams(){
@@ -69,7 +64,7 @@ class BasecampAPI
     }
 
     public function people(){
-        return $this->get('people.json');
+        return collect($this->get('people.json'));
     }
     public function person($id){
         return $this->get('people/'.$id.'.json');

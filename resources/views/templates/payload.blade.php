@@ -47,7 +47,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="{{url('/projects/by-name/')}}"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
-                            <li><a href="{{url('itracker/projects/by-dept/')}}"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
+                            <li><a href="{{url('/projects/by-dept/')}}"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -57,8 +57,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{url('itracker/people/by-name/')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
-                            <li><a href="{{url('itracker/people/by-dept/')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
+                            <li><a href="{{url('/people/by-name/')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
+                            <li><a href="{{url('/people/by-dept/')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -69,7 +69,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li ng-repeat="group in main.groups | orderBy: 'name'">
-                                <a href="itracker/departments/@{{group.group_href}}/">
+                                <a href="{{url('/departments')}}/@{{group.group_href}}/">
                                     <i class="fa fa-circle-o"></i>@{{group.name}}
                                 </a>
                             </li>

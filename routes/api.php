@@ -27,6 +27,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
     Route::post('groups', ['as' => 'people', 'uses' => 'BasecampController@groups']);
     Route::post('group/{group}', ['as' => 'people', 'uses' => 'BasecampController@group'])
         ->where('group', '[0-9]+');
+    Route::post('dept/{dept}', ['as' => 'people', 'uses' => 'BasecampController@dept']);
+    Route::post('dept/{dept}/projects', ['as' => 'people', 'uses' => 'BasecampController@deptProjects']);
 
     Route::post('todos/{status?}', ['as' => 'people', 'uses' => 'BasecampController@todos']);
 });
