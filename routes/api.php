@@ -24,7 +24,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('page', '[1-9]+[0-9]*');
 
     Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
-    Route::post('person/{person}/info', ['as' => 'people', 'uses' => 'BasecampController@personInfo'])
+    Route::post('person/{person}', ['as' => 'people', 'uses' => 'BasecampController@person'])
         ->where('person', '[0-9]+');
     Route::post('person/{person}/projects', ['as' => 'people', 'uses' => 'BasecampController@personProject'])
         ->where('person', '[0-9]+');

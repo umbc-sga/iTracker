@@ -10,7 +10,7 @@
             <!-- <i class="fa fa-clock-o"></i> TIME -->
         </span>
         <h3 class="timeline-header">
-            <a href="{{url('/people')}}/@{{event.creator.id}}">@{{event.creator.name}} </a>
+            <a href="{{url('/person')}}/@{{event.creator.id}}">@{{event.creator.name}} </a>
             <span>@{{ event.summary }}</span>
         </h3>
         </div>

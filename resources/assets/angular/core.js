@@ -17,9 +17,8 @@ angular.module('itracker',[
             templateUrl: '/angular/legacy.people-by-name',
             controller: 'PeopleByNameController'
         })
-        .when('/people/:personId/', {
-            templateUrl: '/angular/legacy.person',
-            controller: 'PersonController'
+        .when('/person/:personId/', {
+            templateUrl: '/angular/pages.person',
         })
         .when('/projects/by-name/', {
             templateUrl: '/angular/legacy.projects-by-name',

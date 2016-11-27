@@ -22,7 +22,7 @@
             </div>
             <div class="box-body">
                 <a ng-repeat="person in people | orderBy:'name'"
-                   data-ng-href="{{url('/people')}}/@{{person.id}}"
+                   data-ng-href="{{url('/person')}}/@{{person.id}}"
                    ng-hide="person.email_address == 'sga@umbc.edu'">
                     <img src="@{{person.avatar_url}}" class="img-circle" style="margin-bottom:15px;margin-right:15px;" title="@{{person.name}}" alt="@{{person.name}}">
                 </a>
@@ -130,7 +130,7 @@
                                         </td>
                                         <td align="center" valign="middle">
 										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/people')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
 																<h5>@{{todo.assignee.name}}</h5>
 															</a>
 											            </span>
@@ -144,7 +144,7 @@
                                         </td>
                                         <td align="center" valign="middle">
 										               <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/people')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
 																<h5>@{{todo.assignee.name}}</h5>
 															</a>
 											            </span>
@@ -196,7 +196,7 @@
                                         </td>
                                         <td align="center" valign="middle">
 										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/people')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
 																<h5>@{{todo.assignee.name}}</h5>
 															</a>
 											            </span>
@@ -210,7 +210,7 @@
                                         </td>
                                         <td align="center" valign="middle">
 										            	<span ng-show="todo.assignee.length != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/people')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
 																<h5>@{{todo.assignee.name}}</h5>
 															</a>
 											            </span>

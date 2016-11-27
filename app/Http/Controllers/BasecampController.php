@@ -59,12 +59,12 @@ class BasecampController extends Controller
         return null;
     }
 
+    //@todo aggregate all relevant personal info
+    // Include all projects and departments
     public function person(Request $request, $person){
-        return $this->api->person($person);
-    }
-
-    public function personInfo(Request $request, $person){
-        return response()->json($this->person($request, $person));
+        $perp = $this->api->person($person);
+        $perp->projects = [];
+        return $perp;
     }
 
     public function groups(Request $request){
