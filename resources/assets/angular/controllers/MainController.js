@@ -6,8 +6,8 @@
  * Fetches and stores some initial data in the main property to display global statistics
  */
 angular.module('itracker')
-    .controller('MainController', ['$scope', 'dataService',
-        function ($scope, dataService) {
+    .controller('MainController', ['$scope', '$log', 'dataService',
+        function ($scope, $log, dataService) {
 
         /**
          * Container for some global data
@@ -55,8 +55,8 @@ angular.module('itracker')
 
             // Increment counters
             for(let list of completedTodoLists) {
-                $scope.main.completedTodoListsCompletedCount += todoList.completed_count;
-                $scope.main.completedTodoListsRemainingCount += todoList.remaining_count;
+                $scope.main.completedTodoListsCompletedCount += list.completed_count;
+                $scope.main.completedTodoListsRemainingCount += list.remaining_count;
             }
         }, true);
 
