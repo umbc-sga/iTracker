@@ -67,7 +67,7 @@ class BasecampController extends Controller
     public function person(Request $request, $person){
         $perp = $this->api->person($person);
         $perp->projects = [];
-        return $perp;
+        return response()->json($perp);
     }
 
     public function groups(Request $request){
