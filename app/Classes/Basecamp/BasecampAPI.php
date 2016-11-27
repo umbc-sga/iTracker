@@ -37,7 +37,7 @@ class BasecampAPI
         ]);
 
         $json = $res->getBody()->getContents();
-        cache([$resource => $json], Carbon::now()->addHour(1));
+        cache([$resource => $json], Carbon::now()->addMinutes(env('BASECAMP_API_CACHING', 60)));
         return json_decode($json);
     }
 }
