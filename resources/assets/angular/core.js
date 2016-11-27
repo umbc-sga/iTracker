@@ -33,7 +33,7 @@ angular.module('itracker',[
             templateUrl: '/angular/legacy.project-orig',
             controller: 'ProjectController'
         })
-        .when('/projects/:projectId/', {
+        .when('/project/:projectId/', {
             templateUrl: '/angular/pages.project',
         })
         .when('/projects/:projectId/todolists/:todoListId', {

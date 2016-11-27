@@ -5,6 +5,6 @@
         </h3>
     </div>
     <div class="box-footer">
-        <a href="{{url('/projects/9793947')}}" class="btn btn-success btn-block" role="button">View this Project!</a>
+        <a href="{{url('/project/1898639')}}" class="btn btn-success btn-block" role="button">View this Project!</a>
     </div>
 </div>
