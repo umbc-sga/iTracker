@@ -18,8 +18,8 @@
             <section class="sidebar">
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="{{asset('media/sga-logo-IT.png')}}" class="img-circle" alt="User Image">
+                    <div class="image">
+                        <img src="{{asset('media/sga-logo-IT.png')}}" class="img-circle" style="max-width: 100%" alt="User Image">
                     </div>
                 </div>
                 <!-- search form -->
