@@ -44,7 +44,7 @@ angular.module('itracker',[
             templateUrl: '/angular/pages.department'
         })
         .otherwise({
-            templateUrl: '/angular/legacy.404-error'
+            templateUrl: '/angular/pages.404-error'
         });
 
     $locationProvider.html5Mode(true);
