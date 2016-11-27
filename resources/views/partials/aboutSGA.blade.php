@@ -3,7 +3,7 @@
         <h3 class="box-title">
             About the UMBC Student Government Association
         </h3>
-    </div> <!-- /.box-header -->
+    </div>
     <div class="box-body">
         <p>The UMBC Student Government Association (SGA) is the voice of the undergraduate students
             at UMBC. Serving as one of the governing bodies at UMBC, the SGA meets with key
@@ -20,6 +20,6 @@
             organizations on and off campus and promote and defend students’ welfare.</p>
     </div>
     <div class="box-footer">
-        <a href="http://sga.umbc.edu/about" class="btn btn-warning" role="button">Read More!</a>
+        <a href="http://sga.umbc.edu/about" class="btn btn-warning pull-right" role="button">Read More!</a>
     </div>
-</div> <!-- /.box-warning -->
+</div>
