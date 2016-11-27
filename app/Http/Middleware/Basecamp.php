@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Cache;
-use League\OAuth2\Client\Provider\GenericProvider;
+use App\Classes\Basecamp\BasecampClient;
 
 
 class Basecamp
@@ -12,46 +12,32 @@ class Basecamp
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if(Cache::get('BCexpiration', 0) < time() || true)
-            if(Cache::has('BCrefreshToken')){
-                $client = new GenericProvider([
-                    'clientId' => config('services.basecamp.id'),
-                    'clientSecret' => config('services.basecamp.secret'),
-                    'redirectUri' => route('bcEndpoint'),
-                    'urlAuthorize' => config('services.basecamp.authUrl'),
-                    'urlAccessToken' => config('services.basecamp.tokenUrl').'?type=refresh',
-                    'urlResourceOwnerDetails' => '',
-                ]);
+        //Resolve the basecamp client out of the container
+        $bc = resolve(BasecampClient::class);
 
-                $token = $client->getAccessToken('refresh_token', [
-                   'refresh_token' => Cache::get('BCrefreshToken')
+        //If access token is expired or hit the refresh lottery get a new token
+        if(Cache::get('BCexpiration', 0) < time() || rand(0,100) > 90) {
+            if ($refreshToken = cache('BCrefreshToken')) {
+                $token = $bc->refresh()->getAccessToken('refresh_token', [
+                    'refresh_token' => $refreshToken
                 ]);
 
                 Cache::forever('BCaccessToken', $token->getToken());
                 Cache::forever('BCexpiration', $token->getExpires());
-            }
-            else {
-                $client = new GenericProvider([
-                    'clientId' => config('services.basecamp.id'),
-                    'clientSecret' => config('services.basecamp.secret'),
-                    'redirectUri' => route('bcEndpoint'),
-                    'urlAuthorize' => config('services.basecamp.authUrl'),
-                    'urlAccessToken' => config('services.basecamp.tokenUrl').'?type=web_server',
-                    'urlResourceOwnerDetails' => '',
-                ]);
-
-                if(is_null($request->input('code', null))) {
+            } else {
+                if (is_null($request->input('code', null))) {
                     $request->session()->put('url.intended', url()->current());
 
-                    return redirect()->to($client->getAuthorizationUrl() . '&type=web_server');
+                    return redirect()->to($bc->web()->getAuthorizationUrl() . '&type=web_server');
                 }
             }
+        }
 
         return $next($request);
     }

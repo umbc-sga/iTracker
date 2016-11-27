@@ -36,6 +36,7 @@ return [
     ],
 
     'basecamp' => [
+        'url' => 'https://3.basecampapi.com/'.env('BASECAMP_ID').'/',
         'id' => env('BASECAMP_CLIENT_ID'),
         'secret' => env('BASECAMP_CLIENT_SECRET'),
         'authUrl' => 'https://launchpad.37signals.com/authorization/new',

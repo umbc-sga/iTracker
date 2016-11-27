@@ -3,24 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Cache;
-use League\OAuth2\Client\Provider\GenericProvider;
+use App\Classes\Basecamp\BasecampAPI;
+use App\Classes\Basecamp\BasecampClient;
 
 
 class BasecampController extends Controller
 {
-    public function endpoint(Request $request){
-        $client = new GenericProvider([
-            'clientId' => config('services.basecamp.id'),
-            'clientSecret' => config('services.basecamp.secret'),
-            'redirectUri' => route('bcEndpoint'),
-            'urlAuthorize' => config('services.basecamp.authUrl'),
-            'urlAccessToken' => config('services.basecamp.tokenUrl').'?type=web_server',
-            'urlResourceOwnerDetails' => '',
-        ]);
-
-        $token = $client->getAccessToken('authorization_code', ['code' => $request->input('code', '')]);
+    public function endpoint(Request $request, BasecampClient $bc){
+        $token = $bc->web()->getAccessToken('authorization_code', ['code' => $request->input('code', '')]);
 
         Cache::forever('BCaccessToken', $token->getToken());
         Cache::forever('BCrefreshToken', $token->getRefreshToken());
@@ -29,8 +20,8 @@ class BasecampController extends Controller
         return redirect()->intended();
     }
 
-    public function projects(){
-        return ['projects'];
+    public function projects(Request $request, BasecampAPI $api){
+        return $api->get('projects.json');
     }
 
     public function people(){
