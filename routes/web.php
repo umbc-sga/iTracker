@@ -21,4 +21,4 @@ Route::group(['prefix' => 'angular'], function(){
 
 Route::get('oauth/endpoint', ['as' => 'bcEndpoint', 'uses' => 'BasecampController@endpoint']);
 
-Route::get('/{any}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');
+Route::get('/{any?}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');

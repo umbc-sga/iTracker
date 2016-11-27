@@ -21,6 +21,9 @@ class BasecampController extends Controller
     }
 
     public function endpoint(Request $request, BasecampClient $bc){
+        if($request->input('error', null))
+            return redirect()->route('home');
+
         $token = $bc->web()->getAccessToken('authorization_code', ['code' => $request->input('code', '')]);
 
         Cache::forever('BCaccessToken', $token->getToken());
