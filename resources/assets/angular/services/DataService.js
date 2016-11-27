@@ -176,14 +176,11 @@ angular.module('itracker')
                 let groups = response.data;
 
                 if (Array.isArray(groups)) {
-                    for(let group of groups){
-                        retrievalService.getGroup(group.id).then((response) => {
-                            let groupInfo = response.data;
-                            groupInfo.group_href = groupInfo.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
+                    $log.debug('Groups:', groups);
 
-                            $log.debug('Group Info:', groupInfo);
-                            this.main.groups.push( groupInfo );
-                        });
+                    for(let group of groups){
+                        group.group_href = group.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
+                        this.main.groups.push( group );
                     }
                 }
             });
