@@ -58,7 +58,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="{{url('/people')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
-                            <li><a href="{{url('/people/by-dept/')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
+                            <li><a href="{{url('/departments/people')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
                         </ul>
                     </li>
                     <li class="treeview">

@@ -77,6 +77,7 @@ class BasecampController extends Controller
         //@todo actually get correct projects
         $teams->transform(function($team) use ($projects){
             $team->projects = $projects->random(6)->values();
+            $team->people = $this->api->peopleInProject($team->id);
             return $team;
         });
 
