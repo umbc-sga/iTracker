@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
 use App\Classes\Basecamp\BasecampClient;
 
-
+//@todo FILTER THESE EMAILS OUT OF USERS: 'sga@umbc.edu','berger@umbc.edu','saddison@umbc.edu'
 class BasecampController extends Controller
 {
     /**

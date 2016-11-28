@@ -13,9 +13,8 @@ angular.module('itracker',[
             templateUrl: '/angular/legacy.people-by-dept',
             controller: 'PeopleByDeptController'
         })
-        .when('/people/by-name/', {
-            templateUrl: '/angular/legacy.people-by-name',
-            controller: 'PeopleByNameController'
+        .when('/people', {
+            templateUrl: '/angular/pages.allPeople',
         })
         .when('/person/:personId/', {
             templateUrl: '/angular/pages.person',
@@ -25,10 +24,6 @@ angular.module('itracker',[
         })
         .when('/departments', {
             templateUrl: '/angular/pages.allDepartments',
-        })
-        .when('/projects-old/:projectId/', {
-            templateUrl: '/angular/legacy.project-orig',
-            controller: 'ProjectController'
         })
         .when('/project/:projectId/', {
             templateUrl: '/angular/pages.project',
