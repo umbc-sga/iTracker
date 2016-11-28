@@ -71,7 +71,16 @@ class BasecampController extends Controller
     }
 
     public function groups(Request $request){
-        return $this->api->teams();
+        $teams = $this->api->teams();
+        $projects = $this->api->projects();
+
+        //@todo actually get correct projects
+        $teams->transform(function($team) use ($projects){
+            $team->projects = $projects->random(6)->values();
+            return $team;
+        });
+
+        return $teams;
     }
 
     public function group(Request $request, $group){
