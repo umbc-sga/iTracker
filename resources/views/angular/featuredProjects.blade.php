@@ -5,13 +5,13 @@
     </ol>
     <div class="carousel-inner">
         <div class="item active">
-            <img src="http://placehold.it/900x500/3c8dbc/ffffff&text=Welcome+To+The+UMBC+SGA+iTracker" alt="">
+            <img src="//placehold.it/900x500/3c8dbc/ffffff&text=Welcome+To+The+UMBC+SGA+iTracker" alt="">
             <div class="carousel-caption">
                 Welcome To The UMBC SGA iTracker
             </div>
         </div>
         <div class="item" data-ng-repeat="project in featuredProjs">
-            <img src="http://placehold.it/900x500/39CCCC/ffffff&text=Featured:+@{{project.name}}" alt="@{{project.name}}">
+            <img src="//placehold.it/900x500/39CCCC/ffffff&text=Featured:+@{{project.name}}" alt="@{{project.name}}">
             <div class="carousel-caption">
                 @{{ project.name }}
             </div>

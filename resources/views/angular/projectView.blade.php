@@ -5,7 +5,7 @@
             @{{project.status | capitalize}}
         </span>
     </small>
-    <div class="widget-user-header bg-blue" style="height: inherit; background: url('http://placehold.it/900x500/@{{ colorPic }}')">
+    <div class="widget-user-header bg-blue" style="height: inherit; background: url('//placehold.it/900x500/@{{ colorPic }}')">
         <div class="row">
             <h3 class="widget-user-username">@{{project.name}}</h3>
             <h5 class="widget-user-desc">@{{project.description}}</h5>
