@@ -46,7 +46,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{url('/projects/by-name/')}}"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
+                            <li><a href="{{url('/projects')}}"><i class="fa fa-circle-o"></i>Projects By Name</a></li>
                             <li><a href="{{url('/projects/by-dept/')}}"><i class="fa fa-circle-o"></i>Projects By Department</a></li>
                         </ul>
                     </li>
@@ -57,7 +57,7 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{url('/people/by-name/')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
+                            <li><a href="{{url('/people')}}"><i class="fa fa-circle-o"></i>Everyone By Name</a></li>
                             <li><a href="{{url('/people/by-dept/')}}"><i class="fa fa-circle-o"></i>Everyone By Department</a></li>
                         </ul>
                     </li>

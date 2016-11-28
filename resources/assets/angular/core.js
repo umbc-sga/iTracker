@@ -20,9 +20,8 @@ angular.module('itracker',[
         .when('/person/:personId/', {
             templateUrl: '/angular/pages.person',
         })
-        .when('/projects/by-name/', {
-            templateUrl: '/angular/legacy.projects-by-name',
-            controller: 'ProjectsByNameController'
+        .when('/projects/', {
+            templateUrl: '/angular/pages.all-projects',
         })
         .when('/projects/by-dept/', {
             templateUrl: '/angular/legacy.projects-by-dept',
