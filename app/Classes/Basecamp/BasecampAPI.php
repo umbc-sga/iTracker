@@ -260,8 +260,6 @@ class BasecampAPI
         $team->projects = $this->teamProjects($team->id);
         $team->memberships = $this->peopleInProject($team->id);
 
-        dd($team);
-
         //Cache
         cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
 
