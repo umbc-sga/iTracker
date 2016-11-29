@@ -28,6 +28,11 @@ class BasecampAPI
     private $options = [];
 
     /**
+     * @var Collection
+     */
+    private $restrictedEmails = null;
+
+    /**
      * BasecampAPI constructor.
      * @param $base_uri string Base basecamp API url
      * @param $accessToken string Access token to use
@@ -40,6 +45,8 @@ class BasecampAPI
             'cacheEnabled' => config('services.basecamp.cachingEnabled'),
             'cacheDecayTime' => config('services.basecamp.cacheAgeOff')
         ];
+
+        $this->restrictedEmails = collect([]);
     }
 
     /**
@@ -54,6 +61,20 @@ class BasecampAPI
      */
     public function cacheDecayTime(){ return $this->options['cacheDecayTime']; }
 
+    /**
+     * Set people to be filtered out of site
+     * @param array $emails
+     */
+    public function setEmailFilters($emails = []){ $this->restrictedEmails = collect($emails); }
+
+    /**
+     * Should person be filtered?
+     * @param $person object Basecamp Person Object
+     * @return bool
+     */
+    public function filteredPerson($person){
+        return $this->restrictedEmails->search($person->email_address) === false;
+    }
     /**
      * Get request to API
      * @param $resource string Resource URL
@@ -148,9 +169,10 @@ class BasecampAPI
      * @return Collection
      */
     public function peopleInProject($id){
-        return collect($this->get('projects/'.$id.'/people.json'));
+        return collect($this->get('projects/'.$id.'/people.json'))->filter(function($person){
+            return $this->filteredPerson($person);
+        })->values();
     }
-
 
     /**
      * Get all teams
@@ -265,7 +287,9 @@ class BasecampAPI
      * @return Collection
      */
     public function people(){
-        return collect($this->get('people.json'));
+        return collect($this->get('people.json'))->filter(function($person){
+            return $this->filteredPerson($person);
+        })->values();
     }
 
     /**
