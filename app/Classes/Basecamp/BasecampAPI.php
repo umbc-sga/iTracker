@@ -117,10 +117,11 @@ class BasecampAPI
 
     /**
      * Get array of all projects
+     * @param bool $stripTeamHash From project list, strip out all team hashing
      * @return Collection
      */
-    public function projects(){
-        $cacheName = 'api-projects';
+    public function projects($stripTeamHash = true){
+        $cacheName = 'api-projects'.$stripTeamHash;
 
         //Check cache
         if($cached = cache($cacheName))
@@ -132,10 +133,10 @@ class BasecampAPI
         //Filter out anything that is not a 'project'
         $projects = collect($resp)->filter(function($project){
             return strtolower($project->purpose) == 'topic';
-        })->transform(function($project){
+        })->transform(function($project) use ($stripTeamHash){
             unset($project->dock);
 
-            if($str = $this->getTeamString($project->description))
+            if($stripTeamHash && ($str = $this->getTeamString($project->description)))
                 $project->description = str_replace($str, '', $project->description);
 
             return $project;
@@ -160,6 +161,9 @@ class BasecampAPI
             return json_decode($cached);
 
         $project = $this->get('projects/'.$id.'.json');
+
+        unset($project->dock);
+
         $project->people = $this->peopleInProject($project->id);
 
         if($str = $this->getTeamString($project->description))
@@ -195,6 +199,9 @@ class BasecampAPI
         //Filter anything not a 'team'
         $teams = collect($this->get('projects.json'))->filter(function($team){
             return strtolower($team->purpose) == 'team';
+        })->transform(function($team) {
+            unset($team->dock);
+            return $team;
         })->values();
 
         //Cache
@@ -216,6 +223,7 @@ class BasecampAPI
 
         $team = $this->project($id);
 
+        unset($team->dock);
         //Add additional fields
         $team->projects = $this->teamProjects($team->id);
         $team->memberships = $this->peopleInProject($team->id);
@@ -252,6 +260,8 @@ class BasecampAPI
         $team->projects = $this->teamProjects($team->id);
         $team->memberships = $this->peopleInProject($team->id);
 
+        dd($team);
+
         //Cache
         cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
 
@@ -278,7 +288,7 @@ class BasecampAPI
             return collect($cached);
 
         //Go through all projects until API is found
-        $teamProjects = $this->projects()->filter(function($project) use ($dept){
+        $teamProjects = $this->projects(false)->filter(function($project) use ($dept){
             if(is_null($project->description)) return false;
 
             if($str = $this->getTeamString($project->description)) {
