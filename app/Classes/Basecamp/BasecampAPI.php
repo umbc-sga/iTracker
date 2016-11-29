@@ -114,6 +114,39 @@ class BasecampAPI
         return json_decode($json);
     }
 
+    public function put($resource, $data){
+        $client = new Client([
+            'base_uri' => $this->baseUri
+        ]);
+
+        //Trim left slashes
+        $resource = ltrim($resource,'/');
+
+        //Cache miss call to API
+        //@todo handle exceptions
+        $res = $client->request('PUT', $resource, [
+            'json' => $data,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->accessToken,
+                'User-Agent' => env('BASECAMP_AGENT')
+            ]
+        ]);
+
+        //Get JSON payload
+        $json = $res->getBody()->getContents();
+
+        return json_decode($json);
+    }
+
+    public function invitePerson($project, $email){
+        return $this->put('project/'.$project.'/people/users.json', [
+            'name' => explode('@', $email)[0],
+            'email_address' => $email,
+            'title' => 'User',
+            'company_name' => 'UMBC'
+        ]);
+    }
+
 
     /**
      * Get array of all projects
@@ -324,6 +357,31 @@ class BasecampAPI
      * @return object
      */
     public function person($id){
-        return $this->get('people/'.$id.'.json');
+        $cacheName = 'api-person-'.$id;
+
+        if($cached = cache($cacheName))
+            return json_decode($cached);
+
+        $person = $this->get('people/'.$id.'.json');
+
+        $person->projects = $this->projects()->filter(function($project) use ($person){
+            foreach($this->peopleInProject($project->id) as $peep)
+                if($peep->id == $person->id)
+                    return true;
+
+            return false;
+        })->values();
+
+        $person->departments = $this->teams()->filter(function($team) use ($person){
+            foreach($this->peopleInProject($team->id) as $peep)
+                if($peep->id == $person->id)
+                    return true;
+
+            return false;
+        })->values();
+
+        cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
+
+        return $person;
     }
 }

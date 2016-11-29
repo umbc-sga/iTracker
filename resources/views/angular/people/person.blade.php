@@ -1,6 +1,7 @@
-<div class="row">
-    <div class="col-md-3">
+<div class="loader smallLoader" ng-show="!loaded"></div>
 
+<div class="row" ng-show="loaded">
+    <div class="col-md-3">
         <!-- Profile Image -->
         <div class="box box-primary">
             <div class="box-body box-profile">
@@ -55,71 +56,8 @@
             <div class="box-body">
                 <div class="box-group" id="accordion">
                     <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                    <h4 ng-show="projs.length == 0">This person is not on any projects...YET!</h4>
-                    <div class="box box-warning box-solid" ng-repeat="project in projs | orderBy: 'name'" style="margin-bottom:20px;">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#projectCollapse-@{{project.id}}" target="_self" style="text-decoration:none; color:black;">
-                            <div class="box-header with-border">
-                                <h4 class="box-title">
-                                    @{{project.name}}
-                                </h4>
-                            </div>
-                        </a>
-                        <div id="projectCollapse-@{{project.id}}" class="panel-collapse collapse">
-                            <div class="box-body no-padding">
-                                <table class="table table-responsive table-condensed">
-                                    <tbody>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Name</td>
-                                        <td>@{{project.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Description</td>
-                                        <td>@{{project.description}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Created By</td>
-                                        <td>@{{project.creator.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Created At</td>
-                                        <td>@{{project.created_at | date}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Last Updated</td>
-                                        <td>@{{project.updated_at | date}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right"># of Topics</td>
-                                        <td>@{{project.topics.count}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Completed To-Do Lists</td>
-                                        <td>@{{project.todolists.completed_count}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right">Outstanding To-Do Lists</td>
-                                        <td>@{{project.todolists.remaining_count}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right"># of People</td>
-                                        <td>@{{project.accesses.count}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right"># of Documents</td>
-                                        <td>@{{project.documents.attachments + project.attachments.count}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:150px;" align="right"># of Events</td>
-                                        <td>@{{project.calendar_events.count}}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="box-footer">
-                                <a href="/itracker/projects/@{{project.id}}"><button type="button" class="btn btn-primary btn-block btn-flat">Read More!</button></a>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 ng-show="person.projects.length == 0">This person is not on any projects...YET!</h4>
+                    <div class="projectsAtAGlance" data-projects="person.projects"></div>
                 </div>
             </div>
         </div>

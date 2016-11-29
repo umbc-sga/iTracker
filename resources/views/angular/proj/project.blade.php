@@ -1,4 +1,6 @@
-<div class="row">
+<div class="loader smallLoader" ng-show="!loaded"></div>
+
+<div class="row" data-ng-show="loaded">
     <div class="col-md-5">
         <div class="box box-primary">
             <div class="box-header with-border">
@@ -15,11 +17,12 @@
             </div>
         </div>
         <div class="box box-primary">
-            <div class="meetTheTeam" data-members="people" data-team-title="People on this Project"></div>
+            <div class="meetTheTeam" data-members="project.people" data-team-title="People on this Project"></div>
             <div class="box-footer">
-                <form action="{{url('/join')}}" method="get" style="display:inline;">
-                    <input type="hidden" name="proj" value="@{{project.id}}">
-                    <input type="hidden" name="projname" value="@{{project.name}}">
+                <form action="{{route('project.join')}}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="PUT">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="projectID" value="@{{project.id}}">
                     <button type="submit" class="btn btn-primary btn-block btn-flat ">Join the team!</button>
                 </form>
             </div>
@@ -61,11 +64,11 @@
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
-																<h5>@{{todo.assignee.name}}</h5>
-															</a>
-											            </span>
+                                            <span ng-show="todo.assignee != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                                    <h5>@{{todo.assignee.name}}</h5>
+                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr ng-repeat="todo in list.todos.completed">
@@ -75,17 +78,17 @@
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-										               <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
-																<h5>@{{todo.assignee.name}}</h5>
-															</a>
-											            </span>
+                                           <span ng-show="todo.assignee != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                                    <h5>@{{todo.assignee.name}}</h5>
+                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                 </table>
                                 <span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
-				                    			<h5>No items in this list yet!</h5>
-				                    		</span>
+                                    <h5>No items in this list yet!</h5>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -127,11 +130,11 @@
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-										                <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
-																<h5>@{{todo.assignee.name}}</h5>
-															</a>
-											            </span>
+                                            <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
+                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                                    <h5>@{{todo.assignee.name}}</h5>
+                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr ng-repeat="todo in list.todos.completed">
@@ -141,17 +144,17 @@
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-										            	<span ng-show="todo.assignee.length != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-											                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
-																<h5>@{{todo.assignee.name}}</h5>
-															</a>
-											            </span>
+                                            <span ng-show="todo.assignee.length != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                                    <h5>@{{todo.assignee.name}}</h5>
+                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                 </table>
                                 <span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
-				                    			<h5>No items in this list yet!</h5>
-				                    		</span>
+                                    <h5>No items in this list yet!</h5>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -192,8 +195,8 @@
                     		</table>
 						</div>
 					</div> -->
-    </div> <!-- /.col -->
+    </div>
     <div class="col-md-7">
         <div class="iTrakertimeline" data-timeline="events"></div>
     </div>
-</div> <!-- /.row -->
+</div>

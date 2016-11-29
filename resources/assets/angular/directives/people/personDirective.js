@@ -11,8 +11,11 @@ angular.module('itracker')
                     $scope.events = [];
 
                     $scope.person = {};
+                    $scope.loaded = false;
 
-                    basecampService.getPerson(personId).then((response) => $scope.person = response.data);
+                    basecampService.getPerson(personId).then((response) => {
+                        $scope.person = response.data;
+                    }).finally(()=>$scope.loaded = true);
 
                     $scope.prettyDate = function(dateTime){
                         let dateStr = dateTime.substring(0,dateTime.indexOf('T'));

@@ -159,4 +159,11 @@ class BasecampController extends Controller
         return ['todos'];
         //return $this->api->get('')
     }
+
+    //@todo Middleware require login
+    public function join(Request $request){
+        dump($request->all());
+
+        //$this->api->invitePerson()
+    }
 }

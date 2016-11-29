@@ -11,6 +11,8 @@ angular.module('itracker')
                     $scope.project = {};
                     $scope.events = [];
 
+                    $scope.loaded = false;
+
                     $scope.activeTodoLists = [];
                     $scope.completedTodoLists = [];
 
@@ -29,9 +31,9 @@ angular.module('itracker')
                         return rest + ' ' + month + ' ' + year;
                     };
 
-                    basecampService.getProject(projectId).then((response) => $scope.project = response.data);
-
-                    basecampService.getPeopleInProject(projectId).then((response) => $scope.people = response.data);
+                    basecampService.getProject(projectId)
+                        .then((response) => $scope.project = response.data)
+                        .finally(()=>$scope.loaded = true);
 
                     $scope.page = 1;
                     $scope.more = true;
