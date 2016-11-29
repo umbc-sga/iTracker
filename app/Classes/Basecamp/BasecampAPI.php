@@ -53,13 +53,13 @@ class BasecampAPI
      * Is caching enabled?
      * @return bool
      */
-    public function cacheEnabled(){ return $this->options['cacheEnabled']; }
+    protected function cacheEnabled(){ return $this->options['cacheEnabled']; }
 
     /**
      * How long should the cache live for? (in minutes)
      * @return int
      */
-    public function cacheDecayTime(){ return $this->options['cacheDecayTime']; }
+    protected function cacheDecayTime(){ return $this->options['cacheDecayTime']; }
 
     /**
      * Set people to be filtered out of site
@@ -72,7 +72,7 @@ class BasecampAPI
      * @param $person object Basecamp Person Object
      * @return bool
      */
-    public function filteredPerson($person){
+    protected function filteredPerson($person){
         return $this->restrictedEmails->search($person->email_address) === false;
     }
     /**
@@ -134,6 +134,10 @@ class BasecampAPI
             return strtolower($project->purpose) == 'topic';
         })->transform(function($project){
             unset($project->dock);
+
+            if($str = $this->getTeamString($project->description))
+                $project->description = str_replace($str, '', $project->description);
+
             return $project;
         })->values();
 
@@ -157,6 +161,9 @@ class BasecampAPI
 
         $project = $this->get('projects/'.$id.'.json');
         $project->people = $this->peopleInProject($project->id);
+
+        if($str = $this->getTeamString($project->description))
+            $project->description = str_replace($str, '', $project->description);
 
         cache([$cacheName => json_encode($project)], $this->cacheDecayTime());
 
@@ -251,6 +258,14 @@ class BasecampAPI
         return $team;
     }
 
+    private function getTeamString($str){
+        $matches = [];
+        if(preg_match_all('/#teams(?: (\d+))+/', $str, $matches) > 0)
+            return $matches[0][0];
+
+        return null;
+    }
+
     /**
      * Get all team projects
      * @param $dept int Department ID
@@ -266,13 +281,16 @@ class BasecampAPI
         $teamProjects = $this->projects()->filter(function($project) use ($dept){
             if(is_null($project->description)) return false;
 
-            $matches = [];
-            if(preg_match_all('/#teams(?: (\d+))+/', $project->description, $matches) > 0)
-                preg_match_all('/([0-9]+)/', $matches[0][0], $matches);
-            else
-                return false;
+            if($str = $this->getTeamString($project->description)) {
+                $matches = [];
 
-            return collect(collect($matches)->splice(1)->last())->search($dept);
+                preg_match_all('/([0-9]+)/', $str, $matches);
+                $project->description = str_replace($str, '', $project->description);
+
+                return in_array($dept, collect($matches)->splice(1)->last());
+            }
+
+            return false;
         })->values();
 
         //Cache
