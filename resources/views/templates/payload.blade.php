@@ -12,17 +12,15 @@
     <div class="wrapper">
     @include('templates.umbc.header')
 
-    <!-- Left side column. contains the logo and sidebar -->
         <aside class="main-sidebar">
-            <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
-                <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="image">
                         <img src="{{asset('media/sga-logo-IT.png')}}" class="img-circle" style="max-width: 100%" alt="User Image">
                     </div>
                 </div>
-                <!-- search form -->
+                {{-- @todo Implement search --}}
+                {{--
                 <form action="#" method="get" class="sidebar-form">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -30,8 +28,8 @@
                                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
                             </span>
                     </div>
-                </form> <!-- /.search form -->
-                <!-- sidebar menu: : style can be found in sidebar.less -->
+                </form>
+                --}}
                 <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active">
@@ -113,10 +111,9 @@
                         </a>
                     </li>
                 </ul>
-            </section>  <!-- /.sidebar -->
+            </section>
         </aside>
 
-        <!-- Main content -->
         <div data-ng-view></div>
 
     @include('templates.umbc.footer')
@@ -125,17 +122,4 @@
     immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
-@endsection
-
-@section('script')
-
-@endsection
-
-@section('head')
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 @endsection
