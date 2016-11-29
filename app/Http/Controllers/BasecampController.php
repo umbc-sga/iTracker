@@ -20,33 +20,66 @@ class BasecampController extends Controller
         $this->api = $api;
     }
 
+    /**
+     * API OAuth Endpoint
+     * @param Request $request
+     * @param BasecampClient $bc
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function endpoint(Request $request, BasecampClient $bc){
+        //If there was an error, retry
         if($request->input('error', null))
             return redirect()->route('home');
 
+        //Get the token
         $token = $bc->web()->getAccessToken('authorization_code', ['code' => $request->input('code', '')]);
 
+        //Store all into the cache
         Cache::forever('BCaccessToken', $token->getToken());
         Cache::forever('BCrefreshToken', $token->getRefreshToken());
         Cache::forever('BCexpiration', $token->getExpires());
 
+        //Redirect where they intended to go
         return redirect()->intended();
     }
 
-    public function invalid(Request $request, $msg){
+    /**
+     * Invalid API request
+     * @param Request $request
+     * @param $msg string Message to append to error
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function invalid(Request $request, $msg = null){
         return response()->json([
-            'message' => 'Invalid API request: '.$msg
+            'message' => 'Invalid API request'.$msg ? ': '.$msg : ''
         ])->setStatusCode(400);
     }
 
+    /**
+     * Get all projects
+     * @param Request $request
+     * @return \Illuminate\Support\Collection
+     */
     public function projects(Request $request){
         return $this->api->projects();
     }
 
+    /**
+     * Get single project
+     * @param Request $request
+     * @param $project int Project ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function project(Request $request, $project){
         return response()->json($this->api->project($project));
     }
 
+    /**
+     * Get all people in a project
+     * @param Request $request
+     * @param $project int Project ID
+     * @return \Illuminate\Support\Collection
+     */
     public function peopleInProject(Request $request, $project){
         return $this->api->peopleInProject($project);
     }
@@ -65,56 +98,54 @@ class BasecampController extends Controller
         return response()->json($this->api->person($person));
     }
 
+    /**
+     * Get all groups
+     * @param Request $request
+     * @return \Illuminate\Support\Collection
+     */
     public function groups(Request $request){
         return $this->api->teams();
     }
 
+    /**
+     * Get single group
+     * @param Request $request
+     * @param $group
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function group(Request $request, $group){
-        return $this->project($request, $group);
+        return response()->json($this->api->team($group));
     }
 
-    public function getDept(Request $request, $dept){
-        $groups = $this->groups($request);
-
-        $groups = $groups->filter(function($group) use ($dept){
-            $convertedName = preg_replace('/&/', 'and', preg_replace('/\\s/', '-', strtolower($group->name)));
-            return $convertedName == $dept;
-        });
-
-        return $groups->count() > 0 ? $groups->first() : null;
+    /**
+     * Get department by name
+     * @param Request $request
+     * @param $deptName string Name of department
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dept(Request $request, $deptName){
+        return response()->json($this->api->teamByName($deptName));
     }
 
-    public function dept(Request $request, $dept){
-        $department = $this->api->teamByName($dept);
-
-        $department->projects = $this->api->teamProjects($department->id);
-        $department->memberships = $this->api->peopleInProject($department->id);
-
-        return response()->json($department);
-    }
-
+    /**
+     * Get department projects
+     * @param Request $request
+     * @param $dept int Department ID
+     * @return \Illuminate\Support\Collection
+     */
     public function deptartmentProjects(Request $request, $dept){
-        $deptId = $this->api->teamByName($dept)->id;
-
-        $deptId = $this->getDept($request, $dept)->id;
-
-        return $this->api->projects()->filter(function($project) use ($deptId){
-            if(is_null($project->description)) return false;
-
-            $matches = [];
-            if(preg_match_all('/#teams(?: (\d+))+/', $project->description, $matches) > 0)
-                preg_match_all('/([0-9]+)/', $matches[0][0], $matches);
-            else
-                return false;
-
-           return collect(collect($matches)->splice(1)->last())->search($deptId);
-        })->values();
+        return $this->api->teamProjects($this->api->teamByName($dept)->id);
     }
 
+    /**
+     * Get all people
+     * @return \Illuminate\Support\Collection
+     */
     public function people(){
         return $this->api->people();
     }
 
+    //@todo handle todos
     public function todos(Request $request, $status=null){
         if(!in_array($status, ['active', 'completed', null]))
             return $this->invalid($request, 'No valid todo status');

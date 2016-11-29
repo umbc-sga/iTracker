@@ -174,6 +174,30 @@ class BasecampAPI
     }
 
     /**
+     * Get team by ID
+     * @param $id int Team ID
+     * @return object
+     */
+    public function team($id){
+        $cacheName = 'api-team-'.$id;
+
+        //Check cache
+        if($cached = cache($cacheName))
+            return json_decode($cached);
+
+        $team = $this->project($id);
+
+        //Add additional fields
+        $team->projects = $this->teamProjects($team->id);
+        $team->memberships = $this->peopleInProject($team->id);
+
+        //Cache
+        cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
+
+        return $team;
+    }
+
+    /**
      * Get team by name
      * @param $name string Team name
      * @return object
@@ -195,8 +219,11 @@ class BasecampAPI
         if(is_null($team))
             return null;
 
-        $team->people = $this->peopleInProject($team->id);
+        //Add additional fields
+        $team->projects = $this->teamProjects($team->id);
+        $team->memberships = $this->peopleInProject($team->id);
 
+        //Cache
         cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
 
         return $team;
@@ -213,6 +240,7 @@ class BasecampAPI
         if($cached = cache($cacheName))
             return collect($cached);
 
+        //Go through all projects until API is found
         $teamProjects = $this->projects()->filter(function($project) use ($dept){
             if(is_null($project->description)) return false;
 
@@ -225,6 +253,7 @@ class BasecampAPI
             return collect(collect($matches)->splice(1)->last())->search($dept);
         })->values();
 
+        //Cache
         cache([$cacheName => $teamProjects->jsonSerialize()], $this->cacheDecayTime());
 
         return $teamProjects;
