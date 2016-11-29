@@ -158,22 +158,7 @@ angular.module('itracker')
 
                     for(let person of people){
                         this.main.emails[person.email] = person.id;
-                        this.main.people.push( { 'info' : person } );
-
-                        /*
-                        retrievalService.getPersonInfo(person.id).then((response) => {
-                            let personInfo = response.data;
-
-                            $log.debug('Person Info:', personInfo);
-
-                            retrievalService.getPersonProj(person.id).then((response) => {
-                                let personProject = response.data;
-                                $log.debug('Person proj', personProject);
-
-                                this.main.people.push( { 'info' : personInfo, 'proj' : personProject } );
-                            });
-                        });
-                        */
+                        this.main.people.push( person );
                     }
                 }
             });
