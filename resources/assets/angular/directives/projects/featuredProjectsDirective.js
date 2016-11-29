@@ -13,7 +13,7 @@ angular.module('itracker')
 
                 if (Array.isArray($scope.projects))
                     for(let project of $scope.projects)
-                        if (project.bookmarked != true) {
+                        if (project.bookmarked == true) {
                             project.updated_at = new Date(project.updated_at);
                             $scope.featuredProjs.push(project);
                         }
