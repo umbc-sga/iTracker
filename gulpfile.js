@@ -13,6 +13,7 @@ var paths = {
     'angular': 'resources/assets/angular/',
     'sass': 'resources/assets/sass/',
     'npm': 'node_modules/',
+    'legacy': 'resources/assets/legacy/',
     'public': {
         'js': 'public/js/',
         'css': 'public/css/',
@@ -22,12 +23,22 @@ var paths = {
 
 gulp.task('fonts', function(){
     return gulp.src([
-        paths.npm+'bootstrap-sass/assets/fonts/bootstrap/*'
+        paths.npm+'bootstrap-sass/assets/fonts/bootstrap/*',
+        paths.npm+'font-awesome/fonts/*',
+        paths.npm+'ionicons/dist/fonts/*',
     ])
         .pipe(gulp.dest(paths.public.font));
 });
 
-gulp.task('css',['fonts'], function() {
+gulp.task('vendorcss', function(){
+    return gulp.src([
+        paths.legacy+'**/*.css',
+    ])
+        .pipe(concat('vendor.css'))
+        .pipe(gulp.dest(paths.stage));
+});
+
+gulp.task('css',['vendorcss', 'fonts'], function() {
     return gulp.src([
         paths.npm+'bootstrap-sass/assets/stylesheets/_bootstrap.scss',
         paths.sass+'**/core.scss',
@@ -46,6 +57,7 @@ gulp.task('vendorjs', function(){
         paths.npm+'angular-route/angular-route.js',
         paths.npm+'angular-ui-router/release/angular-ui-router.js',
         paths.npm+'angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+        paths.legacy+'**/*.js',
     ])
         .pipe(concat('vendor.js'))
         .pipe(gulp.dest(paths.stage));
@@ -54,7 +66,7 @@ gulp.task('vendorjs', function(){
 gulp.task('js', ['vendorjs'], function(){
     return gulp.src([
         paths.angular+'core.js',
-        paths.angular+'**/*.js'
+        paths.angular+'**/*.js',
     ])
         .pipe(babel().on('error', console.error))
         .pipe(concat('core.js'))
@@ -62,14 +74,19 @@ gulp.task('js', ['vendorjs'], function(){
 });
 
 gulp.task('pushcss', ['css'], function(){
-    gulp.src([paths.stage+'*.css'])
+    gulp.src([
+        paths.stage+'vendor.css',
+        paths.stage+'*.css'
+    ])
+        .pipe(concat('core.css'))
         .pipe(gulp.dest(paths.public.css));
 });
 
 gulp.task('pushjs', ['js'], function(){
     return gulp.src([
         paths.stage+'vendor.js',
-        paths.stage+'*.js'
+        paths.stage+'*.js',
+        'resources/assets/legacyAnnoying/js/app.js',
     ])
         .pipe(concat('core.js'))
         .pipe(gulp.dest(paths.public.js));
