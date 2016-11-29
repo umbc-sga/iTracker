@@ -55,7 +55,7 @@ gulp.task('js', ['vendorjs'], function(){
         paths.angular+'core.js',
         paths.angular+'**/*.js'
     ])
-        .pipe(babel())
+        .pipe(babel().on('error', console.error))
         .pipe(concat('core.js'))
         .pipe(gulp.dest(paths.stage));
 });
