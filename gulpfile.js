@@ -74,7 +74,7 @@ gulp.task('js', ['vendorjs'], function(){
 });
 
 gulp.task('pushcss', ['css'], function(){
-    gulp.src([
+    return gulp.src([
         paths.stage+'vendor.css',
         paths.stage+'*.css'
     ])
@@ -108,11 +108,20 @@ gulp.task('default',['pushjs','pushcss', 'watch'],function(){
 });
 
 gulp.task('prod',['clear', 'css', 'js'],function(){
-    gulp.src([paths.stage+'core.css'])
+    gulp.src([
+        paths.stage+'vendor.css',
+        paths.stage+'*.css'
+    ])
+        .pipe(concat('core.css'))
         .pipe(clearCSS())
         .pipe(gulp.dest(paths.public.css));
 
-    return gulp.src([paths.stage+'core.js'])
+    return gulp.src([
+        paths.stage+'vendor.js',
+        paths.stage+'*.js',
+        'resources/assets/legacyAnnoying/js/app.js'
+    ])
+        .pipe(concat('core.js'))
         .pipe(uglify())
         .pipe(gulp.dest(paths.public.js));
 });
