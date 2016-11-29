@@ -8,11 +8,14 @@ angular.module('itracker')
                 controller: ['$scope', ($scope) => {
                     $scope.name = $routeParams.departmentName;
                     $scope.department = {};
+                    $scope.loaded = false;
 
                     basecampService.getDepartment($routeParams.departmentName).then((response) => {
                         $scope.department = response.data;
                     }).catch((err) => {
-                        $log.error('Error while getting department info.',err);
+                        $log.error('Error while getting department info.', err);
+                    }).finally(()=>{
+                        $scope.loaded = true;
                     })
                 }],
                 templateUrl: '/angular/department'

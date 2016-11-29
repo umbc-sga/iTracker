@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('allProjects', ['$routeParams', '$log', 'basecampService',
-        function($routeParams, $log, basecampService){
+    .directive('allProjects', [function(){
             return {
                 restrict: 'C',
                 scope: {

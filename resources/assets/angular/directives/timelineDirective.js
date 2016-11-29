@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('iTrakertimeline', [
-        function(){
+    .directive('iTrakertimeline', [function(){
         return {
             restrict: 'C',
             scope: {

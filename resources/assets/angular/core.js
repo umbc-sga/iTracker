@@ -2,6 +2,7 @@
 
 angular.module('itracker',[
     //'ui.router',
+    'ui.bootstrap',
     'ngRoute',
 ]).config(['$routeProvider','$locationProvider', '$logProvider',
     function ($routeProvider, $locationProvider, $logProvider) {

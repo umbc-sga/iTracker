@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('numberBox', [
-        function(){
+    .directive('numberBox', [function(){
         return {
             restrict: 'C',
             scope: {

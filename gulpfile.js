@@ -45,6 +45,7 @@ gulp.task('vendorjs', function(){
         paths.npm+'angular/angular.js',
         paths.npm+'angular-route/angular-route.js',
         paths.npm+'angular-ui-router/release/angular-ui-router.js',
+        paths.npm+'angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
     ])
         .pipe(concat('vendor.js'))
         .pipe(gulp.dest(paths.stage));

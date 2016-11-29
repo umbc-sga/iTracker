@@ -15,85 +15,17 @@
             </div>
         </div>
         <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    People on this Project
-                </h3>
-            </div>
-            <div class="box-body">
-                <a ng-repeat="person in people | orderBy:'name'"
-                   data-ng-href="{{url('/person')}}/@{{person.id}}"
-                   ng-hide="person.email_address == 'sga@umbc.edu'">
-                    <img src="@{{person.avatar_url}}" class="img-circle" style="margin-bottom:15px;margin-right:15px;" title="@{{person.name}}" alt="@{{person.name}}">
-                </a>
-            </div>
+            <div class="meetTheTeam" data-members="people" data-team-title="People on this Project"></div>
             <div class="box-footer">
                 <form action="{{url('/join')}}" method="get" style="display:inline;">
-                    <input type="text" name="proj" value="@{{project.id}}" hidden="">
-                    <input type="text" name="projname" value="@{{project.name}}" hidden="">
+                    <input type="hidden" name="proj" value="@{{project.id}}">
+                    <input type="hidden" name="projname" value="@{{project.name}}">
                     <button type="submit" class="btn btn-primary btn-block btn-flat ">Join the team!</button>
                 </form>
             </div>
         </div>
-        <div class="box box-primary">
-            <div class="box-header">
-                <h3 class="box-title">
-                    Project At-A-Glance
-                </h3>
-            </div>
-            <div class="box-body">
-                <table class="table table-responsive table-condensed">
-                    <tbody>
-                    <tr>
-                        <td style="width:150px;" align="right">Name</td>
-                        <td>@{{project.name}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right">Description</td>
-                        <td>@{{project.description}}</td>
-                    </tr>
-                    {{--
-                    <tr>
-                        <td style="width:150px;" align="right">Created By</td>
-                        <td>@{{project.creator.name}}</td>
-                    </tr>
-                    --}}
-                    <tr>
-                        <td style="width:150px;" align="right">Created At</td>
-                        <td>@{{project.created_at | date}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right">Last Updated</td>
-                        <td>@{{project.updated_at | date}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right"># of Topics</td>
-                        <td>@{{project.topics.count}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right">Completed To-Do Lists</td>
-                        <td>@{{project.todolists.completed_count}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right">Outstanding To-Do Lists</td>
-                        <td>@{{project.todolists.remaining_count}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right"># of People</td>
-                        <td>@{{people.length}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right"># of Documents</td>
-                        <td>@{{project.documents.attachments + project.attachments.count}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width:150px;" align="right"># of Events</td>
-                        <td>@{{project.calendar_events.count}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div> <!-- /.box-body -->
-        </div> <!-- /.box -->
+        <div class="box box-primary projectAtAGlance" data-project="project"></div>
+
         <div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
             <div class="box-header with-border">
                 <h3 class="box-title">Active To-Do Lists <small>(Click on list name to expand)</small> </h3>

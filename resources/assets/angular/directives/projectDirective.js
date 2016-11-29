@@ -71,7 +71,7 @@ angular.module('itracker')
                             $scope.more = false;
                         }
                     };
-                    $scope.getEventSet();
+                    //$scope.getEventSet();
 
                     $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
 

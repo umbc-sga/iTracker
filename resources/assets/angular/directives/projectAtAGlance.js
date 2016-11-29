@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('personView', [function(){
+    .directive('projectAtAGlance', [function(){
             return {
                 restrict: 'C',
                 scope: {
-                    person: '='
+                    project: '='
                 },
-                templateUrl: '/angular/personView'
+                templateUrl: '/angular/projectAtAGlance'
             };
         }]);
