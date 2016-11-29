@@ -40,7 +40,9 @@ return [
         'id' => env('BASECAMP_CLIENT_ID'),
         'secret' => env('BASECAMP_CLIENT_SECRET'),
         'authUrl' => 'https://launchpad.37signals.com/authorization/new',
-        'tokenUrl' => 'https://launchpad.37signals.com/authorization/token'
+        'tokenUrl' => 'https://launchpad.37signals.com/authorization/token',
+        'cachingEnabled' => env('BASECAMP_API_CACHING', true),
+        'cacheAgeOff' => env('BASECAMP_API_CACHE_TIME', 60)
     ]
 
 ];

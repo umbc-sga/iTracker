@@ -51,6 +51,7 @@ class BasecampController extends Controller
         return $this->api->peopleInProject($project);
     }
 
+    //@todo Migrate to API class
     public function projectEvents(Request $request, $project, $page = 1){
         $project = $this->api->project($project);
 
@@ -58,30 +59,14 @@ class BasecampController extends Controller
         return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
     }
 
-    public function personProject(Request $request, $person){
-        return null;
-    }
-
     //@todo aggregate all relevant personal info
     // Include all projects and departments
     public function person(Request $request, $person){
-        $perp = $this->api->person($person);
-        $perp->projects = [];
-        return response()->json($perp);
+        return response()->json($this->api->person($person));
     }
 
     public function groups(Request $request){
-        $teams = $this->api->teams();
-        $projects = $this->api->projects();
-
-        //@todo actually get correct projects
-        $teams->transform(function($team) use ($projects){
-            $team->projects = $projects->random(6)->values();
-            $team->people = $this->api->peopleInProject($team->id);
-            return $team;
-        });
-
-        return $teams;
+        return $this->api->teams();
     }
 
     public function group(Request $request, $group){
@@ -100,25 +85,29 @@ class BasecampController extends Controller
     }
 
     public function dept(Request $request, $dept){
-        $ret = $this->getDept($request, $dept);
-        $ret->memberships = $this->api->peopleInProject($ret->id);
-        $ret->projects = $this->deptProjects($request, $dept);
+        $department = $this->api->teamByName($dept);
 
-        return response()->json($ret);
+        $department->projects = $this->api->teamProjects($department->id);
+        $department->memberships = $this->api->peopleInProject($department->id);
+
+        return response()->json($department);
     }
 
-    public function deptProjects(Request $request, $dept){
+    public function deptartmentProjects(Request $request, $dept){
+        $deptId = $this->api->teamByName($dept)->id;
+
         $deptId = $this->getDept($request, $dept)->id;
 
-        $peopleInDept = $this->api->peopleInProject($deptId);
+        return $this->api->projects()->filter(function($project) use ($deptId){
+            if(is_null($project->description)) return false;
 
-        return $this->api->projects()->filter(function($project) use($peopleInDept){
-            $people = $this->api->peopleInProject($project->id)->pluck('id');
+            $matches = [];
+            if(preg_match_all('/#teams(?: (\d+))+/', $project->description, $matches) > 0)
+                preg_match_all('/([0-9]+)/', $matches[0][0], $matches);
+            else
+                return false;
 
-            foreach($peopleInDept as $person)
-                return $people->search($person->id) !== false;
-
-            return false;
+           return collect(collect($matches)->splice(1)->last())->search($deptId);
         })->values();
     }
 
