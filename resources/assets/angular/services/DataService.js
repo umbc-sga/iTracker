@@ -2,6 +2,10 @@
 
 angular.module('itracker')
     .factory('dataService', ['$q', '$log', 'retrievalService', function($q, $log, retrievalService) {
+        this.people = [];
+        this.projects = [];
+        this.groups = [];
+
         this.main = {
             people: [],
             projects: [],
@@ -123,8 +127,9 @@ angular.module('itracker')
             retrievalService.getProjects().then((response) => {
                 let projects = response.data;
                 if (Array.isArray(projects)) {
-                    this.main.projects = projects;
                     $log.debug('Projects:', projects);
+                    this.projects = projects;
+                    this.main.projects = projects;
 
                     retrievalService.getActiveTodoLists().then((response) => {
                         let data = response.data;
@@ -149,6 +154,7 @@ angular.module('itracker')
 
                 if (Array.isArray(people)) {
                     $log.debug('People: ', people);
+                    this.people = people;
 
                     for(let person of people){
                         this.main.emails[person.email] = person.id;
@@ -178,8 +184,9 @@ angular.module('itracker')
                 if (Array.isArray(groups)) {
                     $log.debug('Groups:', groups);
 
+                    this.groups = groups;
+
                     for(let group of groups){
-                        group.group_href = group.name.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
                         this.main.groups.push( group );
                     }
                 }
@@ -191,6 +198,9 @@ angular.module('itracker')
             getProjectPack: getProjectPack,
             getPersonPack: getPersonPack,
             bootstrap: bootstrap,
-            main: this.main
+            main: this.main,
+            groups: this.groups,
+            projects: this.projects,
+            people: this.people
         }
     }]);

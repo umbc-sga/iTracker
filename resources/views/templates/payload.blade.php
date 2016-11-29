@@ -68,8 +68,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li ng-repeat="group in main.groups | orderBy: 'name'">
-                                <a href="{{url('/departments')}}/@{{group.group_href}}/">
+                            <li ng-repeat="group in data.groups | orderBy: 'name'">
+                                <a href="{{url('/departments')}}/@{{group.name | departmentHref}}/">
                                     <i class="fa fa-circle-o"></i>@{{group.name}}
                                 </a>
                             </li>

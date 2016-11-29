@@ -12,7 +12,7 @@ angular.module('itracker')
         /**
          * Container for some global data
          */
-        $scope.main = dataService.main;
+        $scope.data = dataService.main;
 
         /**
          * Recalculate main counters when main active todo lists change

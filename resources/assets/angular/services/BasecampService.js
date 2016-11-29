@@ -22,13 +22,11 @@ angular.module('itracker')
         };
 
         return {
-            groups: () => {},
-            people: () => {},
-            projects: () => {},
             getProjects: () => request('/projects'),
             getPeopleInProject: (projectId) => request('/project/'+projectId+'/people'),
             getProjectEvents: (projectId, page) => request('/project/'+projectId+'/events/'+page),
             getProject: (projectId) => request('/project/'+projectId),
+
             getPeople: () => request('/people'),
             getPerson: (personId) => request('/person/'+personId),
             getPersonProjects: (personId) => request('/person/'+personId+'/projects', ),
@@ -36,15 +34,17 @@ angular.module('itracker')
             getPersonRoles: (personId) => request('/person/'+personId+'/roles'),
             getPersonDepartments: (personId) => request('/person/'+personId+'/departments'),
             getPersonEvents: (personId, page) => request('/person/'+personId+'/events/'+page),
+
             getGroups: () => request('/groups'),
             getGroup: (groupdId) => request('/group/'+groupdId),
             getDepartment: (deptName) => request('/dept/'+deptName),
             getDepartmentPersonWithRole: (roleId, deptId) => request('/dept/'+deptId+'/role/'+roleId),
             getDepartmentProjects: (deptId) => request('/dept/'+deptId+'/projects'),
+
             getActiveTodos: () => request('/todos/active'),
             getCompletedTodos: () => request('/todos/completed'),
-            getRole: (roleId) => request('/role/'+roleId),
 
+            getRole: (roleId) => request('/role/'+roleId),
             changeRole: (person, dept, role) => request('/dept/'+dept+'/person/'+person+'/role/'+role, 'PUT')
         };
     }]);

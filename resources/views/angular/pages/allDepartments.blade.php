@@ -11,5 +11,5 @@
         </ol>
     </section>
     <!-- Main content -->
-    <section class="content allDepartments"></section>
+    <section class="content allDepartments" data-departments="data.groups"></section>
 </div>

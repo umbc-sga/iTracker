@@ -17,7 +17,7 @@
              <div class="numberBox"
                   data-color="bg-aqua"
                   data-title="Active Projects"
-                  data-str="@{{ main.projects.length }}"
+                  data-str="@{{ data.projects.length }}"
                   data-url="{{url('/projects')}}"
                   data-description="See What We Are Working On!"
                   data-icon="ion ion-compose"></div>
@@ -26,7 +26,7 @@
              <div class="numberBox"
                   data-color="bg-yellow"
                   data-title="Departments"
-                  data-str="@{{ main.groups.length }}"
+                  data-str="@{{ data.groups.length }}"
                   data-url="{{url('/departments')}}"
                   data-description="See Departmental Projects!"
                   data-icon="ion ion-briefcase"></div>
@@ -35,7 +35,7 @@
              <div class="numberBox"
                   data-color="bg-red"
                   data-title="Active Members"
-                  data-str="@{{ main.people.length }}"
+                  data-str="@{{ data.people.length }}"
                   data-url="{{url('/people')}}"
                   data-description="See Who Is Who!"
                   data-icon="ion ion-person"></div>

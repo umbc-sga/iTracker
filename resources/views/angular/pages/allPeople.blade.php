@@ -11,5 +11,5 @@
         </ol>
     </section>
     <!-- Main content -->
-    <section class="content allPeople"></section>
+    <section class="content allPeople" data-people="data.people"></section>
 </div>

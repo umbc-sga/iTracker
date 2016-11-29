@@ -11,5 +11,5 @@
 	</section>
 
 	<!-- Main content -->
-	<section class="content departmentPeople"></section>
+	<section class="content departmentPeople" data-groups="data.groups"></section>
 </div>

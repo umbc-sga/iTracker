@@ -9,11 +9,4 @@
             <h5 class="widget-user-desc">@{{person.email}}</h5>
         </div>
     </a>
-    <div class="box-footer no-padding">
-        <ul class="nav nav-stacked">
-            <li><a>Projects <span class="pull-right badge bg-blue">@{{person.active}}</span></a></li>
-            <li><a>Assigned Tasks <span class="pull-right badge bg-aqua"> @{{person.todoCount}}</span></a></li>
-            <li><a>Events Created <span class="pull-right badge bg-green">@{{person.eventCount}}</span></a></li>
-        </ul>
-    </div>
 </div>

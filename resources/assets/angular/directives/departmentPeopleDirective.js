@@ -5,10 +5,17 @@ angular.module('itracker')
         function($routeParams, $log, basecampService){
             return {
                 restrict: 'C',
+                scope: {
+                    groups: '='
+                },
                 controller: ['$scope', ($scope) => {
                     $scope.departments = [];
-
-                    basecampService.getGroups().then((response) => $scope.departments = response.data);
+                    for(let group of $scope.groups) {
+                        basecampService.getGroup(group.id).then((response) => {
+                            response.data.loaded = true;
+                            $scope.departments.push(response.data)
+                        });
+                    }
                 }],
                 templateUrl: '/angular/departmentPeople'
             };

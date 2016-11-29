@@ -10,5 +10,5 @@
 			<li class="active">By Name</li>
 		</ol>
 	</section>
-	<section class="content allProjects"></section>
+	<section class="content allProjects" data-projects="data.projects"></section>
 </div>

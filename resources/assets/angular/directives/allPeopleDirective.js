@@ -1,15 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('allPeople', ['$routeParams', '$log', 'basecampService',
-        function($routeParams, $log, basecampService){
+    .directive('allPeople', [function(){
             return {
                 restrict: 'C',
-                controller: ['$scope', ($scope) => {
-                    $scope.people = [];
-
-                    basecampService.getPeople().then((response) => $scope.people = response.data);
-                }],
+                scope: {
+                    people: '='
+                },
                 templateUrl: '/angular/allPeople'
             };
         }]);
