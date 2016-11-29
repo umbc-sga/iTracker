@@ -43,7 +43,7 @@ class PurgeCache extends Command
             return $this->error('Cache driver is not set to Database, no action was taken!');
         }
 
-        if(false && $resp = $this->ask('Are you sure you want to purge cache? This will cause slowdowns until cache is rebuilt. (y/N)', 'n'))
+        if($resp = $this->ask('Are you sure you want to purge cache? This will cause slowdowns until cache is rebuilt. (y/N)', 'n'))
             if(strtolower($resp)[0] == 'n')
                 return null;
 
