@@ -7,6 +7,6 @@ angular.module('itracker')
                 scope: {
                     project: '='
                 },
-                templateUrl: '/angular/projectAtAGlance'
+                templateUrl: '/angular/proj.projectAtAGlance'
             };
         }]);

@@ -12,6 +12,6 @@ angular.module('itracker')
 
                     $scope.colorPic = randomColor();
                 }],
-                templateUrl: '/angular/allProjects'
+                templateUrl: '/angular/proj.allProjects'
             };
         }]);

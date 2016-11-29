@@ -105,6 +105,6 @@ angular.module('itracker')
 
                     }, true);
                 }],
-                templateUrl: '/angular/project'
+                templateUrl: '/angular/proj.project'
             };
         }]);

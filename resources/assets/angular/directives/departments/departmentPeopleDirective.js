@@ -17,6 +17,6 @@ angular.module('itracker')
                         });
                     }
                 }],
-                templateUrl: '/angular/departmentPeople'
+                templateUrl: '/angular/dept.departmentPeople'
             };
         }]);

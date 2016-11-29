@@ -15,6 +15,6 @@ angular.module('itracker')
                         $scope.loaded = true;
                     }).catch((response) => $log.error('Error when getting department: ', response));
                 }],
-                templateUrl: '/angular/departmentView'
+                templateUrl: '/angular/dept.departmentView'
             };
         }]);

@@ -7,6 +7,6 @@ angular.module('itracker')
                 scope: {
                     departments: '='
                 },
-                templateUrl: '/angular/allDepartments'
+                templateUrl: '/angular/dept.allDepartments'
             };
         }]);

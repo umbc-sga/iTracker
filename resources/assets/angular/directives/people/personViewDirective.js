@@ -7,6 +7,6 @@ angular.module('itracker')
                 scope: {
                     person: '='
                 },
-                templateUrl: '/angular/personView'
+                templateUrl: '/angular/people.personView'
             };
         }]);

@@ -62,6 +62,6 @@ angular.module('itracker')
                     };
                     //$scope.getEventSet();
                 }],
-                templateUrl: '/angular/person'
+                templateUrl: '/angular/people.person'
             };
         }]);

@@ -18,6 +18,6 @@ angular.module('itracker')
                             $scope.featuredProjs.push(project);
                         }
             }],
-            templateUrl: '/angular/featuredProjects'
+            templateUrl: '/angular/proj.featuredProjects'
         };
     }]);

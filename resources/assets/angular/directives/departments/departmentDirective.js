@@ -18,6 +18,6 @@ angular.module('itracker')
                         $scope.loaded = true;
                     })
                 }],
-                templateUrl: '/angular/department'
+                templateUrl: '/angular/dept.department'
             };
         }]);
