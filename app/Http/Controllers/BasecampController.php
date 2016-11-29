@@ -15,9 +15,16 @@ class BasecampController extends Controller
      */
     protected $api;
 
+    private $filteredEmails = [
+        'sga@umbc.edu',
+        'berger@umbc.edu',
+        'saddison@umbc.edu'
+    ];
+
     public function __construct(BasecampAPI $api)
     {
         $this->api = $api;
+        $this->api->setEmailFilters($this->filteredEmails);
     }
 
     /**
