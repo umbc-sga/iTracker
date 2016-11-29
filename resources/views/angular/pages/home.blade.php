@@ -17,7 +17,7 @@
             <div class="col-xs-12 col-md-8">
                 <div class="col-xs-12">
                     <div class="box">
-                        <div class="featuredProjects"></div>
+                        <div class="featuredProjects" data-projects="data.projects"></div>
                     </div>
                 </div>  <!-- /.col -->
                 <div class="col-xs-12">
