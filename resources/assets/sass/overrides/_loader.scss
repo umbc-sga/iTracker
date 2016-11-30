@@ -1,0 +1,48 @@
+/* Animation */
+@-webkit-keyframes loading {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-moz-keyframes loading {
+  to { -moz-transform: rotate(360deg); }
+}
+@-ms-keyframes loading {
+  to { -ms-transform: rotate(360deg); }
+}
+@keyframes loading {
+  to { transform: rotate(360deg); }
+}
+
+.loader{
+  height: 150px;
+  width: 150px;
+  margin: auto;
+  padding: 20px;
+}
+
+.smallLoader{
+  height: 50px;
+  width: 50px;
+}
+
+.medLoader{
+  height: 100px;
+  width: 100px;
+}
+
+/* Loader (*/
+.loading {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: transparent;
+
+  box-shadow: 0 0 5px rgba(0,0,0,0.57);
+  border: 4px solid #fbff00;
+  border-bottom-color: #000;
+  border-left-color: #000;
+
+  -webkit-animation: loading 0.5s infinite linear;
+  -moz-animation: loading 0.5s infinite linear;
+  animation: loading 0.5s infinite linear;
+
+}

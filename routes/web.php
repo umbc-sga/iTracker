@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,13 @@
 |
 */
 
-Route::any('angular/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view']);
+Route::group(['prefix' => 'angular'], function(){
+    Route::any('/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view']);
 
-Route::get('/{any}', ['as' => 'home', 'uses' => 'HomeController@index'])->where('any', '.*');
+    Route::get('/{any}', 'AngularController@NoView')->where('any', '.*');
+});
+
+Route::put('project/join', ['as' => 'project.join', 'uses' => 'BasecampController@join']);
+Route::get('oauth/endpoint', ['as' => 'bcEndpoint', 'uses' => 'BasecampController@endpoint']);
+
+Route::get('/{any?}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');

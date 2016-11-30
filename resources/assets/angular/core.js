@@ -2,53 +2,41 @@
 
 angular.module('itracker',[
     //'ui.router',
+    'ui.bootstrap',
     'ngRoute',
 ]).config(['$routeProvider','$locationProvider', '$logProvider',
     function ($routeProvider, $locationProvider, $logProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: '/angular/legacy.home',
-            controller: 'HomeController'
+            templateUrl: '/angular/pages.home',
         })
-        .when('/people/by-dept/', {
-            templateUrl: '/angular/legacy.people-by-dept',
-            controller: 'PeopleByDeptController'
+        .when('/departments/people', {
+            templateUrl: '/angular/pages.departmentPeople',
         })
-        .when('/people/by-name/', {
-            templateUrl: '/angular/legacy.people-by-name',
-            controller: 'PeopleByNameController'
+        .when('/people', {
+            templateUrl: '/angular/pages.allPeople',
         })
-        .when('/people/:personId/', {
-            templateUrl: '/angular/legacy.person',
-            controller: 'PersonController'
+        .when('/person/:personId/', {
+            templateUrl: '/angular/pages.person',
         })
-        .when('/projects/by-name/', {
-            templateUrl: '/angular/legacy.projects-by-name',
-            controller: 'ProjectsByNameController'
+        .when('/projects/', {
+            templateUrl: '/angular/pages.allProjects',
         })
-        .when('/projects/by-dept/', {
-            templateUrl: '/angular/legacy.projects-by-dept',
-            controller: 'ProjectsByDeptController'
+        .when('/departments', {
+            templateUrl: '/angular/pages.allDepartments',
         })
-        .when('/projects-old/:projectId/', {
-            templateUrl: '/angular/legacy.project-orig',
-            controller: 'ProjectController'
-        })
-        .when('/projects/:projectId/', {
-            templateUrl: '/angular/legacy.project',
-            controller: 'ProjectController'
+        .when('/project/:projectId/', {
+            templateUrl: '/angular/pages.project',
         })
         .when('/projects/:projectId/todolists/:todoListId', {
             templateUrl: '/angular/legacy.todo-list',
             controller: 'TodoListController'
         })
         .when('/departments/:departmentName', {
-            templateUrl: '/angular/legacy.department',
-            controller: 'DepartmentController'
+            templateUrl: '/angular/pages.department'
         })
         .otherwise({
-            templateUrl: '/angular/legacy.404-error',
-            controller: 'ErrorController'
+            templateUrl: '/angular/pages.404-error'
         });
 
     $locationProvider.html5Mode(true);
@@ -61,9 +49,3 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 
-function replace_All(str, find, replace){
-    while(str.indexOf(find) != -1){
-        str = str.replace(find, replace);
-    }
-    return str;
-}

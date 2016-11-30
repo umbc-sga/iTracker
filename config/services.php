@@ -36,8 +36,13 @@ return [
     ],
 
     'basecamp' => [
-        'account' => env('BASECAMP_ACCOUNT'),
-        'token' => env('BASECAMP_SECRET'),
+        'url' => 'https://3.basecampapi.com/'.env('BASECAMP_ID').'/',
+        'id' => env('BASECAMP_CLIENT_ID'),
+        'secret' => env('BASECAMP_CLIENT_SECRET'),
+        'authUrl' => 'https://launchpad.37signals.com/authorization/new',
+        'tokenUrl' => 'https://launchpad.37signals.com/authorization/token',
+        'cachingEnabled' => env('BASECAMP_API_CACHING', true),
+        'cacheAgeOff' => env('BASECAMP_API_CACHE_TIME', 60)
     ]
 
 ];

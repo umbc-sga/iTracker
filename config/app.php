@@ -188,6 +188,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        \App\Providers\BasecampProvider::class,
+        \App\Providers\BasecampAPIProvider::class,
+
     ],
 
     /*

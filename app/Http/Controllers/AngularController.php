@@ -8,16 +8,20 @@ use App\Http\Requests;
 
 class AngularController extends Controller
 {
-    public function view($page)
+    public function view(Request $request, $page)
     {
         $name = 'angular.'.$page;
 
         if(view()->exists($name))
             return view()->make($name);
         else
-            return response(json_encode([
-                'error' => 'No view "'.$page.'"" found',
-                'status' => 404
-            ]), 404);
+            return $this->noview($request);
+    }
+
+    public function noview(Request $request){
+        return response()->json([
+            'message' => 'No view found'
+        ])->setStatusCode(404)
+            ->header('Content-Type', 'text/json');
     }
 }
