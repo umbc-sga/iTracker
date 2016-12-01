@@ -3,7 +3,6 @@
 @section('title') UMBC SGA iTracker @endsection
 
 @section('meta')
-    <!-- Favicon -->
     <link rel="icon" href="{{asset('favicon.ico')}}" type="image/x-icon">
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon">
 @endsection
@@ -66,8 +65,8 @@
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li ng-repeat="group in data.groups | orderBy: 'name'">
-                                <a href="{{url('/departments')}}/@{{group.name | departmentHref}}/">
+                            <li data-ng-repeat="group in data.groups | orderBy: 'name'">
+                                <a data-ng-href="{{url('/departments')}}/@{{group.name | departmentHref}}/">
                                     <i class="fa fa-circle-o"></i>@{{group.name}}
                                 </a>
                             </li>
@@ -121,7 +120,7 @@
     <!-- Add the sidebar's background. This div must be placed
     immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
-    </div><!-- ./wrapper -->
+    </div>
 @endsection
 
 @section('script')
