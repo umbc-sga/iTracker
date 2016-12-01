@@ -32,6 +32,12 @@
             </div>
             <div class="col-xs-12 col-md-6">
                 <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
+                <div class="loader smallLoader" data-ng-show="!todoLoaded"></div>
+                <div class="col-xs-12">
+                    <div data-ng-repeat="list in project.todo.lists">
+                        @{{ list }}
+                    </div>
+                </div>
             </div>
         </div>
 

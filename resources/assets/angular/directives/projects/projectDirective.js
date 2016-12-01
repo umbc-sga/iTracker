@@ -12,6 +12,7 @@ angular.module('itracker')
                     $scope.events = [];
 
                     $scope.loaded = false;
+                    $scope.todoLoaded = false;
 
                     $scope.activeTodoLists = [];
                     $scope.completedTodoLists = [];
@@ -21,6 +22,11 @@ angular.module('itracker')
 
                     $scope.completedTodoListsCompletedCount = 0;
                     $scope.completedTodoListsRemainingCount = 0;
+
+                    basecampService.getProjectTodos(projectId).then((response) => {
+                        $scope.project.todo = response.data;
+                    }).finally(() => $scope.todoLoaded = true);
+
 
                     $scope.prettyDate = function(dateTime){
                         let dateStr = dateTime.substring(0,dateTime.indexOf('T'));

@@ -269,9 +269,21 @@ class BasecampAPI
         return $projects;
     }
 
+    private function getRecursive($url){
+        $resp = $this->get($url);
+
+        if(is_null($resp->url))
+            return $resp;
+
+        $resp->data = $this->getRecursive($resp->url);
+
+        return $resp;
+    }
+
     /**
      * Get basecamp project
      * @param $id int Project ID
+     * @param bool $dockedItems Include docked items
      * @return object
      */
     public function project($id){
@@ -283,9 +295,27 @@ class BasecampAPI
 
         $project = $this->get('projects/'.$id.'.json');
 
-        unset($project->dock);
-
         $project->people = $this->peopleInProject($project->id);
+
+        foreach($project->dock as $key => $dock){
+            if($dock->enabled) {
+                $project->dock[$dock->name] = $dock;
+            }
+
+            unset($project->dock[$key]);
+        }
+
+        if($set = &$project->dock['todoset'])
+            $set->sets = $this->get($set->url);
+
+        if($vault = &$project->dock['vault'])
+            $vault->docs = $this->get($vault->url);
+
+        if($board = &$project->dock['message_board'])
+            $board->topics = $this->get($board->url);
+
+        if($schedule = &$project->dock['schedule'])
+            $schedule->events = $this->get($schedule->url);
 
         if($str = $this->getTeamString($project->description))
             $project->description = str_replace($str, '', $project->description);
@@ -294,6 +324,23 @@ class BasecampAPI
             cache([$cacheName => json_encode($project)], $this->cacheDecayTime());
 
         return $project;
+    }
+
+    /**
+     * Get project todos
+     * @param $project object Project object
+     * @return object
+     */
+    public function projectTodos($project)
+    {
+        $set = $project->dock['todoset'];
+
+        $todolists = $this->get($project->dock['todoset']->sets->todolists_url);
+        foreach($todolists as &$list){
+            $list->todos = $this->get($list->todos_url);
+        }
+
+        return $todolists;
     }
 
     /**
@@ -346,7 +393,6 @@ class BasecampAPI
 
         $team = $this->project($id);
 
-        unset($team->dock);
         //Add additional fields
         $team->projects = $this->teamProjects($team->id);
         $team->memberships = $this->peopleInProject($team->id);
@@ -391,6 +437,11 @@ class BasecampAPI
         return $team;
     }
 
+    /**
+     * Get team hash out of string, returns null if not found
+     * @param $str string
+     * @return null|string
+     */
     private function getTeamString($str){
         $matches = [];
         if(preg_match_all('/#teams(?: (\d+))+/', $str, $matches) > 0)

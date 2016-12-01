@@ -153,12 +153,8 @@ class BasecampController extends Controller
     }
 
     //@todo handle todos
-    public function todos(Request $request, $status=null){
-        if(!in_array($status, ['active', 'completed', null]))
-            return $this->invalid($request, 'No valid todo status');
-
-        return ['todos'];
-        //return $this->api->get('')
+    public function todos(Request $request, $project=null){
+        return response()->json($this->api->projectTodos($this->api->project($project)));
     }
 
     /**

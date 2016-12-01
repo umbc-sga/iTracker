@@ -19,27 +19,27 @@
         </tr>
         <tr>
             <td align="right"># of Topics</td>
-            <td>@{{project.topics.count}}</td>
+            <td>@{{project.dock.message_board.topics.messages_count}}</td>
         </tr>
         <tr>
             <td align="right">Completed To-Do Lists</td>
-            <td>@{{project.todolists.completed_count}}</td>
+            <td>@{{project.dock.todoset.sets.completed_ratio.split('/')[0]}}</td>
         </tr>
         <tr>
             <td align="right">Outstanding To-Do Lists</td>
-            <td>@{{project.todolists.remaining_count}}</td>
+            <td>@{{project.dock.todoset.sets.completed_ratio.split('/')[1] - project.dock.todoset.sets.completed_ratio.split('/')[0]}}</td>
         </tr>
         <tr>
             <td align="right"># of People</td>
-            <td>@{{project.accesses.count}}</td>
+            <td>@{{project.people.length}}</td>
         </tr>
         <tr>
             <td align="right"># of Documents</td>
-            <td>@{{project.documents.attachments + project.attachments.count}}</td>
+            <td>@{{project.dock.vault.docs.documents_count + project.dock.vault.docs.uploads_count + project.dock.vault.docs.vaults_count}}</td>
         </tr>
         <tr>
             <td align="right"># of Events</td>
-            <td>@{{project.calendar_events.count}}</td>
+            <td>@{{project.dock.schedule.events.entries_count}}</td>
         </tr>
         </tbody>
     </table>

@@ -131,6 +131,8 @@ angular.module('itracker')
                     this.projects = projects;
                     this.main.projects = projects;
 
+                    return;
+
                     retrievalService.getActiveTodoLists().then((response) => {
                         let data = response.data;
                         if (Array.isArray(data)) {
