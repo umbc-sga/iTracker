@@ -1,33 +1,39 @@
 <div class="loader smallLoader" data-ng-show="!loaded"></div>
 
 <div class="row" data-ng-show="loaded">
-    <div class="col-md-5">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    Progress Bar
-                </h3>
-            </div>
-            <div class="box-body">
-                <div class="progress progress-xl progress-striped active" style="height:30px;">
-                    <div class="progress-bar progress-bar-primary" style="width: @{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">
-                        <h6>@{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%</h6>
+    <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            Progress Bar
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="progress progress-xl progress-striped active" style="height:30px;">
+                            <div class="progress-bar progress-bar-primary" style="width: @{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%">
+                                <h6>@{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}%</h6>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="meetTheTeam" data-members="project.people" data-team-title="People on this Project"></div>
+                @if(config('services.basecamp.openAccess'))
+                    <div class="box-footer">
+                        <form action="{{route('project.join')}}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="PUT">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="projectID" value="@{{project.id}}">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat ">Join the team!</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
             </div>
         </div>
-        <div class="box box-primary">
-            <div class="meetTheTeam" data-members="project.people" data-team-title="People on this Project"></div>
-            <div class="box-footer">
-                <form action="{{route('project.join')}}" method="post" style="display:inline;">
-                    <input type="hidden" name="_method" value="PUT">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="projectID" value="@{{project.id}}">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat ">Join the team!</button>
-                </form>
-            </div>
-        </div>
-        <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
 
         <div class="box box-primary" data-ng-show="project.todolists.remaining_count > 0">
             <div class="box-header with-border">
@@ -99,6 +105,7 @@
                 </div>
             </div>
         </div>
+
         <div class="box box-primary" data-ng-show="project.todolists.completed_count > 0">
             <div class="box-header with-border">
                 <h3 class="box-title">Completed To-Do Lists <small>(Click on list name to expand)</small> </h3>
