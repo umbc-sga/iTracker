@@ -1,6 +1,4 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             Dashboard
@@ -11,7 +9,6 @@
         </ol>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="row">
             <div class="col-xs-12 col-md-8">
@@ -19,10 +16,10 @@
                     <div class="box">
                         <div class="featuredProjects" data-projects="data.projects"></div>
                     </div>
-                </div>  <!-- /.col -->
+                </div>
                 <div class="col-xs-12">
                     @include('partials.aboutSGA')
-                </div> <!-- /.col -->
+                </div>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="col-xs-12">
@@ -59,4 +56,4 @@
             </div>
         </div>
     </section>
-</div> <!-- /.content-wrapper -->
+</div>

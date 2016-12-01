@@ -3,7 +3,7 @@
         <li data-target="#featured-carousel" data-slide-to="0" class="active"></li>
         <li data-target="#featured-carousel"
             data-slide-to="@{{$index+1}}"
-            ng-repeat="project in featuredProjs | orderBy: 'updated_at' | limitTo: 5"></li>
+            data-ng-repeat="project in featuredProjs | orderBy: 'updated_at' | limitTo: 5"></li>
     </ol>
     <div class="carousel-inner">
         <div class="item active">
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="item" data-ng-repeat="project in featuredProjs | orderBy: 'updated_at':true | limitTo: 5">
-            <img src="//placehold.it/900x500/39CCCC/ffffff&text=Featured:+@{{project.name}}" alt="@{{project.name}}">
+            <img data-ng-src="//placehold.it/900x500/39CCCC/ffffff&text=Featured:+@{{project.name}}" alt="@{{project.name}}">
             <div class="carousel-caption">
                 @{{ project.name }}
             </div>

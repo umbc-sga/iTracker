@@ -1,6 +1,4 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
 			@{{ person.id != null ? person.name+"'s Profile" : '' }}
@@ -12,6 +10,5 @@
 		</ol>
 	</section>
 
-	<!-- Main content -->
-	<section class="content person"></section>	<!-- /.content -->
-</div>	<!-- /.content-wrapper -->
+	<section class="content person"></section>
+</div>

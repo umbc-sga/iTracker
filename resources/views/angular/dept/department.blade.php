@@ -12,9 +12,9 @@
 
 <!-- Main content -->
 <section class="content">
-    <div class="loader smallLoader" ng-show="!loaded"></div>
+    <div class="loader smallLoader" data-ng-show="!loaded"></div>
 
-    <div class="row" ng-show="loaded">
+    <div class="row" data-ng-show="loaded">
         <div class="col-xs-12 col-md-5">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -36,7 +36,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div ng-show="department.project.count == 0">This department does not have any active projects...YET!</div>
+                    <div data-ng-show="department.project.count == 0">This department does not have any active projects...YET!</div>
                     <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>

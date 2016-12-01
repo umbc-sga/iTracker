@@ -44,6 +44,6 @@
         </tbody>
     </table>
 </div>
-<div class="box-footer" ng-show="readMore">
+<div class="box-footer" data-ng-show="readMore">
     <a href="{{url('/project')}}/@{{project.id}}"><button type="button" class="btn btn-primary btn-block btn-flat">Read More!</button></a>
 </div>

@@ -1,4 +1,4 @@
-<div class="loader smallLoader" ng-show="!loaded"></div>
+<div class="loader smallLoader" data-ng-show="!loaded"></div>
 
 <div class="row" data-ng-show="loaded">
     <div class="col-md-5">
@@ -29,14 +29,14 @@
         </div>
         <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
 
-        <div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
+        <div class="box box-primary" data-ng-show="project.todolists.remaining_count > 0">
             <div class="box-header with-border">
                 <h3 class="box-title">Active To-Do Lists <small>(Click on list name to expand)</small> </h3>
             </div>
             <div class="box-body">
                 <div class="box-group" id="accordion">
                     <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                    <div class="panel box box-warning box-solid" ng-repeat="list in activeTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
+                    <div class="panel box box-warning box-solid" data-ng-repeat="list in activeTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
                         <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-@{{list.id}}" target="_self" style="text-decoration:none; color:black;">
                             <div class="progress progress-md progress-striped active" style="height: 30px; margin-bottom: 0px;">
                                 <div class="box-header with-border progress-bar progress-bar-warning" style="width:@{{(list.completed_count * (100 / (list.remaining_count + list.completed_count))) || '0' | number:0}}%"></div>
@@ -51,42 +51,46 @@
 
                         <div id="todoCollapse-@{{list.id}}" class="panel-collapse collapse">
                             <div class="box-body no-padding">
-                                <h4 ng-show="list.description.length > 0">@{{list.description}}</h4>
-                                <table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
+                                <h4 data-ng-show="list.description.length > 0">@{{list.description}}</h4>
+                                <table class="table table-bordered"
+                                       data-ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
                                     <tr>
                                         <th>Task To Do</th>
                                         <th style="width: 150px;">Assigned To</th>
                                     </tr>
-                                    <tr ng-repeat="todo in list.todos.remaining">
+                                    <tr data-ng-repeat="todo in list.todos.remaining">
                                         <td valign="middle">
                                             <h5>@{{todo.content}}</h5>
-                                            <h6 ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
+                                            <h6 data-ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-                                            <span ng-show="todo.assignee != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
-                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                            <span data-ng-show="todo.assignee != null" data-ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a data-ng-href="{{url('/person')}}/@{{todo.assignee.id}}/">
+                                                    <img data-ng-src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
                                                     <h5>@{{todo.assignee.name}}</h5>
                                                 </a>
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr ng-repeat="todo in list.todos.completed">
+                                    <tr data-ng-repeat="todo in list.todos.completed">
                                         <td valign="middle">
                                             <h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">@{{todo.content}}</span></h5>
-                                            <h6 ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
+                                            <h6 data-ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-                                           <span ng-show="todo.assignee != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
-                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                           <span data-ng-show="todo.assignee != null"
+                                                 data-ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a data-ng-href="{{url('/person')}}/@{{todo.assignee.id}}/">
+                                                    <img data-ng-src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
                                                     <h5>@{{todo.assignee.name}}</h5>
                                                 </a>
                                             </span>
                                         </td>
                                     </tr>
                                 </table>
-                                <span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
+                                <span data-ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
                                     <h5>No items in this list yet!</h5>
                                 </span>
                             </div>
@@ -95,15 +99,15 @@
                 </div>
             </div>
         </div>
-        <div class="box box-primary" ng-show="project.todolists.completed_count > 0">
+        <div class="box box-primary" data-ng-show="project.todolists.completed_count > 0">
             <div class="box-header with-border">
                 <h3 class="box-title">Completed To-Do Lists <small>(Click on list name to expand)</small> </h3>
             </div>
             <div class="box-body">
-                <div class="box-group" id="accordion">
+                <div class="box-group">
                     <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
-                    <div class="panel box box-success" ng-repeat="list in completedTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#todoCollapse-@{{list.id}}" target="_self" style="text-decoration:none; color:black;">
+                    <div class="panel box box-success" data-ng-repeat="list in completedTodoLists | orderBy: 'name'" style="margin-bottom:20px;">
+                        <a data-toggle="collapse" data-parent="#accordion" data-ng-href="#todoCollapse-@{{list.id}}" target="_self" style="text-decoration:none; color:black;">
                             <div class="progress progress-md progress-striped active" style="height: 30px; margin-bottom: 0px;">
                                 <div class="box-header with-border progress-bar progress-bar-success" style="width:100%"></div>
                                 <h4 class="box-title todoTitle">
@@ -117,42 +121,47 @@
 
                         <div id="todoCollapse-@{{list.id}}" class="panel-collapse collapse">
                             <div class="box-body no-padding">
-                                <h4 ng-show="list.description.length > 0">@{{list.description}}</h4>
-                                <table class="table table-bordered" ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
+                                <h4 data-ng-show="list.description.length > 0">@{{list.description}}</h4>
+                                <table class="table table-bordered"
+                                       data-ng-show="(list.todos.remaining.length + list.todos.completed.length) > 0">
                                     <tr>
                                         <th>Task To Do</th>
                                         <th>Assigned To</th>
                                     </tr>
-                                    <tr ng-repeat="todo in list.todos.remaining">
+                                    <tr data-ng-repeat="todo in list.todos.remaining">
                                         <td valign="middle">
                                             <h5>@{{todo.content}}</h5>
-                                            <h6 ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
+                                            <h6 data-ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-                                            <span ng-show="todo.assignee != null" ng-repeat="person in people | filter: {id:todo.assignee.id}">
-                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                            <span data-ng-show="todo.assignee != null"
+                                                  data-ng-repeat="person in people | filter: {id:todo.assignee.id}">
+                                                <a data-ng-href="{{url('/person')}}/@{{todo.assignee.id}}/">
+                                                    <img data-ng-src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
                                                     <h5>@{{todo.assignee.name}}</h5>
                                                 </a>
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr ng-repeat="todo in list.todos.completed">
+                                    <tr data-ng-repeat="todo in list.todos.completed">
                                         <td valign="middle">
                                             <h5><i class="fa fa-check"></i> <span style="text-decoration: line-through;">@{{todo.content}}</span></h5>
-                                            <h6 ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
+                                            <h6 data-ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
                                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>
                                         </td>
                                         <td align="center" valign="middle">
-                                            <span ng-show="todo.assignee.length != null" ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
-                                                <a href="{{url('/person')}}/@{{todo.assignee.id}}/"><img src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
+                                            <span data-ng-show="todo.assignee.length != null"
+                                                  data-ng-repeat="person in project.people | filter: {id:todo.assignee.id}">
+                                                <a data-ng-href="{{url('/person')}}/@{{todo.assignee.id}}/">
+                                                    <img data-ng-src="@{{person.avatar_url}}" class="img-circle" title="@{{todo.assignee.name}}" alt="@{{todo.assignee.name}}">
                                                     <h5>@{{todo.assignee.name}}</h5>
                                                 </a>
                                             </span>
                                         </td>
                                     </tr>
                                 </table>
-                                <span ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
+                                <span data-ng-show="(list.todos.remaining.length + list.todos.completed.length) == 0">
                                     <h5>No items in this list yet!</h5>
                                 </span>
                             </div>

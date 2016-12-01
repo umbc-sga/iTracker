@@ -1,7 +1,5 @@
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             @{{project.name}}
@@ -13,6 +11,5 @@
         </ol>
     </section>
 
-    <!-- Main content -->
-    <section class="content project"></section> <!-- /.content -->
-</div> <!-- /.content-wrapper -->
+    <section class="content project"></section>
+</div>
