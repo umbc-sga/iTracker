@@ -24,7 +24,15 @@ angular.module('itracker')
                     $scope.completedTodoListsRemainingCount = 0;
 
                     basecampService.getProjectTodos(projectId).then((response) => {
-                        $scope.project.todo = response.data;
+                        let lists = response.data;
+
+                        for(let list of lists){
+                            let ratio = list.completed_ratio.split('/');
+                            list.ratio = Math.floor((ratio[0]/ratio[1])*100);
+
+                        }
+
+                        $scope.project.todo = lists;
                     }).finally(() => $scope.todoLoaded = true);
 
 
