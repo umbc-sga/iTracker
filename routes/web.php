@@ -20,8 +20,9 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.', 'namespace' => 'Auth'], funct
     Route::get('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
     Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
     Route::get('/callback', ['as' => 'callback', 'uses' => 'AuthController@callback']);
-    Route::get('/basecamp', ['as' => 'bcEndpoint', 'uses' => 'BasecampController@endpoint']);
 });
+
+Route::get('auth/basecamp', ['as' => 'auth.bcEndpoint', 'uses' => 'BasecampController@endpoint']);
 
 Route::group(['prefix' => 'angular'], function(){
     Route::any('/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view']);

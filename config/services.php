@@ -41,6 +41,7 @@ return [
     ],
 
     'basecamp' => [
+        'openAccess' => env('BASECAMP_OPEN_ACCESS', false),
         'url' => 'https://3.basecampapi.com/'.env('BASECAMP_ID').'/',
         'id' => env('BASECAMP_CLIENT_ID'),
         'secret' => env('BASECAMP_CLIENT_SECRET'),

@@ -73,8 +73,10 @@ class BasecampAPI
      * @return bool
      */
     protected function filteredPerson($person){
-        return $this->restrictedEmails->search($person->email_address) === false;
+        return $this->restrictedEmails->search($person->email_address) === false
+            || strtolower($person->personable_type) == 'tombstone';
     }
+
     /**
      * Get request to API
      * @param $resource string Resource URL
@@ -106,14 +108,26 @@ class BasecampAPI
 
         //Get JSON payload
         $json = $res->getBody()->getContents();
+        $decoded = json_decode($json);
+
+        $matches = [];
+        //More pages?
+        if(count($res->getHeader('Link')) > 0 && preg_match('/<([^>]+)>/', $res->getHeader('Link')[0], $matches) > 0)
+            $decoded = array_merge($decoded, $this->get($matches[1], $force));
 
         //Cache this if it's a 200 response
         if($this->cacheEnabled() && $res->getStatusCode() == 200)
-            cache([$cacheName => $json], $this->cacheDecayTime());
+            cache([$cacheName => json_encode($decoded)], $this->cacheDecayTime());
 
-        return json_decode($json);
+        return $decoded;
     }
 
+    /**
+     * Put Request to API
+     * @param $resource string Resource URL
+     * @param $data array Data to pass to api
+     * @return object
+     */
     public function put($resource, $data){
         $client = new Client([
             'base_uri' => $this->baseUri
@@ -138,15 +152,73 @@ class BasecampAPI
         return json_decode($json);
     }
 
-    public function invitePerson($project, $email){
-        return $this->put('project/'.$project.'/people/users.json', [
-            'name' => explode('@', $email)[0],
-            'email_address' => $email,
-            'title' => 'User',
-            'company_name' => 'UMBC'
+    /**
+     * Invite person to basecamp
+     * @param $project int Project ID
+     * @param $people string|array People emails
+     * @return object
+     */
+    public function invitePeople($project, $people){
+        $invites = [];
+
+        if(is_array($people))
+            foreach($people as $email)
+                $invites[] = [
+                    'name' => explode('@', $email)[0],
+                    'email_address' => $email
+                ];
+        else {
+            $invites[] = [
+                'name' => explode('@', $people)[0],
+                'email_address' => $people
+            ];
+        }
+
+        return $this->put('projects/'.$project.'/people/users.json', [
+            'create' => $invites
         ]);
     }
 
+    /**
+     * Grant permission to user in project
+     * @param $project int Project ID
+     * @param $people int|array|object Person IDs to submit
+     * @return object
+     */
+    public function projectGrant($project, $people)
+    {
+        if(is_object($people))
+            $people = [$people->id];
+
+        if(!is_array($people))
+            $people = [$people];
+
+        return $this->put('projects/'.$project.'/people/users.json', [
+            'grant' => $people
+        ]);
+    }
+
+    /**
+     * Invite or grant access to project
+     * @param $project int Project ID
+     * @param $email string Email of user
+     * @return object
+     */
+    public function inviteOrGrant($project, $email)
+    {
+        $existingPerson = null;
+        foreach($this->people() as $person){
+            if($person->email_address == auth()->user()->email) {
+                $existingPerson = $person;
+                break;
+            }
+        }
+
+        if($existingPerson)
+            return $this->projectGrant($project, $existingPerson);
+        else
+            return $this->invitePeople($project, $email);
+    }
 
     /**
      * Get array of all projects
@@ -363,6 +435,10 @@ class BasecampAPI
             return json_decode($cached);
 
         $person = $this->get('people/'.$id.'.json');
+
+        dd($person);
+        if($this->filteredPerson($person))
+            return null;
 
         $person->projects = $this->projects()->filter(function($project) use ($person){
             foreach($this->peopleInProject($project->id) as $peep)

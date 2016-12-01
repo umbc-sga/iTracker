@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
 use App\Classes\Basecamp\BasecampClient;
+use Illuminate\Support\Facades\Validator;
 
 class BasecampController extends Controller
 {
@@ -160,10 +161,26 @@ class BasecampController extends Controller
         //return $this->api->get('')
     }
 
-    //@todo Middleware require login
+    /**
+     * Invite person to basecamp project
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function join(Request $request){
-        dump($request->all());
+        if(!config('services.basecamp.openAccess'))
+            return redirect()->route('home')->with('message', 'Sorry, you can\'t join projects');
 
-        //$this->api->invitePerson()
+        $input = $request->all();
+        $input['email'] = auth()->user()->email;
+
+        $validator = Validator::make($input, [
+            'projectID' => 'required|numeric',
+            'email' => 'required|email'
+        ])->validate();
+
+        if(!$validator && ends_with(auth()->user()->email, '@umbc.edu'))
+            $this->api->inviteOrGrant($request->input('projectID'), auth()->user()->email);
+
+        return redirect()->route('home')->with('message', 'If you don\'t already have access check your email to join!');
     }
 }

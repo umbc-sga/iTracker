@@ -123,3 +123,9 @@
         <div class="control-sidebar-bg"></div>
     </div><!-- ./wrapper -->
 @endsection
+
+@section('script')
+    @if(session('message', null))
+        <script>alert('{!!session('message')!!}');</script>
+    @endif
+@endsection
