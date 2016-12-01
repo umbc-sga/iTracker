@@ -27,7 +27,7 @@
                 </form>
             </div>
         </div>
-        <div class="box box-primary projectAtAGlance" data-project="project"></div>
+        <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
 
         <div class="box box-primary" ng-show="project.todolists.remaining_count > 0">
             <div class="box-header with-border">

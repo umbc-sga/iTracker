@@ -3,6 +3,6 @@
         <uib-accordion-heading class="text-center">
             @{{project.name}}
         </uib-accordion-heading>
-        <div class="projectAtAGlance" data-project="project"></div>
+        <div class="projectAtAGlance" data-project="project" data-read-more="readMore"></div>
     </div>
 </uib-accordion>

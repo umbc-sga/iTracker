@@ -15,7 +15,7 @@
     <div class="loader smallLoader" ng-show="!loaded"></div>
 
     <div class="row" ng-show="loaded">
-        <div class="col-md-3">
+        <div class="col-xs-12 col-md-5">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -28,7 +28,7 @@
             </div>
             <div class="meetTheTeam" data-members="department.memberships" data-team-title="Meet the Team"></div>
         </div>
-        <div class="col-md-5">
+        <div class="col-xs-12 col-md-7">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -37,10 +37,11 @@
                 </div>
                 <div class="box-body">
                     <div ng-show="department.project.count == 0">This department does not have any active projects...YET!</div>
-                    <div class="projectsAtAGlance" data-projects="department.projects"></div>
+                    <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>
-        </div> <!-- /.col -->
+        </div>
+        {{--
         <div class="col-md-4">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -53,5 +54,6 @@
                 </div>
             </div>
         </div>
+        --}}
     </div>
 </section>

@@ -5,7 +5,8 @@ angular.module('itracker')
             return {
                 restrict: 'C',
                 scope: {
-                    projects: '='
+                    projects: '=',
+                    readMore: '='
                 },
                 templateUrl: '/angular/proj.projectsAtAGlance'
             };

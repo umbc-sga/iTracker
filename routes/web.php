@@ -25,7 +25,7 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.', 'namespace' => 'Auth'], funct
 Route::get('auth/basecamp', ['as' => 'auth.bcEndpoint', 'uses' => 'BasecampController@endpoint']);
 
 Route::group(['prefix' => 'angular'], function(){
-    Route::any('/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view']);
+    Route::any('/{page}', ['as'=> 'angular', 'uses' => 'AngularController@view'])->where('page', '[a-zA-Z0-9_\.]+');
 
     Route::get('/{any}', 'AngularController@NoView')->where('any', '.*');
 });

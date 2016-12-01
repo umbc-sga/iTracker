@@ -60,13 +60,12 @@
                 <div class="box-group" id="accordion">
                     <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                     <h4 ng-show="person.projects.length == 0">This person is not on any projects...YET!</h4>
-                    <div class="projectsAtAGlance" data-projects="person.projects"></div>
+                    <div class="projectsAtAGlance" data-projects="person.projects" data-read-more="true"></div>
                 </div>
             </div>
         </div>
-    </div> <!-- /.col -->
+    </div>
     <div class="col-md-4" id="timeline">
-        <!-- The timeline -->
         <ul class="timeline timeline-inverse" >
             <li class="time-label" ng-repeat="event in events | limitTo: limit ">
 						<span class="bg-red" ng-show ='event.created_at.length > 0'>
@@ -84,5 +83,5 @@
                 <button type="button" class="btn btn-primary" ng-hide = "!more"  ng-click = "limit = limit + 5; getEventSet()"><i class="fa fa-clock-o"></i> Show Previous Events</button>
             </li>
         </ul>
-    </div>	<!-- /.col -->
-</div>	<!-- /.row -->
+    </div>
+</div>

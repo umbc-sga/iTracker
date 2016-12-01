@@ -293,7 +293,7 @@ class BasecampAPI
         if($this->cacheEnabled())
             cache([$cacheName => json_encode($project)], $this->cacheDecayTime());
 
-        return $this->get('projects/'.$id.'.json');
+        return $project;
     }
 
     /**
@@ -452,14 +452,17 @@ class BasecampAPI
     public function person($id){
         $cacheName = $this->prefix().'person-'.$id;
 
+        //Return cached person if thye exist
         if($cached = cache($cacheName))
             return json_decode($cached);
 
         $person = $this->get('people/'.$id.'.json');
 
+        //Should they be filtered?
         if($this->personShouldBeFiltered($person))
             return null;
 
+        //Get all projects
         $person->projects = $this->projects()->filter(function($project) use ($person){
             foreach($this->peopleInProject($project->id) as $peep)
                 if($peep->id == $person->id)
@@ -468,6 +471,7 @@ class BasecampAPI
             return false;
         })->values();
 
+        //Get all departments they're in
         $person->departments = $this->teams()->filter(function($team) use ($person){
             foreach($this->peopleInProject($team->id) as $peep)
                 if($peep->id == $person->id)
@@ -475,6 +479,7 @@ class BasecampAPI
 
             return false;
         })->values();
+
 
         if($this->cacheEnabled())
             cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
