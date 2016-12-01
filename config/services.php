@@ -35,6 +35,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET')
+    ],
+
     'basecamp' => [
         'url' => 'https://3.basecampapi.com/'.env('BASECAMP_ID').'/',
         'id' => env('BASECAMP_CLIENT_ID'),

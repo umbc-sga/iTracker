@@ -27,7 +27,7 @@ class BasecampProvider extends ServiceProvider
     {
         //Register OAuth client for basecamp
         $this->app->singleton(BasecampClient::class, function($app){
-            return new BasecampClient(config('services.basecamp'), route('bcEndpoint'));
+            return new BasecampClient(config('services.basecamp'), route('auth.bcEndpoint'));
         });
     }
 }

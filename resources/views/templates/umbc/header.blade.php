@@ -36,7 +36,11 @@
                     <a href="http://umbc.edu/search"><small>Search</small></a>
                 </li>
                 <li>
-                    <a href="https://webauth.umbc.edu/umbcLogin?action=logout"><small>Logout</small></a>
+                    @if(auth()->guest())
+                        <a href="{{route('auth.login')}}" target="_self"><small>Login</small></a>
+                    @else
+                        <a href="{{route('auth.logout')}}" target="_self"><small>Logout</small></a>
+                    @endif
                 </li>
             </ul>
         </div>
