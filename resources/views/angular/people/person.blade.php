@@ -1,6 +1,9 @@
 <div class="loader smallLoader" ng-show="!loaded"></div>
 
-<div class="row" ng-show="loaded">
+<div class="row" ng-show="loaded && person.id == null">
+    <div class="genericError" data-error="404" data-message="The person you are looking for does not exist"></div>
+</div>
+<div class="row" ng-show="loaded && person.id != null">
     <div class="col-md-3">
         <!-- Profile Image -->
         <div class="box box-primary">

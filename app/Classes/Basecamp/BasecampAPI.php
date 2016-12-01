@@ -436,7 +436,6 @@ class BasecampAPI
 
         $person = $this->get('people/'.$id.'.json');
 
-        dd($person);
         if($this->filteredPerson($person))
             return null;
 
