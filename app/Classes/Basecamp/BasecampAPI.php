@@ -4,6 +4,8 @@ namespace App\Classes\Basecamp;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 
@@ -38,6 +40,11 @@ class BasecampAPI
     private $apiPrefix = 'api-';
 
     /**
+     * @var Request
+     */
+    private $request = null;
+
+    /**
      * Get API prefix
      * @return string
      */
@@ -52,12 +59,21 @@ class BasecampAPI
     {
         $this->accessToken = $accessToken;
         $this->baseUri = $base_uri;
+
         $this->options = [
             'cacheEnabled' => config('services.basecamp.cachingEnabled'),
             'cacheDecayTime' => config('services.basecamp.cacheAgeOff')
         ];
 
         $this->restrictedEmails = collect([]);
+    }
+
+    /**
+     * Set request
+     * @param Request $request
+     */
+    public function setRequest(Request $request){
+        $this->request = $request;
     }
 
     /**
@@ -114,13 +130,16 @@ class BasecampAPI
             return json_decode($cached);
 
         //Cache miss call to API
-        //@todo handle exceptions
-        $res = $client->request('GET', $resource, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'User-Agent' => env('BASECAMP_AGENT')
-            ]
-        ]);
+        try {
+            $res = $client->request('GET', $resource, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken,
+                    'User-Agent' => env('BASECAMP_AGENT')
+                ]
+            ]);
+        } catch(RequestException $e){
+            abort($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
+        }
 
         //Get JSON payload
         $json = $res->getBody()->getContents();
