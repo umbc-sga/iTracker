@@ -9,5 +9,5 @@
         </ol>
     </section>
 
-    <section class="content"></section>
+    <section class="content profileEdit"></section>
 </div>

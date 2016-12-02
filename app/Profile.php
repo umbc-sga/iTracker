@@ -20,7 +20,7 @@ class Profile extends Model
      *
      * @var array
      */
-    protected $hidden = ['user_id'];
+    protected $hidden = ['user_id', 'id'];
 
     public function user(){
         $this->belongsTo(User::class);

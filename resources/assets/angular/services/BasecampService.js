@@ -40,7 +40,7 @@ angular.module('itracker')
             getPeople: () => request('/people'),
             getPerson: (personId) => request('/person/'+personId),
             getPersonProjects: (personId) => request('/person/'+personId+'/projects', ),
-            getPersonInfo: (personId) => request('/person/'+personId+'/info'),
+            getPersonProfile: (personId) => request('/person/'+personId+'/profile'),
             getPersonRoles: (personId) => request('/person/'+personId+'/roles'),
             getPersonDepartments: (personId) => request('/person/'+personId+'/departments'),
             getPersonEvents: (personId, page) => request('/person/'+personId+'/events/'+page),

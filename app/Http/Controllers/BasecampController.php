@@ -104,6 +104,7 @@ class BasecampController extends Controller
     // Include all projects and departments
     public function person(Request $request, $person){
         $apiPerson = $this->api->person($person);
+
         if(!is_null($apiPerson) && property_exists($apiPerson, 'id'))
             $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->first();
 

@@ -6,7 +6,7 @@
 </div>
 
 <div class="row" data-ng-show="loaded && person.id != null">
-    <div class="col-md-3">
+    <div class="col-xs-12 col-md-3">
         <div class="box box-primary">
             <div class="box-body box-profile">
                 <img class="profile-user-img img-responsive img-circle" data-ng-src="@{{person.avatar_url}}" alt="User profile picture">
@@ -32,19 +32,37 @@
              data-profile="person.profile">
         </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-xs-12 col-md-5">
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Projects </h3>
             </div>
             <div class="box-body">
-                <div class="box-group" id="accordion">
+                <div class="box-group">
                     <h4 data-ng-show="person.projects.length == 0">This person is not on any projects...YET!</h4>
                     <div class="projectsAtAGlance" data-projects="person.projects" data-read-more="true"></div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-xs-12 col-md-4">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Departments </h3>
+            </div>
+            <div class="box-body">
+                <div class="box-group">
+                    <h4 data-ng-show="person.departments.length == 0">This person is not in any departments</h4>
+                    <div class="box box-success col-xs-12" data-ng-repeat="department in person.departments | orderBy:'department.name'">
+                        <a data-ng-href="{{url('/department/')}}/@{{ department.id }}" style="color:black">
+                            <h5>@{{ department.name }}</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--
     <div class="col-md-4" id="timeline">
         <ul class="timeline timeline-inverse" >
             <li class="time-label" data-ng-repeat="event in events | limitTo: limit ">
@@ -69,4 +87,5 @@
             </li>
         </ul>
     </div>
+    --}}
 </div>
