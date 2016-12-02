@@ -1,7 +1,8 @@
 <div class="loader smallLoader" data-ng-show="!loaded"></div>
 
 <div class="row" data-ng-show="loaded && person.id == null">
-    <div class="genericError" data-error="404" data-message="The person you are looking for does not exist"></div>
+    <div class="genericError" data-error="404"
+         data-message="The person you are looking for does not exist"></div>
 </div>
 
 <div class="row" data-ng-show="loaded && person.id != null">
