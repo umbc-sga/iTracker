@@ -2,16 +2,11 @@
 
 namespace App;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use App\Classes\Basecamp\BasecampAPI;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-use Illuminate\Database\Eloquent\Model;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
-
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+class User extends Authenticatable
 {
-    use Authenticatable, EntrustUserTrait;
 
     /**
      * The database table used by the model.
@@ -36,6 +31,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = ['password', 'remember_token'];
 
     public function profile(){
-        $this->hasOne(Profile::class);
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    public function generateProfile(BasecampAPI $api){
+        if($this->profile()->first() == null)
+            foreach($api->people() as $person)
+                if($person->email_address == $this->email)
+                    return Profile::create(['user_id' => $this->id, 'api_id' => $person->id]);
+
+        return false;
     }
 }

@@ -15,7 +15,7 @@ class AddProfileData extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('api_id')->unsigned();
+            $table->integer('api_id')->unsigned()->unique();
             $table->integer('user_id')->unsigned();
             $table->text('biography')->nullable();
             $table->string('major', 100)->nullable();

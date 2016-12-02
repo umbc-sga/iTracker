@@ -32,4 +32,6 @@ Route::group(['prefix' => 'angular'], function(){
 
 Route::put('project/join', ['as' => 'project.join', 'middleware' => ['auth'], 'uses' => 'BasecampController@join']);
 
+Route::get('/profile/{user}/edit', ['as' => 'profile.edit', 'middleware' => ['basecamp'], 'uses' =>'HomeController@index'])
+    ->where('user', '[0-9]+');
 Route::get('/{any?}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');

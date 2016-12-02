@@ -27,27 +27,9 @@
             </div>
         </div>
 
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">About Me</h3>
-            </div>
-            <div class="box-body">
-                <strong><i class="fa fa-user"></i> Bio</strong>
-                <p class="text-muted">
-                    @{{person.bio}}
-                </p>
-                <hr>
-                <strong><i class="fa fa-book margin-r-5"></i> Major and Class Standing</strong>
-                <p class="text-muted">
-                    @{{person.classStanding}}, @{{person.major}}
-                </p>
-                <hr>
-                <strong><i class="fa fa-map-marker margin-r-5"></i> Hometown</strong>
-                <p class="text-muted">@{{person.hometown}}</p>
-                <hr>
-                <strong><i class="fa fa-question-circle"></i> One thing I really want to share with the world is...</strong>
-                <p class="text-muted">@{{person.fact}}</p>
-            </div>
+        <div class="box box-primary personProfile"
+             data-ng-show="person.profile"
+             data-profile="person.profile">
         </div>
     </div>
     <div class="col-md-5">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
@@ -102,7 +103,11 @@ class BasecampController extends Controller
     //@todo aggregate all relevant personal info
     // Include all projects and departments
     public function person(Request $request, $person){
-        return response()->json($this->api->person($person));
+        $apiPerson = $this->api->person($person);
+        if(!is_null($apiPerson) && property_exists($apiPerson, 'id'))
+            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->first();
+
+        return response()->json($apiPerson);
     }
 
     /**
