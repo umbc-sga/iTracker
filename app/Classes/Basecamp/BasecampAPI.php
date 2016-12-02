@@ -244,7 +244,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'projects'.$stripTeamHash;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Miss, call to API
@@ -290,7 +290,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'project-'.$id;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $project = $this->get('projects/'.$id.'.json');
@@ -305,16 +305,18 @@ class BasecampAPI
             unset($project->dock[$key]);
         }
 
-        if($set = &$project->dock['todoset'])
+        $project->dock = (object)$project->dock;
+
+        if($set = &$project->dock->todoset)
             $set->sets = $this->get($set->url);
 
-        if($vault = &$project->dock['vault'])
+        if($vault = &$project->dock->vault)
             $vault->docs = $this->get($vault->url);
 
-        if($board = &$project->dock['message_board'])
+        if($board = &$project->dock->message_board)
             $board->topics = $this->get($board->url);
 
-        if($schedule = &$project->dock['schedule'])
+        if($schedule = &$project->dock->schedule)
             $schedule->events = $this->get($schedule->url);
 
         if($str = $this->getTeamString($project->description))
@@ -333,9 +335,9 @@ class BasecampAPI
      */
     public function projectTodos($project)
     {
-        $set = $project->dock['todoset'];
+        $set = $project->dock->todoset;
 
-        $todolists = $this->get($project->dock['todoset']->sets->todolists_url);
+        $todolists = $this->get($project->dock->todoset->sets->todolists_url);
         foreach($todolists as &$list){
             $list->todos = $this->get($list->todos_url);
         }
@@ -362,7 +364,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'teams';
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Filter anything not a 'team'
@@ -388,7 +390,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'team-'.$id;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $team = $this->project($id);
@@ -413,7 +415,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'team-'.$name;
 
         //Check cache for ID
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         //Go through all teams until it's found
@@ -458,7 +460,7 @@ class BasecampAPI
     public function teamProjects($dept){
         $cacheName = $this->prefix().'team-projects-'.$dept;
 
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Go through all projects until API is found
@@ -504,7 +506,7 @@ class BasecampAPI
         $cacheName = $this->prefix().'person-'.$id;
 
         //Return cached person if thye exist
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $person = $this->get('people/'.$id.'.json');
