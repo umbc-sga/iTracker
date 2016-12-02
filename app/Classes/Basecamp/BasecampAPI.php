@@ -55,9 +55,8 @@ class BasecampAPI
      * @param $base_uri string Base basecamp API url
      * @param $accessToken string Access token to use
      */
-    public function __construct($base_uri, $accessToken)
+    public function __construct($base_uri)
     {
-        $this->accessToken = $accessToken;
         $this->baseUri = $base_uri;
 
         $this->options = [
@@ -66,6 +65,10 @@ class BasecampAPI
         ];
 
         $this->restrictedEmails = collect([]);
+    }
+
+    public function setAccessToken($token){
+        $this->accessToken = $token;
     }
 
     /**
