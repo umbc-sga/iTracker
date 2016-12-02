@@ -95,10 +95,11 @@ class BasecampAPI
     /**
      * Get request to API
      * @param $resource string Resource URL
+     * @param bool $allPages Get all pages in response
      * @param $force bool Force API call, ignore setting
      * @return object
      */
-    public function get($resource, $force = false){
+    public function get($resource, $allPages = true, $force = false){
         $client = new Client([
             'base_uri' => $this->baseUri
         ]);
@@ -283,7 +284,6 @@ class BasecampAPI
     /**
      * Get basecamp project
      * @param $id int Project ID
-     * @param bool $dockedItems Include docked items
      * @return object
      */
     public function project($id){
@@ -308,16 +308,16 @@ class BasecampAPI
         $project->dock = (object)$project->dock;
 
         if($set = &$project->dock->todoset)
-            $set->sets = $this->get($set->url);
+            $set->data = $this->get($set->url);
 
         if($vault = &$project->dock->vault)
-            $vault->docs = $this->get($vault->url);
+            $vault->data = $this->get($vault->url);
 
         if($board = &$project->dock->message_board)
-            $board->topics = $this->get($board->url);
+            $board->data = $this->get($board->url);
 
         if($schedule = &$project->dock->schedule)
-            $schedule->events = $this->get($schedule->url);
+            $schedule->data = $this->get($schedule->url);
 
         if($str = $this->getTeamString($project->description))
             $project->description = str_replace($str, '', $project->description);
@@ -335,14 +335,40 @@ class BasecampAPI
      */
     public function projectTodos($project)
     {
-        $set = $project->dock->todoset;
+        $todolists = $this->get($project->dock->todoset->data->todolists_url);
 
-        $todolists = $this->get($project->dock->todoset->sets->todolists_url);
         foreach($todolists as &$list){
             $list->todos = $this->get($list->todos_url);
         }
 
         return $todolists;
+    }
+
+    /**
+     * Get project todos
+     * @param $project object Project object
+     * @todo Handle older history
+     * @return object
+     */
+    public function projectHistory($project)
+    {
+        $buckets = [];
+        foreach($project->dock as $dock)
+            if(property_exists($dock, 'data'))
+                $buckets[] = $dock->data->bucket->id;
+
+        $types = ['Document', 'Todo', 'Todolist', 'Upload'];
+
+        $history = collect([]);
+
+        foreach($types as $type)
+            $history[$type] = $this->get('projects/recordings.json?type='.$type
+                .'&bucket='.implode(',', $buckets)
+                .'&sort=created_at&direction=desc', false);
+
+        return $history->flatten(1)
+            ->sortByDesc('updated_at')
+            ->values()->all();
     }
 
     /**

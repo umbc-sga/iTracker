@@ -13,6 +13,7 @@ angular.module('itracker')
 
                     $scope.loaded = false;
                     $scope.todoLoaded = false;
+                    $scope.historyLoaded = false;
 
                     $scope.activeTodoLists = [];
                     $scope.completedTodoLists = [];
@@ -29,11 +30,43 @@ angular.module('itracker')
                         for(let list of lists){
                             let ratio = list.completed_ratio.split('/');
                             list.ratio = Math.floor((ratio[0]/ratio[1])*100);
-
                         }
 
                         $scope.project.todo = lists;
                     }).finally(() => $scope.todoLoaded = true);
+
+                    basecampService.getProjectHistory(projectId).then((response) => {
+                        let history = response.data;
+                        let timeline = [];
+
+                        for(let moment of history){
+                            let obj = {
+                                type: moment.type,
+                                action: '',
+                                description: moment.description,
+                                updated_at: moment.updated_at,
+                                created_at: moment.created_at,
+                                url: moment.url,
+                                creator: moment.creator
+                            };
+
+                            switch(moment.type){
+                                case 'Upload':
+                                    obj.action = 'uploaded '+moment.filename;
+                                    break;
+                                case 'Todo':
+                                    obj.action = (moment.completed ? 'completed' : '') + moment.content;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            timeline.push(obj);
+                        }
+
+                        $scope.project.history = timeline;
+                    }).finally(() => $scope.historyLoaded = true);
+
 
 
                     $scope.prettyDate = function(dateTime){
