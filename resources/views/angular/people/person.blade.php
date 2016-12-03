@@ -13,12 +13,6 @@
                 <h3 class="profile-username text-center">@{{person.name}}</h3>
                 <p class="text-muted text-center">@{{person.position}}</p>
                 <ul class="list-group list-group-unbordered" style="">
-                    <li class="list-group-item" data-ng-show="depts.length > 0" style="border-bottom:0px;">
-                        <b data-ng-show="depts.length == 1">Department</b>
-                        <b data-ng-show="depts.length > 1">Departments</b>
-                        <br/>
-                        <a data-ng-href="{{url('/departments')}}/@{{dept.href}}" data-ng-repeat="dept in depts">@{{dept.name}}<br></a>
-                    </li>
                     <li class="list-group-item">
                         <b>E-Mail Address</b><br/>
                         <a class="mailto:@{{person.email_address}}">@{{person.email_address}}</a>
@@ -54,7 +48,7 @@
                 <div class="box-group">
                     <h4 data-ng-show="person.departments.length == 0">This person is not in any departments</h4>
                     <div class="box box-success col-xs-12" data-ng-repeat="department in person.departments | orderBy:'department.name'">
-                        <a data-ng-href="{{url('/department/')}}/@{{ department.id }}" style="color:black">
+                        <a data-ng-href="{{url('/department/')}}/@{{ department.name | departmentHref }}" style="color:black">
                             <h5>@{{ department.name }}</h5>
                         </a>
                     </div>
