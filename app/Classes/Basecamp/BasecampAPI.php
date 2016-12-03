@@ -55,7 +55,7 @@ class BasecampAPI
      * @param $base_uri string Base basecamp API url
      * @param $accessToken string Access token to use
      */
-    public function __construct($base_uri)
+    public function __construct($base_uri = '')
     {
         $this->baseUri = $base_uri;
 

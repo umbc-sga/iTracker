@@ -13,7 +13,7 @@ class MakeUserOrgTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_organization', function (Blueprint $table) {
+        Schema::create('organization_user', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('organization_id')->unsigned();
@@ -32,9 +32,10 @@ class MakeUserOrgTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_organization', function(Blueprint $table){
+        Schema::table('organization_user', function(Blueprint $table){
             $table->dropUnique('unique_user_org_role');
         });
-        Schema::dropIfExists('user_organization');
+
+        Schema::dropIfExists('organization_user');
     }
 }

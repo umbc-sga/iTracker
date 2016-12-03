@@ -15,7 +15,8 @@ class MakeOrganizationsTable extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('api_id')->unsigned();
+            $table->integer('api_id')->unsigned()->unique();
+            $table->string('name', 200);
             $table->timestamps();
         });
     }

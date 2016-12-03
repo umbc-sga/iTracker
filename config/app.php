@@ -193,6 +193,7 @@ return [
 
         \App\Providers\BasecampProvider::class,
         \App\Providers\BasecampAPIProvider::class,
+        \App\Providers\OrganizationProvider::class,
 
     ],
 
