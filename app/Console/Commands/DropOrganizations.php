@@ -7,6 +7,7 @@ use App\OrganizationRoles;
 use App\OrganizationUser;
 use App\RolePermission;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 
 class DropOrganizations extends Command
 {
@@ -45,10 +46,12 @@ class DropOrganizations extends Command
             if(strtolower($resp)[0] == 'n')
                 return null;
 
+        Schema::disableForeignKeyConstraints();
         $records = Organization::where('id', '!=', 'null')->delete()
                     + OrganizationUser::where('id', '!=', 'null')->delete()
                     + OrganizationRoles::where('id', '!=', 'null')->delete()
                     + RolePermission::where('id', '!=', 'null')->delete();
+        Schema::enableForeignKeyConstraints();
 
         $this->info($records.' records deleted');
     }

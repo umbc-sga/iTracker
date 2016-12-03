@@ -44,7 +44,17 @@ class User extends Authenticatable
     }
 
     public function organizations(){
-        return $this->hasManyThrough(Organization::class, OrganizationUser::class,
-            'user_id', 'organization_id', 'id');
+        return $this->hasMany(OrganizationUser::class);
+    }
+
+    public static function fullUser($id){
+        return User::where('id', $id)
+            ->with(
+                'profile',
+                'organizations',
+                'organizations.organization',
+                'organizations.role',
+                'organizations.role.permissions'
+            )->first();
     }
 }
