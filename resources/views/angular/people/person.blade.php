@@ -14,8 +14,11 @@
                 <p class="text-muted text-center">@{{person.position}}</p>
                 <ul class="list-group list-group-unbordered" style="">
                     <li class="list-group-item">
-                        <b>E-Mail Address</b><br/>
+                        <strong>E-Mail Address</strong><br/>
                         <a class="mailto:@{{person.email_address}}">@{{person.email_address}}</a>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@{{ person.title }}</strong>
                     </li>
                 </ul>
             </div>

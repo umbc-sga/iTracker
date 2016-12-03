@@ -28,7 +28,7 @@ angular.module('itracker',[
         .when('/project/:projectId/', {
             templateUrl: '/angular/pages.project',
         })
-        .when('/departments/:departmentName', {
+        .when('/department/:departmentName', {
             templateUrl: '/angular/pages.department'
         })
         .when('/profile/:profileId/:action', {
