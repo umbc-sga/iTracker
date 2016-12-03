@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .service('retrievalService', ['$q', '$log', 'basecampService', function($q, $log, basecampService) {
+    .service('retrievalService', ['$q', '$log', 'basecampService', 'apiService',
+        function($q, $log, basecampService, apiService) {
         this.getPeople = () => {
             return basecampService.getPeople()
                 .catch((err) => $log.error('Error while getting projects', err));
@@ -99,5 +100,9 @@ angular.module('itracker')
         this.changeRole = function(person, dept, role){
             return basecampService.changeRole(person, dept, role);
         };
+
+        this.getCurrentUser = function(){
+            return apiService.request('/currentUser');
+        }
 
     }]);

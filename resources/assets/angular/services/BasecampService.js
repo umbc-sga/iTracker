@@ -1,9 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .factory('basecampService', ['$q', '$log', '$http', function($q, $log, $http) {
-        let _apiVer = '/api/v1/';
-
+    .factory('basecampService', ['$q', '$log', '$http', 'apiService', function($q, $log, $http, apiService) {
         /**
          * Handles request and returns promise
          * @param resource URI Resource to access
@@ -13,11 +11,7 @@ angular.module('itracker')
          */
         let request = (resource = '', method = 'POST', data = {}) => {
             return $q((resolve, reject) => {
-                $http({
-                    method: method,
-                    url: (_apiVer + resource).replace(/\/\//g, '/'),
-                    data: data
-                })
+                apiService.request(resource, method, data)
                     .then((response) => resolve(response), (response) => {
                         if (response.status == 429) {
                             $log.debug('Rate limited, retrying in 10 seconds', response);
@@ -50,9 +44,6 @@ angular.module('itracker')
             getDepartment: (deptName) => request('/dept/'+deptName),
             getDepartmentPersonWithRole: (roleId, deptId) => request('/dept/'+deptId+'/role/'+roleId),
             getDepartmentProjects: (deptId) => request('/dept/'+deptId+'/projects'),
-
-            getActiveTodos: () => request('/todos/active'),
-            getCompletedTodos: () => request('/todos/completed'),
 
             getRole: (roleId) => request('/role/'+roleId),
             changeRole: (person, dept, role) => request('/dept/'+dept+'/person/'+person+'/role/'+role, 'PUT')

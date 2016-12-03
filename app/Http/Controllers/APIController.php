@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class APIController extends Controller
@@ -11,5 +12,9 @@ class APIController extends Controller
             'message' => 'Api call is invalid'
         ])->setStatusCode(400)
             ->header('Content-Type', 'text/json');
+    }
+
+    public function currentUser(Request $request){
+        return response()->json(User::fullUser(auth()->id()));
     }
 }

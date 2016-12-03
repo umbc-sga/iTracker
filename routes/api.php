@@ -43,7 +43,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
     Route::post('dept/{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
 
 
-    Route::post('todos/{status?}', ['as' => 'todos', 'uses' => 'BasecampController@todos']);
+    Route::any('currentUser', ['as' => 'currentUser', 'middleware' => ['web', 'auth'], 'uses' => 'APIController@currentUser']);
 });
 
 Route::any('/{any}', 'APIController@NoAPIResponse')->where('any', '.*');
