@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\CreateOrganizations;
+use App\Console\Commands\SyncOrganizations;
 use App\Console\Commands\dropBasecampAuth;
 use App\Console\Commands\PurgeCache;
 
@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         dropBasecampAuth::class,
         PurgeCache::class,
-        CreateOrganizations::class,
+        SyncOrganizations::class,
     ];
 
     /**
