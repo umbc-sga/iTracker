@@ -28,7 +28,11 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = [
+        'id', 'updated_at', 'created_at',
+        'google_etag', 'google_token', 'google_id', 'gender',
+        'password', 'remember_token'
+    ];
 
     public function profile(){
         return $this->hasOne(Profile::class, 'user_id', 'id');
