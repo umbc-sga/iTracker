@@ -41,6 +41,10 @@ class DropOrganizations extends Command
      */
     public function handle()
     {
+        if($resp = $this->ask('This will destroy all organizational data! Are you sure? (y/N)', 'n'))
+            if(strtolower($resp)[0] == 'n')
+                return null;
+
         $records = Organization::where('id', '!=', 'null')->delete();
         $records += OrganizationUser::where('id', '!=', 'null')->delete();
 
