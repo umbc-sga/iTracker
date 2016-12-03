@@ -1,0 +1,65 @@
+<div ng-controller="ProjectController">
+
+    <ul class="breadcrumb">
+        <li><a href="#">Projects</a> <span class="divider">/</span></li>
+        <li>@{{project.name}}</li>
+    </ul>
+
+    <div class="page-header">
+        <h1>@{{project.name}} <small>@{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}% complete</small></h1>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 60%">@{{activeTodoLists.length || '0'}} todo list(s)</th>
+                <th style="width: 40%">
+                    @{{(((activeTodoListsCompletedCount + completedTodoListsCompletedCount) * (100 / (activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount))) || '0') | number:0}}% complete
+                    (@{{activeTodoListsCompletedCount + completedTodoListsCompletedCount}}/@{{activeTodoListsRemainingCount + activeTodoListsCompletedCount + completedTodoListsRemainingCount + completedTodoListsCompletedCount}} todo's)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="info">
+                <td><input type="text" ng-model="search.name" class="input-block-level" placeholder="Filter by todo list name" /></td>
+                <td></td>
+            </tr>
+            <tr ng-repeat="todoList in activeTodoLists | filter:search | orderBy: todoList.position">
+                <td>
+                    <p><a href="#/projects/@{{project.id}}/todolists/@{{todoList.id}}">@{{todoList.name}}</a></p>
+                    <p class="ng-cloak" ng-show="todoList.description">@{{todoList.description}}</p>
+                    <p class="muted">Created: @{{todoList.created_at | date}} | Last update: @{{todoList.updated_at | date}}</p>
+                </td>
+                <td>
+                    <p>
+                        @{{(todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) || '0' | number:0}}% complete
+                        (@{{todoList.completed_count}}/@{{todoList.remaining_count + todoList.completed_count}} todo's)
+                    </p>
+                    <div class="progress progress-striped">
+                        <div class="bar"
+                             ng-style="{width: (todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) + '%' }"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-repeat="todoList in completedTodoLists | filter:search | orderBy: todoList.position">
+                <td>
+                    <p><a href="#/projects/@{{project.id}}/todolists/@{{todoList.id}}">@{{todoList.name}}</a></p>
+                    <p class="ng-cloak" ng-show="todoList.description">@{{todoList.description}}</p>
+                    <p class="muted">Created: @{{todoList.created_at | date}} | Last update: @{{todoList.updated_at | date}}</p>
+                </td>
+                <td>
+                    <p>
+                        @{{(todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) || '0' | number:0}}% complete
+                        (@{{todoList.completed_count}}/@{{todoList.remaining_count + todoList.completed_count}} todo's)
+                    </p>
+                    <div class="progress progress-striped progress-success">
+                        <div class="bar"
+                             ng-style="{width: (todoList.completed_count * (100 / (todoList.remaining_count + todoList.completed_count))) + '%' }"></div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
