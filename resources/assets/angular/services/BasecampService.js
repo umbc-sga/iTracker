@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .factory('basecampService', ['$q', '$http', function($q, $http) {
+    .factory('basecampService', ['$q', '$log', '$http', function($q, $log, $http) {
         let _apiVer = '/api/v1/';
 
         /**
@@ -15,22 +15,32 @@ angular.module('itracker')
             return $q((resolve, reject) => {
                 $http({
                     method: method,
-                    url: (_apiVer+resource).replace(/\/\//g, '/'),
+                    url: (_apiVer + resource).replace(/\/\//g, '/'),
                     data: data
-                }).then((response) => resolve(response), (response) => reject(response));
+                })
+                    .then((response) => resolve(response), (response) => {
+                        if (response.status == 429) {
+                            $log.debug('Rate limited, retrying in 10 seconds', response);
+                            return setTimeout(() => resolve(request(resource, method, data)), 10*1000);
+                        }
+
+                        reject(response);
+                    })
             });
         };
 
         return {
             getProjects: () => request('/projects'),
             getPeopleInProject: (projectId) => request('/project/'+projectId+'/people'),
+            getProjectTodos: (projectId) => request('/project/'+projectId+'/todos'),
+            getProjectHistory: (projectId) => request('/project/'+projectId+'/history'),
             getProjectEvents: (projectId, page) => request('/project/'+projectId+'/events/'+page),
             getProject: (projectId) => request('/project/'+projectId),
 
             getPeople: () => request('/people'),
             getPerson: (personId) => request('/person/'+personId),
             getPersonProjects: (personId) => request('/person/'+personId+'/projects', ),
-            getPersonInfo: (personId) => request('/person/'+personId+'/info'),
+            getPersonProfile: (personId) => request('/person/'+personId+'/profile'),
             getPersonRoles: (personId) => request('/person/'+personId+'/roles'),
             getPersonDepartments: (personId) => request('/person/'+personId+'/departments'),
             getPersonEvents: (personId, page) => request('/person/'+personId+'/events/'+page),

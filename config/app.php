@@ -188,6 +188,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
+
         \App\Providers\BasecampProvider::class,
         \App\Providers\BasecampAPIProvider::class,
 
@@ -238,6 +241,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

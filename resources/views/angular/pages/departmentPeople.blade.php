@@ -1,5 +1,4 @@
 <div class="content-wrapper">
-	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
 			All People By Department
@@ -10,6 +9,5 @@
 		</ol>
 	</section>
 
-	<!-- Main content -->
 	<section class="content departmentPeople" data-groups="data.groups"></section>
 </div>

@@ -65,16 +65,6 @@ angular.module('itracker')
                 .catch((err) => $log.error('Error while getting project', id, err));
         };
 
-        this.getActiveTodoLists = function () {
-            return basecampService.getActiveTodos()
-                .catch((err) => $log.error('Error while getting active todos', err));
-        };
-
-        this.getCompletedTodoLists = function () {
-            return basecampService.getCompletedTodos()
-                .catch((err) => $log.error('Error while getting completed todos', err));
-        };
-
         this.getProjectAccesses = function(id){
             return basecampService.getProjectAccesses(id)
                 .catch((err) => $log.error('Error while getting project accesses', id, err));

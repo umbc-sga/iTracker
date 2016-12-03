@@ -28,15 +28,14 @@ angular.module('itracker',[
         .when('/project/:projectId/', {
             templateUrl: '/angular/pages.project',
         })
-        .when('/projects/:projectId/todolists/:todoListId', {
-            templateUrl: '/angular/legacy.todo-list',
-            controller: 'TodoListController'
-        })
         .when('/departments/:departmentName', {
             templateUrl: '/angular/pages.department'
         })
+        .when('/profile/:profileId/:action', {
+            templateUrl: '/angular/pages.profile'
+        })
         .otherwise({
-            templateUrl: '/angular/pages.404-error'
+            templateUrl: '/angular/pages.404error'
         });
 
     $locationProvider.html5Mode(true);

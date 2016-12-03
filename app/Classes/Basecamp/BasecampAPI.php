@@ -4,6 +4,8 @@ namespace App\Classes\Basecamp;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 
@@ -33,20 +35,48 @@ class BasecampAPI
     private $restrictedEmails = null;
 
     /**
+     * @var string
+     */
+    private $apiPrefix = 'api-';
+
+    /**
+     * @var Request
+     */
+    private $request = null;
+
+    /**
+     * Get API prefix
+     * @return string
+     */
+    protected function prefix(){ return $this->apiPrefix; }
+
+    /**
      * BasecampAPI constructor.
      * @param $base_uri string Base basecamp API url
      * @param $accessToken string Access token to use
      */
-    public function __construct($base_uri, $accessToken)
+    public function __construct($base_uri)
     {
-        $this->accessToken = $accessToken;
         $this->baseUri = $base_uri;
+
         $this->options = [
             'cacheEnabled' => config('services.basecamp.cachingEnabled'),
             'cacheDecayTime' => config('services.basecamp.cacheAgeOff')
         ];
 
         $this->restrictedEmails = collect([]);
+    }
+
+    public function setAccessToken($token){
+        $this->accessToken = $token;
+    }
+
+    /**
+     * Set request
+     * @param Request $request
+     */
+    public function setRequest(Request $request){
+        $this->request = $request;
     }
 
     /**
@@ -65,23 +95,30 @@ class BasecampAPI
      * Set people to be filtered out of site
      * @param array $emails
      */
-    public function setEmailFilters($emails = []){ $this->restrictedEmails = collect($emails); }
+    public function setEmailFilters($emails = []){
+        $this->restrictedEmails = collect($emails)->transform(function($email){
+            return strtolower($email);
+        });
+    }
 
     /**
      * Should person be filtered?
      * @param $person object Basecamp Person Object
      * @return bool
      */
-    protected function filteredPerson($person){
-        return $this->restrictedEmails->search($person->email_address) === false;
+    protected function personShouldBeFiltered($person){
+        return $this->restrictedEmails->search(strtolower($person->email_address)) !== false
+            || strtolower($person->personable_type) === 'tombstone';
     }
+
     /**
      * Get request to API
      * @param $resource string Resource URL
+     * @param bool $allPages Get all pages in response
      * @param $force bool Force API call, ignore setting
      * @return object
      */
-    public function get($resource, $force = false){
+    public function get($resource, $allPages = true, $force = false){
         $client = new Client([
             'base_uri' => $this->baseUri
         ]);
@@ -89,31 +126,46 @@ class BasecampAPI
         //Trim left slashes
         $resource = ltrim($resource,'/');
 
-        $cacheName = 'apicall-'.$resource;
+        $cacheName = $this->prefix().'call-'.$resource;
 
         //If caching enabled and not forced, return cached response
         if($this->cacheEnabled() && !$force && ($cached = cache($cacheName)))
             return json_decode($cached);
 
         //Cache miss call to API
-        //@todo handle exceptions
-        $res = $client->request('GET', $resource, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->accessToken,
-                'User-Agent' => env('BASECAMP_AGENT')
-            ]
-        ]);
+        try {
+            $res = $client->request('GET', $resource, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken,
+                    'User-Agent' => env('BASECAMP_AGENT')
+                ]
+            ]);
+        } catch(RequestException $e){
+            abort($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
+        }
 
         //Get JSON payload
         $json = $res->getBody()->getContents();
+        $decoded = json_decode($json);
+
+        $matches = [];
+        //More pages?
+        if(count($res->getHeader('Link')) > 0 && preg_match('/<([^>]+)>/', $res->getHeader('Link')[0], $matches) > 0)
+            $decoded = array_merge($decoded, $this->get($matches[1], $force));
 
         //Cache this if it's a 200 response
         if($this->cacheEnabled() && $res->getStatusCode() == 200)
-            cache([$cacheName => $json], $this->cacheDecayTime());
+            cache([$cacheName => json_encode($decoded)], $this->cacheDecayTime());
 
-        return json_decode($json);
+        return $decoded;
     }
 
+    /**
+     * Put Request to API
+     * @param $resource string Resource URL
+     * @param $data array Data to pass to api
+     * @return object
+     */
     public function put($resource, $data){
         $client = new Client([
             'base_uri' => $this->baseUri
@@ -138,15 +190,73 @@ class BasecampAPI
         return json_decode($json);
     }
 
-    public function invitePerson($project, $email){
-        return $this->put('project/'.$project.'/people/users.json', [
-            'name' => explode('@', $email)[0],
-            'email_address' => $email,
-            'title' => 'User',
-            'company_name' => 'UMBC'
+    /**
+     * Invite person to basecamp
+     * @param $project int Project ID
+     * @param $people string|array People emails
+     * @return object
+     */
+    public function invitePeople($project, $people){
+        $invites = [];
+
+        if(is_array($people))
+            foreach($people as $email)
+                $invites[] = [
+                    'name' => explode('@', $email)[0],
+                    'email_address' => $email
+                ];
+        else {
+            $invites[] = [
+                'name' => explode('@', $people)[0],
+                'email_address' => $people
+            ];
+        }
+
+        return $this->put('projects/'.$project.'/people/users.json', [
+            'create' => $invites
         ]);
     }
 
+    /**
+     * Grant permission to user in project
+     * @param $project int Project ID
+     * @param $people int|array|object Person IDs to submit
+     * @return object
+     */
+    public function projectGrant($project, $people)
+    {
+        if(is_object($people))
+            $people = [$people->id];
+
+        if(!is_array($people))
+            $people = [$people];
+
+        return $this->put('projects/'.$project.'/people/users.json', [
+            'grant' => $people
+        ]);
+    }
+
+    /**
+     * Invite or grant access to project
+     * @param $project int Project ID
+     * @param $email string Email of user
+     * @return object
+     */
+    public function inviteOrGrant($project, $email)
+    {
+        $existingPerson = null;
+        foreach($this->people() as $person){
+            if($person->email_address == auth()->user()->email) {
+                $existingPerson = $person;
+                break;
+            }
+        }
+
+        if($existingPerson)
+            return $this->projectGrant($project, $existingPerson);
+        else
+            return $this->invitePeople($project, $email);
+    }
 
     /**
      * Get array of all projects
@@ -154,10 +264,10 @@ class BasecampAPI
      * @return Collection
      */
     public function projects($stripTeamHash = true){
-        $cacheName = 'api-projects'.$stripTeamHash;
+        $cacheName = $this->prefix().'projects'.$stripTeamHash;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Miss, call to API
@@ -176,9 +286,21 @@ class BasecampAPI
         })->values();
 
         //Cache
-        cache([$cacheName => $projects->jsonSerialize()], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => $projects->jsonSerialize()], $this->cacheDecayTime());
 
         return $projects;
+    }
+
+    private function getRecursive($url){
+        $resp = $this->get($url);
+
+        if(is_null($resp->url))
+            return $resp;
+
+        $resp->data = $this->getRecursive($resp->url);
+
+        return $resp;
     }
 
     /**
@@ -187,24 +309,88 @@ class BasecampAPI
      * @return object
      */
     public function project($id){
-        $cacheName = 'api-project-'.$id;
+        $cacheName = $this->prefix().'project-'.$id;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $project = $this->get('projects/'.$id.'.json');
 
-        unset($project->dock);
-
         $project->people = $this->peopleInProject($project->id);
+
+        foreach($project->dock as $key => $dock){
+            if($dock->enabled) {
+                $project->dock[$dock->name] = $dock;
+            }
+
+            unset($project->dock[$key]);
+        }
+
+        $project->dock = (object)$project->dock;
+
+        if($set = &$project->dock->todoset)
+            $set->data = $this->get($set->url);
+
+        if($vault = &$project->dock->vault)
+            $vault->data = $this->get($vault->url);
+
+        if($board = &$project->dock->message_board)
+            $board->data = $this->get($board->url);
+
+        if($schedule = &$project->dock->schedule)
+            $schedule->data = $this->get($schedule->url);
 
         if($str = $this->getTeamString($project->description))
             $project->description = str_replace($str, '', $project->description);
 
-        cache([$cacheName => json_encode($project)], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($project)], $this->cacheDecayTime());
 
-        return $this->get('projects/'.$id.'.json');
+        return $project;
+    }
+
+    /**
+     * Get project todos
+     * @param $project object Project object
+     * @return object
+     */
+    public function projectTodos($project)
+    {
+        $todolists = $this->get($project->dock->todoset->data->todolists_url);
+
+        foreach($todolists as &$list){
+            $list->todos = $this->get($list->todos_url);
+        }
+
+        return $todolists;
+    }
+
+    /**
+     * Get project todos
+     * @param $project object Project object
+     * @todo Handle older history
+     * @return object
+     */
+    public function projectHistory($project)
+    {
+        $buckets = [];
+        foreach($project->dock as $dock)
+            if(property_exists($dock, 'data'))
+                $buckets[] = $dock->data->bucket->id;
+
+        $types = ['Document', 'Todo', 'Todolist', 'Upload'];
+
+        $history = collect([]);
+
+        foreach($types as $type)
+            $history[$type] = $this->get('projects/recordings.json?type='.$type
+                .'&bucket='.implode(',', $buckets)
+                .'&sort=created_at&direction=desc', false);
+
+        return $history->flatten(1)
+            ->sortByDesc('updated_at')
+            ->values()->all();
     }
 
     /**
@@ -214,7 +400,7 @@ class BasecampAPI
      */
     public function peopleInProject($id){
         return collect($this->get('projects/'.$id.'/people.json'))->filter(function($person){
-            return $this->filteredPerson($person);
+            return !$this->personShouldBeFiltered($person);
         })->values();
     }
 
@@ -223,10 +409,10 @@ class BasecampAPI
      * @return Collection
      */
     public function teams(){
-        $cacheName = 'api-teams';
+        $cacheName = $this->prefix().'teams';
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Filter anything not a 'team'
@@ -238,7 +424,8 @@ class BasecampAPI
         })->values();
 
         //Cache
-        cache([$cacheName => $teams->jsonSerialize()], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => $teams->jsonSerialize()], $this->cacheDecayTime());
         return $teams;
     }
 
@@ -248,21 +435,21 @@ class BasecampAPI
      * @return object
      */
     public function team($id){
-        $cacheName = 'api-team-'.$id;
+        $cacheName = $this->prefix().'team-'.$id;
 
         //Check cache
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $team = $this->project($id);
 
-        unset($team->dock);
         //Add additional fields
         $team->projects = $this->teamProjects($team->id);
         $team->memberships = $this->peopleInProject($team->id);
 
         //Cache
-        cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
 
         return $team;
     }
@@ -273,10 +460,10 @@ class BasecampAPI
      * @return object
      */
     public function teamByName($name){
-        $cacheName = 'api-team-'.$name;
+        $cacheName = $this->prefix().'team-'.$name;
 
         //Check cache for ID
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         //Go through all teams until it's found
@@ -294,11 +481,17 @@ class BasecampAPI
         $team->memberships = $this->peopleInProject($team->id);
 
         //Cache
-        cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($team)], $this->cacheDecayTime());
 
         return $team;
     }
 
+    /**
+     * Get team hash out of string, returns null if not found
+     * @param $str string
+     * @return null|string
+     */
     private function getTeamString($str){
         $matches = [];
         if(preg_match_all('/#teams(?: (\d+))+/', $str, $matches) > 0)
@@ -313,9 +506,9 @@ class BasecampAPI
      * @return Collection
      */
     public function teamProjects($dept){
-        $cacheName = 'api-team-projects-'.$dept;
+        $cacheName = $this->prefix().'team-projects-'.$dept;
 
-        if($cached = cache($cacheName))
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return collect($cached);
 
         //Go through all projects until API is found
@@ -335,7 +528,8 @@ class BasecampAPI
         })->values();
 
         //Cache
-        cache([$cacheName => $teamProjects->jsonSerialize()], $this->cacheDecayTime());
+        if($this->cacheEnabled())
+            cache([$cacheName => $teamProjects->jsonSerialize()], $this->cacheDecayTime());
 
         return $teamProjects;
     }
@@ -347,7 +541,7 @@ class BasecampAPI
      */
     public function people(){
         return collect($this->get('people.json'))->filter(function($person){
-            return $this->filteredPerson($person);
+            return !$this->personShouldBeFiltered($person);
         })->values();
     }
 
@@ -357,13 +551,19 @@ class BasecampAPI
      * @return object
      */
     public function person($id){
-        $cacheName = 'api-person-'.$id;
+        $cacheName = $this->prefix().'person-'.$id;
 
-        if($cached = cache($cacheName))
+        //Return cached person if thye exist
+        if($this->cacheEnabled() && $cached = cache($cacheName))
             return json_decode($cached);
 
         $person = $this->get('people/'.$id.'.json');
 
+        //Should they be filtered?
+        if($this->personShouldBeFiltered($person))
+            return null;
+
+        //Get all projects
         $person->projects = $this->projects()->filter(function($project) use ($person){
             foreach($this->peopleInProject($project->id) as $peep)
                 if($peep->id == $person->id)
@@ -372,6 +572,7 @@ class BasecampAPI
             return false;
         })->values();
 
+        //Get all departments they're in
         $person->departments = $this->teams()->filter(function($team) use ($person){
             foreach($this->peopleInProject($team->id) as $peep)
                 if($peep->id == $person->id)
@@ -380,7 +581,9 @@ class BasecampAPI
             return false;
         })->values();
 
-        cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
+
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
 
         return $person;
     }

@@ -51,6 +51,8 @@ gulp.task('css',['vendorcss', 'fonts'], function() {
 
 gulp.task('vendorjs', function(){
     return gulp.src([
+        paths.legacy+'js/html5shiv.min.js',
+        paths.legacy+'js/respond.min.js',
         paths.npm+'jquery/dist/jquery.js',
         paths.npm+'bootstrap-sass/assets/javascripts/bootstrap.js',
         paths.npm+'angular/angular.js',

@@ -83,45 +83,6 @@ angular.module('itracker')
             return result;
         };
 
-        let getProjectPack = (id) => {
-            return retrievalService.getProject(id).then((response) => {
-                let project = response.data;
-                return {
-                    id: project.id,
-                    name: project.name,
-                    status: project.archived ? 'Archived': 'Active',
-                    description: project.description,
-                    creator: project.creator.name,
-                    events: project.calendar_events.count,
-                    docs: project.documents.count,
-                    created_ad: project.created_at,
-                    updated_at: project.updated_at,
-                };
-            });
-        };
-
-        let getPersonPack = (id) => {
-            return retrievalService.getPersonInfo(id).then((response) => {
-                let person = response.data;
-                //Remapped person
-                return {
-                    id: person.id,
-                    name: person.name,
-                    email: person.email_address,
-                    todoCount: person.assigned_todos.count,
-                    eventCount: person.events.count,
-                    avatar_url: person.avatar_url,
-                    bio: person.bio,
-                    major: person.major,
-                    classStanding: person.classStanding,
-                    hometown: person.hometown,
-                    fact: perosn.fact,
-                    position: person.position,
-                    activeProjects: person.activeProjects,
-                    archivedProjects: person.archivedProjects,
-                };
-            });
-        };
 
         let bootstrap = () => {
             retrievalService.getProjects().then((response) => {
@@ -130,22 +91,6 @@ angular.module('itracker')
                     $log.debug('Projects:', projects);
                     this.projects = projects;
                     this.main.projects = projects;
-
-                    retrievalService.getActiveTodoLists().then((response) => {
-                        let data = response.data;
-                        if (Array.isArray(data)) {
-                            this.main.activeTodoLists = data;
-                            $log.debug('Active todo lists:', data);
-                        }
-                    });
-
-                    retrievalService.getCompletedTodoLists().then((response) => {
-                        let data = response.data;
-                        if (Array.isArray(data)) {
-                            this.main.completedTodoLists = data;
-                            $log.debug('Completed todo lists:', data);
-                        }
-                    });
                 }
             });
 
@@ -180,8 +125,6 @@ angular.module('itracker')
 
         return {
             getProjectCounts: getProjectCounts,
-            getProjectPack: getProjectPack,
-            getPersonPack: getPersonPack,
             bootstrap: bootstrap,
             main: this.main,
             groups: this.groups,

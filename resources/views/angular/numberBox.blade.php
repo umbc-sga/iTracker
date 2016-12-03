@@ -1,4 +1,3 @@
-<!-- small box -->
 <div class="small-box @{{ color }}">
     <div class="inner">
         <h3>
