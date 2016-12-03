@@ -10,22 +10,11 @@ use Illuminate\Support\ServiceProvider;
 
 class BasecampAPIProvider extends ServiceProvider
 {
-
-    protected $defer = true;
-
     /**
      * Bootstrap the api
-     * @param Request $request
-     * @param BasecampAPI $api
      */
-    public function boot(Request $request, BasecampAPI $api)
+    public function boot()
     {
-        $api->setRequest($request);
-        try{
-            $api->setAccessToken(cache('BCaccessToken'));
-        } catch(QueryException $e){
-            $api->setAccessToken('');
-        }
     }
 
     /**
@@ -37,7 +26,7 @@ class BasecampAPIProvider extends ServiceProvider
     {
         //Register basecamp API service
         $this->app->singleton(BasecampAPI::class, function($app){
-            return new BasecampAPI(config('services.basecamp.url'));
+            return new BasecampAPI();
         });
     }
 }

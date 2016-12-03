@@ -52,12 +52,12 @@ class BasecampAPI
 
     /**
      * BasecampAPI constructor.
-     * @param $base_uri string Base basecamp API url
      * @param $accessToken string Access token to use
      */
-    public function __construct($base_uri = '')
+    public function __construct()
     {
-        $this->baseUri = $base_uri;
+        $this->baseUri = config('services.basecamp.url');
+        $this->setAccessToken(cache('BCaccessToken', null));
 
         $this->options = [
             'cacheEnabled' => config('services.basecamp.cachingEnabled'),
@@ -67,6 +67,18 @@ class BasecampAPI
         $this->restrictedEmails = collect([]);
     }
 
+    /**
+     * Set basecamp URI
+     * @param $uri string
+     */
+    public function setRootURI($uri)
+    {
+        $this->baseUri = $uri;
+    }
+
+    /**
+     * @param $token string Basecamp Access token
+     */
     public function setAccessToken($token){
         $this->accessToken = $token;
     }
@@ -141,6 +153,7 @@ class BasecampAPI
                 ]
             ]);
         } catch(RequestException $e){
+            dd($e);
             abort($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
         }
 
