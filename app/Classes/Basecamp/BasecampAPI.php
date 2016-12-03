@@ -5,6 +5,7 @@ namespace App\Classes\Basecamp;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -57,7 +58,12 @@ class BasecampAPI
     public function __construct()
     {
         $this->baseUri = config('services.basecamp.url');
-        $this->setAccessToken(cache('BCaccessToken', null));
+
+        try {
+            $this->setAccessToken(cache('BCaccessToken', null));
+        } catch(QueryException $e){
+            $this->setAccessToken('');
+        }
 
         $this->options = [
             'cacheEnabled' => config('services.basecamp.cachingEnabled'),
