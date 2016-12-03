@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DropOrganizations;
 use App\Console\Commands\SyncOrganizations;
 use App\Console\Commands\dropBasecampAuth;
 use App\Console\Commands\PurgeCache;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
         dropBasecampAuth::class,
         PurgeCache::class,
         SyncOrganizations::class,
+        DropOrganizations::class,
     ];
 
     /**
