@@ -9,33 +9,65 @@ angular.module('itracker')
                     let projectId = $routeParams.projectId;
 
                     $scope.project = {};
-                    $scope.events = [];
 
                     $scope.loaded = false;
                     $scope.todoLoaded = false;
+                    $scope.historyLoaded = false;
 
-                    $scope.activeTodoLists = [];
-                    $scope.completedTodoLists = [];
+                    basecampService.getProject(projectId)
+                        .then((response) => $scope.project = response.data)
+                        .catch((response) => $log.error(response))
+                        .finally(()=>$scope.loaded = true);
 
-                    $scope.activeTodoListsCompletedCount = 0;
-                    $scope.activeTodoListsRemainingCount = 0;
+                    basecampService.getProjectTodos(projectId)
+                        .then((response) => {
+                            let lists = response.data;
 
-                    $scope.completedTodoListsCompletedCount = 0;
-                    $scope.completedTodoListsRemainingCount = 0;
+                            for(let list of lists){
+                                let ratio = list.completed_ratio.split('/');
+                                list.ratio = Math.floor((ratio[0]/ratio[1])*100);
+                            }
 
-                    basecampService.getProjectTodos(projectId).then((response) => {
-                        let lists = response.data;
+                            $scope.project.todo = lists;
+                        })
+                        .catch((response) => $log.error(response))
+                        .finally(() => $scope.todoLoaded = true);
 
-                        for(let list of lists){
-                            let ratio = list.completed_ratio.split('/');
-                            list.ratio = Math.floor((ratio[0]/ratio[1])*100);
+                    basecampService.getProjectHistory(projectId)
+                        .then((response) => {
+                            let timeline = [];
 
-                        }
+                            for(let moment of response.data){
+                                let obj = {
+                                    type: moment.type,
+                                    action: '',
+                                    description: moment.description,
+                                    updated_at: moment.updated_at,
+                                    created_at: moment.created_at,
+                                    url: moment.url,
+                                    creator: moment.creator
+                                };
 
-                        $scope.project.todo = lists;
-                    }).finally(() => $scope.todoLoaded = true);
+                                switch(moment.type){
+                                    case 'Upload':
+                                        obj.action = 'uploaded '+moment.filename;
+                                        break;
+                                    case 'Todo':
+                                        obj.action = (moment.completed ? 'completed' : '') + moment.content;
+                                        break;
+                                    default:
+                                        break;
+                                }
 
+                                timeline.push(obj);
+                            }
 
+                            $scope.project.history = timeline;
+                        })
+                        .catch((response) => $log.error(response))
+                        .finally(() => $scope.historyLoaded = true);
+
+                    /*
                     $scope.prettyDate = function(dateTime){
                         let dateStr = dateTime.substring(0,dateTime.indexOf('T'));
                         let year = dateStr.substring(0,dateStr.indexOf('-'));
@@ -44,10 +76,6 @@ angular.module('itracker')
                         rest = rest.substring(rest.indexOf('-') + 1);
                         return rest + ' ' + month + ' ' + year;
                     };
-
-                    basecampService.getProject(projectId)
-                        .then((response) => $scope.project = response.data)
-                        .finally(()=>$scope.loaded = true);
 
                     $scope.page = 1;
                     $scope.more = true;
@@ -88,38 +116,7 @@ angular.module('itracker')
                         }
                     };
                     //$scope.getEventSet();
-
-                    $scope.$watch('activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
-
-                        if (activeTodoLists === oldActiveTodoLists) {
-                            return;
-                        }
-
-                        $scope.activeTodoListsCompletedCount = 0;
-                        $scope.activeTodoListsRemainingCount = 0;
-
-                        angular.forEach(activeTodoLists, function (todoList) {
-                            $scope.activeTodoListsCompletedCount += todoList.completed_count;
-                            $scope.activeTodoListsRemainingCount += todoList.remaining_count;
-                        })
-
-                    }, true);
-
-                    $scope.$watch('completedTodoLists', function (completedTodoLists, oldCompletedTodoLists) {
-
-                        if (completedTodoLists === oldCompletedTodoLists) {
-                            return;
-                        }
-
-                        $scope.completedTodoListsCompletedCount = 0;
-                        $scope.completedTodoListsRemainingCount = 0;
-
-                        angular.forEach(completedTodoLists, function (todoList) {
-                            $scope.completedTodoListsCompletedCount += todoList.completed_count;
-                            $scope.completedTodoListsRemainingCount += todoList.remaining_count;
-                        })
-
-                    }, true);
+                    */
                 }],
                 templateUrl: '/angular/proj.project'
             };

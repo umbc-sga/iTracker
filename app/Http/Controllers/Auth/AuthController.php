@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Classes\Basecamp\BasecampAPI;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Controller;
@@ -27,7 +28,7 @@ class AuthController extends Controller
         return redirect()->route('home');
     }
 
-    public function callback(Request $request){
+    public function callback(Request $request, BasecampAPI $api){
         $user = Socialite::driver('google')->user();
 
         $request->session()->put('google_user', $user);
@@ -47,6 +48,9 @@ class AuthController extends Controller
         }
 
         auth()->login($usr);
+
+        if($profile = $usr->generateProfile($api))
+            return redirect()->route('profile.edit', ['user' => $profile->api_id]);
 
         return redirect()->intended();
     }

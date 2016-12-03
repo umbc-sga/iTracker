@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
@@ -102,7 +103,12 @@ class BasecampController extends Controller
     //@todo aggregate all relevant personal info
     // Include all projects and departments
     public function person(Request $request, $person){
-        return response()->json($this->api->person($person));
+        $apiPerson = $this->api->person($person);
+
+        if(!is_null($apiPerson) && property_exists($apiPerson, 'id'))
+            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->first();
+
+        return response()->json($apiPerson);
     }
 
     /**
@@ -152,9 +158,24 @@ class BasecampController extends Controller
         return $this->api->people();
     }
 
-    //@todo handle todos
-    public function todos(Request $request, $project=null){
+    /**
+     * Get project Todos
+     * @param Request $request
+     * @param $project object Project object
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function todos(Request $request, $project){
         return response()->json($this->api->projectTodos($this->api->project($project)));
+    }
+
+    /**
+     * Get history of project
+     * @param Request $request
+     * @param $project object Project object
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function history(Request $request, $project){
+        return response()->json($this->api->projectHistory($this->api->project($project)));
     }
 
     /**

@@ -31,11 +31,18 @@
                 --}}
                 <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active">
+                    <li>
                         <a href="{{url('/')}}">
                             <i class="fa fa-home"></i> <span>Home</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
                         </a>
                     </li>
+                    @if(!auth()->guest() && ($profile = auth()->user()->profile()->first()))
+                    <li>
+                        <a href="{{url('/person/'.$profile->api_id)}}">
+                            <i class="fa fa-user"></i> <span>My Profile</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
+                        </a>
+                    </li>
+                    @endif
                     <li class="treeview">
                         <a class="no-link">
                             <i class="fa fa-edit"></i>

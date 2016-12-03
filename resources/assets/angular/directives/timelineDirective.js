@@ -7,6 +7,11 @@ angular.module('itracker')
             scope: {
                 timeline: '=',
             },
+            controller: ['$scope', function($scope){
+                $scope.limit = 10;
+
+                $scope.increaseLimit = () => $scope.limit += 5;
+            }],
             templateUrl: '/angular/timeline'
         };
     }]);

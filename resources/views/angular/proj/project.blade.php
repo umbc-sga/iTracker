@@ -13,8 +13,8 @@
                     <div class="box-body">
                         <div class="progress progress-xl progress-striped active" style="height:30px;">
                             <div class="progress-bar progress-bar-primary"
-                                 style="width: @{{(project.dock.todoset.sets.completed_ratio.split('/')[0] / project.dock.todoset.sets.completed_ratio.split('/')[1])*100}}%">
-                                <h6>@{{ (project.dock.todoset.sets.completed_ratio.split('/')[0] / project.dock.todoset.sets.completed_ratio.split('/')[1])*100 }}%</h6>
+                                 style="width: @{{(project.dock.todoset.data.completed_ratio.split('/')[0] / project.dock.todoset.data.completed_ratio.split('/')[1])*100}}%">
+                                <h6>@{{ (project.dock.todoset.data.completed_ratio.split('/')[0] / project.dock.todoset.data.completed_ratio.split('/')[1])*100 }}%</h6>
                             </div>
                         </div>
                     </div>
@@ -32,7 +32,16 @@
                 @endif
             </div>
             <div class="col-xs-12 col-md-6">
-                <div class="box box-primary projectAtAGlance" data-project="project" data-read-more="false"></div>
+                <div class="box box-primary projectAtAGlance"
+                     data-project="project"
+                     data-read-more="false"></div>
+                <div class="loader smallLoader" data-ng-show="!historyLoaded"></div>
+                <div class="box box-primary col-xs-12">
+                    <h2>History of the Project</h2>
+                    <div class="iTrakertimeline"
+                         data-timeline="project.history"
+                         data-ng-show="historyLoaded"></div>
+                </div>
             </div>
         </div>
 

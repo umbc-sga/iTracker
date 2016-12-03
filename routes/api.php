@@ -19,7 +19,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('project', '[0-9]+');
     Route::post('project/{project}/people', ['as' => 'peopleInProject', 'uses' => 'BasecampController@peopleInProject'])
         ->where('project', '[0-9]+');
-    Route::post('project/{project}/todos', ['as' => 'peopleInProject', 'uses' => 'BasecampController@todos'])
+    Route::post('project/{project}/todos', ['as' => 'projectTodos', 'uses' => 'BasecampController@todos'])
+        ->where('project', '[0-9]+');
+    Route::post('project/{project}/history', ['as' => 'projectHistory', 'uses' => 'BasecampController@history'])
         ->where('project', '[0-9]+');
     Route::post('project/{project}/events/{page?}', ['as' => 'projectEvents', 'uses' => 'BasecampController@projectEvents'])
         ->where('project', '[0-9]+')
@@ -30,6 +32,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
     Route::post('person/{person}', ['as' => 'person', 'uses' => 'BasecampController@person'])
         ->where('person', '[0-9]+');
     Route::post('person/{person}/projects', ['as' => 'personProjects', 'uses' => 'BasecampController@personProject'])
+        ->where('person', '[0-9]+');
+    Route::post('person/{person}/profile', ['as' => 'personProjects', 'uses' => 'ProfileController@profile'])
         ->where('person', '[0-9]+');
 
     Route::post('groups', ['as' => 'groups', 'uses' => 'BasecampController@groups']);

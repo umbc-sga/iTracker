@@ -4,17 +4,28 @@ namespace App\Providers;
 
 use App\Classes\Basecamp\BasecampAPI;
 use App\Classes\Basecamp\BasecampClient;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class BasecampAPIProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     *
-     */
-    public function boot()
-    {
 
+    protected $defer = true;
+
+    /**
+     * Bootstrap the api
+     * @param Request $request
+     * @param BasecampAPI $api
+     */
+    public function boot(Request $request, BasecampAPI $api)
+    {
+        $api->setRequest($request);
+        try{
+            $api->setAccessToken(cache('BCaccessToken'));
+        } catch(QueryException $e){
+            $api->setAccessToken('');
+        }
     }
 
     /**
@@ -26,7 +37,7 @@ class BasecampAPIProvider extends ServiceProvider
     {
         //Register basecamp API service
         $this->app->singleton(BasecampAPI::class, function($app){
-            return new BasecampAPI(config('services.basecamp.url'), cache('BCaccessToken'));
+            return new BasecampAPI(config('services.basecamp.url'));
         });
     }
 }
