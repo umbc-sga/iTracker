@@ -6,28 +6,28 @@ use App\Classes\Basecamp\BasecampAPI;
 use App\Organization;
 use Illuminate\Console\Command;
 
-class CreateOrganizations extends Command
+class SyncOrganizations extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'basecamp:seed';
+    protected $signature = 'basecamp:sync';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Seed organizational information from API';
+    protected $description = 'Sync organizational information from API';
 
     protected $api = null;
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param BasecampAPI $api
      */
     public function __construct(BasecampAPI $api)
     {
