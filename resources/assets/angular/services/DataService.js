@@ -121,6 +121,10 @@ angular.module('itracker')
                     }
                 }
             });
+
+            retrievalService.getCurrentUser().then((response) => {
+                this.main.user = response.data;
+            });
         };
 
         return {
@@ -129,6 +133,7 @@ angular.module('itracker')
             main: this.main,
             groups: this.groups,
             projects: this.projects,
-            people: this.people
+            people: this.people,
+            user: this.main.user
         }
     }]);

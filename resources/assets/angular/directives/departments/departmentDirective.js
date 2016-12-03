@@ -16,7 +16,7 @@ angular.module('itracker')
                         $log.error('Error while getting department info.', err);
                     }).finally(()=>{
                         $scope.loaded = true;
-                    })
+                    });
                 }],
                 templateUrl: '/angular/dept.department'
             };
