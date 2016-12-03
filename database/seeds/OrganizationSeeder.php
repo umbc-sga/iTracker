@@ -49,8 +49,5 @@ class OrganizationSeeder extends Seeder
 
             return $permissions;
         });
-
-        dump($titles);
-        dump($permissions);
     }
 }
