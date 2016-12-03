@@ -45,8 +45,10 @@ class DropOrganizations extends Command
             if(strtolower($resp)[0] == 'n')
                 return null;
 
-        $records = Organization::where('id', '!=', 'null')->delete();
-        $records += OrganizationUser::where('id', '!=', 'null')->delete();
+        $records = Organization::where('id', '!=', 'null')->delete()
+                    + OrganizationUser::where('id', '!=', 'null')->delete()
+                    + OrganizationRoles::where('id', '!=', 'null')->delete()
+                    + RolePermission::where('id', '!=', 'null')->delete();
 
         $this->info($records.' records deleted');
     }

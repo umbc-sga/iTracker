@@ -19,7 +19,7 @@ class AddForeignKeys extends Migration
             $table->foreign('organization_role')->references('id')->on('organization_roles');
         });
 
-        Schema::table('role_permission', function(Blueprint $table){
+        Schema::table('role_permissions', function(Blueprint $table){
             $table->foreign('organization_role_id')->references('id')->on('organization_roles');
         });
 
@@ -41,8 +41,8 @@ class AddForeignKeys extends Migration
             $table->dropForeign('organization_users_organization_role_foreign');
         });
 
-        Schema::table('role_permission', function(Blueprint $table){
-            $table->dropForeign('role_permission_organization_role_id_foreign');
+        Schema::table('role_permissions', function(Blueprint $table){
+            $table->dropForeign('role_permissions_organization_role_id_foreign');
         });
 
         Schema::table('profiles', function(Blueprint $table){

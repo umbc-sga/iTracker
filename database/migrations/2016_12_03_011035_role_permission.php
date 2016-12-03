@@ -13,11 +13,14 @@ class RolePermission extends Migration
      */
     public function up()
     {
-        Schema::create('role_permission', function (Blueprint $table) {
+        //@todo Normalize this DB
+        Schema::create('role_permissions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('organization_role_id')->unsigned();
-            $table->string('permission',80)->unique();
+            $table->string('permission',80);
             $table->timestamps();
+
+            $table->unique(['organization_role_id', 'permission']);
         });
     }
 
@@ -28,6 +31,9 @@ class RolePermission extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_permission');
+        Schema::table('role_permissions', function(Blueprint $table){
+            $table->dropUnique('role_permissions_organization_role_id_permission_unique');
+        });
+        Schema::dropIfExists('role_permissions');
     }
 }

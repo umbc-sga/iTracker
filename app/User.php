@@ -42,4 +42,9 @@ class User extends Authenticatable
 
         return false;
     }
+
+    public function organizations(){
+        return $this->hasManyThrough(Organization::class, OrganizationUser::class,
+            'user_id', 'organization_id', 'id');
+    }
 }
