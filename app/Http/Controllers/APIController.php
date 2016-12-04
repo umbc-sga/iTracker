@@ -15,6 +15,9 @@ class APIController extends Controller
     }
 
     public function currentUser(Request $request){
-        return response()->json(User::fullUser(auth()->id()));
+        $user = User::fullUser(auth()->id());
+        if($user->email == env('APP_SUPER_ADMIN'))
+            $user->superadmin = true;
+        return response()->json();
     }
 }
