@@ -159,7 +159,6 @@ class BasecampAPI
                 ]
             ]);
         } catch(RequestException $e){
-            dd($e);
             abort($e->getResponse()->getStatusCode(), $e->getResponse()->getReasonPhrase());
         }
 
