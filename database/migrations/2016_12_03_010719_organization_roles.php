@@ -16,6 +16,7 @@ class OrganizationRoles extends Migration
         Schema::create('organization_roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 150);
+            $table->string('stub', 150);
             $table->timestamps();
         });
     }

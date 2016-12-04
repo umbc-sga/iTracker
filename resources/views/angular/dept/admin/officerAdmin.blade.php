@@ -1,3 +1,0 @@
-OFFICER ADMIN
-
-@{{ department.memberships }}
