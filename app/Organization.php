@@ -40,7 +40,6 @@ class Organization extends Model
         $needToCreate = $validOrgs->diff($currentOrgs);
         $needToDelete = $currentOrgs->diff($validOrgs);
 
-        //@todo Cascade on DB
         $deleted = Organization::whereIn('api_id', $needToDelete)->delete();
 
         $teams->filter(function($org) use ($needToCreate){
