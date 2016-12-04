@@ -39,10 +39,8 @@ angular.module('itracker')
                             'Content-Type': undefined
                         })
                             .then((response) => {
-                                if(response.data) {
-                                    $scope.loaded = false;
-                                    getProject();
-                                }
+                                if(response.data)
+                                    $scope.bootstrap();
                             })
                             .catch((response) => $log.error(response.data))
                     };
@@ -60,9 +58,7 @@ angular.module('itracker')
                             .catch((response) => $log.error(response))
                             .finally(()=>$scope.loaded = true);
 
-                    getProject();
-
-                    basecampService.getProjectTodos(projectId)
+                    let getProjectTodos = () => basecampService.getProjectTodos(projectId)
                         .then((response) => {
                             let lists = response.data;
 
@@ -76,7 +72,7 @@ angular.module('itracker')
                         .catch((response) => $log.error(response))
                         .finally(() => $scope.todoLoaded = true);
 
-                    basecampService.getProjectHistory(projectId)
+                    let getProjectHistory = () => basecampService.getProjectHistory(projectId)
                         .then((response) => {
                             let timeline = [];
 
@@ -111,6 +107,16 @@ angular.module('itracker')
                         .finally(() => $scope.historyLoaded = true);
 
 
+                    $scope.bootstrap = () => {
+                        $scope.loaded = false;
+                        $scope.todoLoaded = false;
+                        $scope.historyLoaded = false;
+                        getProject();
+                        getProjectTodos();
+                        getProjectHistory();
+                    };
+
+                    $scope.bootstrap();
                 }],
                 templateUrl: '/angular/proj.project',
                 link: function(scope, element, attrs){
