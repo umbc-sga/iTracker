@@ -16,15 +16,15 @@
                 </a>
                 <div class="col-xs-8">
                     <div class="pull-right" data-ng-show="showPositions">
-                        <i data-ng-show="person.position.title[0] == 'E'" class="fa fa-university pull-right" title="Executive Cabinet" aria-hidden="true"></i>
-                        <i data-ng-show="person.position.title[0] == 'C'" class="fa fa-balance-scale pull-right" title="Cabinet" aria-hidden="true"></i>
-                        <i data-ng-show="person.position == null" class="fa fa-question pull-right" title="Has not joined iTracker" aria-hidden="true"></i>
+                        <i data-ng-show="person.role.stub == 'exec'" class="fa fa-university pull-right" title="Executive Cabinet" aria-hidden="true"></i>
+                        <i data-ng-show="person.role.stub == 'cabinet'" class="fa fa-balance-scale pull-right" title="Cabinet" aria-hidden="true"></i>
+                        <i data-ng-show="person.role == null" class="fa fa-question pull-right" title="Has not joined iTracker" aria-hidden="true"></i>
                     </div>
 
                     <a data-ng-href="{{url('/person')}}/@{{person.id}}">
                         <h4>@{{person.name}}</h4>
                     </a>
-                    <h5 data-ng-show="person.title">@{{person.title}}</h5>
+                    <h5 data-ng-show="person.title">@{{person.position}}</h5>
                     <h5>@{{person.email_address}}</h5>
                 </div>
             </div>

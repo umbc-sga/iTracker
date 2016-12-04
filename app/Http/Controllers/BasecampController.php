@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Profile;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
@@ -105,8 +106,10 @@ class BasecampController extends Controller
     public function person(Request $request, $person){
         $apiPerson = $this->api->person($person);
 
-        if(!is_null($apiPerson) && property_exists($apiPerson, 'id'))
-            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->first();
+        if(!is_null($apiPerson) && property_exists($apiPerson, 'id')) {
+            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->with('user')->first();
+            $apiPerson->user = User::fullUser($apiPerson->profile->user->id);
+        }
 
         return response()->json($apiPerson);
     }
@@ -149,8 +152,11 @@ class BasecampController extends Controller
 
         foreach ($profiles as $profile)
             foreach ($profile->user->organizations as $organization)
-                if ($organization->organization->api_id == $department->id)
-                    $department->memberships[$ids->search($profile->api_id)]->position = $organization->role;
+                if ($organization->organization->api_id == $department->id) {
+                    $person = &$department->memberships[$ids->search($profile->api_id)];
+                    $person->position = $organization->title;
+                    $person->role = $organization->role;
+                }
 
         return response()->json($department);
     }
