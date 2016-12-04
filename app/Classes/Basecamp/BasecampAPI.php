@@ -360,8 +360,17 @@ class BasecampAPI
         if($schedule = &$project->dock->schedule)
             $schedule->data = $this->get($schedule->url);
 
-        if($str = $this->getTeamString($project->description))
+        //Departments involved
+        $project->departments = null;
+
+        if($str = $this->getTeamString($project->description)){
+            $matches = [];
+
+            preg_match_all('/([0-9]+)/', $str, $matches);
             $project->description = str_replace($str, '', $project->description);
+
+            $project->departments = collect($matches)->splice(1)->last();
+        }
 
         if($this->cacheEnabled())
             cache([$cacheName => json_encode($project)], $this->cacheDecayTime());

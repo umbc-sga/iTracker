@@ -4,6 +4,33 @@
     <div class="col-xs-12">
         <div class="row">
             <div class="col-xs-12 col-md-6">
+                <div class="box box-primary" data-ng-show="project.picture || canEdit">
+                    <div data-ng-if="canEdit" class="hidden">
+                        <form data-ng-submit="">
+                            <input type="file" name="image" custom-on-change="uploadImage" />
+                        </form>
+                    </div>
+                    <div data-ng-show="project.picture">
+                        <img data-ng-src="@{{ project.picture }}"
+                             class="projectPicture"
+                             data-ng-class="{canEdit: canEdit}"
+                             data-ng-click="upload()"
+                             title="project picture"
+                             alt="project picture"
+                             width="100%"
+                             height="100%" />
+                    </div>
+                    <div data-ng-show="!project.picture && canEdit" style="cursor: pointer">
+                        <img src="//placeholdit.imgix.net/~text?txtsize=33&txt=upload&w=350&h=150"
+                             class="projectPicture"
+                             data-ng-class="{canEdit: canEdit}"
+                             data-ng-click="upload()"
+                             title="project picture"
+                             alt="project picture"
+                             width="100%"
+                             height="100%" />
+                    </div>
+                </div>
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">

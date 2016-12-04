@@ -11,5 +11,5 @@
         </ol>
     </section>
 
-    <section class="content project"></section>
+    <section class="content project" data-token="{{csrf_token()}}"></section>
 </div>

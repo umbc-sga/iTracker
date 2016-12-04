@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
-    public function __construct()
-    {
-        auth()->loginUsingId(2);
-    }
-
     protected function getOrganizationPermission(User $user, Organization $org,  $name){
         return $user->email == env('APP_SUPER_ADMIN')
             || false !== OrganizationUser::where('user_id', $user->id)
