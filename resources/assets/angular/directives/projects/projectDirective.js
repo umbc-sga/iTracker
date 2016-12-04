@@ -50,7 +50,7 @@ angular.module('itracker')
                             .then((response) => {
                                 let project = $scope.project = response.data;
 
-                                if(project.departments)
+                                if(project.departments && $scope.data.user)
                                     for(let org of $scope.data.user.organizations)
                                         if (org.organization.api_id == project.departments[0])
                                             $scope.canEdit = true;
