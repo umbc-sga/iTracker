@@ -108,7 +108,8 @@ class BasecampController extends Controller
 
         if(!is_null($apiPerson) && property_exists($apiPerson, 'id')) {
             $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->with('user')->first();
-            $apiPerson->user = User::fullUser($apiPerson->profile->user->id);
+            if($apiPerson->profile)
+                $apiPerson->user = User::fullUser($apiPerson->profile->user->id);
         }
 
         return response()->json($apiPerson);
