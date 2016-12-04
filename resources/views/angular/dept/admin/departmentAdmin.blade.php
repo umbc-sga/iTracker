@@ -5,9 +5,6 @@
 </div>
 <div class="box-body">
     @{{ perms }}
-    <div class="officerAdmin"
-         data-permissions="perms"
-         data-department="department"></div>
     <div class="officerExec"
          data-permissions="perms"
          data-department="department"></div>

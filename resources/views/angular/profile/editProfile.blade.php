@@ -2,13 +2,9 @@
     <div class="box box-primary col-xs-12">
         <h3>Modify how you see fit!</h3>
         <div class="box box-danger" data-ng-repeat="error in errors">
-            @{{ error }}
+            @{{ error[0] }}
         </div>
-        <form action="{{route('profile.store')}}" method="post" style="display:inline;">
-            <input type="hidden" name="_method" value="PUT">
-            {{ csrf_field() }}
-            <input type="hidden" name="profile" value="@{{profile.api_id}}">
-
+        <form style="display:inline;" data-ng-submit="!loading && submit('{{csrf_token()}}')">
             <label for="bio">Biography</label>
             <textarea required name="bio" class="form-control" data-ng-model="profile.biography"></textarea>
 
@@ -30,8 +26,7 @@
 
             <label for="fact">One fact about you</label>
             <input required type="text" name="fact" class="form-control" data-ng-model="profile.fact" maxlength="200">
-
-            <button type="submit" class="btn btn-success btn-flat pull-right">Save</button>
+            <button type="submit" value="submit" class="btn btn-success btn-flat pull-right" data-ng-class="{'disabled': loading}">Save</button>
         </form>
     </div>
 </div>

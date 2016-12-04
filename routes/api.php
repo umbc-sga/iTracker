@@ -42,7 +42,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
     Route::post('dept/{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept']);
     Route::post('dept/{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
 
-
+    Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
     Route::post('currentUser', ['as' => 'currentUser', 'middleware' => ['web', 'auth'], 'uses' => 'APIController@currentUser']);
 });
 

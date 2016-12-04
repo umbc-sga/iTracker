@@ -101,7 +101,6 @@ class BasecampController extends Controller
         return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
     }
 
-    //@todo aggregate all relevant personal info
     // Include all projects and departments
     public function person(Request $request, $person){
         $apiPerson = $this->api->person($person);
