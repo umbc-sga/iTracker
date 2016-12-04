@@ -6,6 +6,7 @@ angular.module('itracker')
             return {
                 restrict: 'C',
                 scope: {
+                    'user': '=',
                     'permissions': '=',
                     'department': '='
                 },

@@ -5,6 +5,7 @@
 </div>
 <div class="box-body">
     <div class="officerExec"
+         data-user="user"
          data-permissions="perms"
          data-department="department"></div>
 </div>

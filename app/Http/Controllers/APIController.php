@@ -18,6 +18,6 @@ class APIController extends Controller
         $user = User::fullUser(auth()->id());
         if($user->email == env('APP_SUPER_ADMIN'))
             $user->superadmin = true;
-        return response()->json();
+        return response()->json($user);
     }
 }

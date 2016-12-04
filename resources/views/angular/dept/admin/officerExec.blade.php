@@ -12,25 +12,25 @@
 
     @{{ department.memberships[personID].name ? 'Editing '+department.memberships[personID].name : ''}}
 
-    <div class="col-xs-12" data-ng-show="permissions.indexOf('makeExec') >= 0 || permissions.indexOf('editOfficers') >= 0">
+    <div class="col-xs-12" data-ng-show="user.superadmin || permissions.indexOf('makeExec') >= 0 || permissions.indexOf('editOfficers') >= 0">
         <h3>Modify Position</h3>
         <button type="button" class="btn btn-lg"
                 title="Executive Cabinet"
-                data-ng-show="permissions.indexOf('makeExec') >= 0"
+                data-ng-show="user.superadmin || permissions.indexOf('makeExec') >= 0"
                 data-ng-class="{'btn-success': department.memberships[personID].role.stub == 'exec'}"
                 data-ng-click="makeExec(department.memberships[personID])">
             <i class="fa fa-university" aria-hidden="true"></i>
         </button>
         <button type="button" class="btn btn-lg"
                 title="Cabinet"
-                data-ng-show="permissions.indexOf('editOfficers') >= 0"
+                data-ng-show="user.superadmin || permissions.indexOf('editOfficers') >= 0"
                 data-ng-class="{'btn-success': department.memberships[personID].role.stub == 'cabinet'}"
                 data-ng-click="makeCabinet(department.memberships[personID])">
             <i  class="fa fa-balance-scale" aria-hidden="true"></i>
         </button>
     </div>
 
-    <div class="col-xs-12" data-ng-show="permissions.indexOf('updateMembersInfo') >= 0">
+    <div class="col-xs-12" data-ng-show="user.superadmin || permissions.indexOf('updateMembersInfo') >= 0">
         <div class="row">
             <div class="col-xs-12">
                 <h3>Edit Profile</h3>
