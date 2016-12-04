@@ -150,6 +150,8 @@ class BasecampAPI
         if($this->cacheEnabled() && !$force && ($cached = cache($cacheName)))
             return json_decode($cached);
 
+        $res = null;
+
         //Cache miss call to API
         try {
             $res = $client->request('GET', $resource, [
