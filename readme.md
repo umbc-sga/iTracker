@@ -55,11 +55,12 @@ These steps will take you from a completely clean installation to working
     - You can only edit accounts that are made.
 2. Assuming you have the prerequisites finished and your .env file is filled out you can continue on.
 3. Firstly run `php artisan migrate --seed` from the root project directory to setup all databases for the project
-4. Go to the web url and enable access to your basecamp
+4. Run `php artisan storage:link` to link picture storage to the public directory
+5. Go to the web url and enable access to your basecamp
     - If you enabled access to the wrong account you can destroy credentials with `php artisan basecamp:dropAuth`
-5. Log into the application by clicking in the top right *Login*
+6. Log into the application by clicking in the top right *Login*
     - If you're found in basecamp it will ask you to fill out your profile, this isn't required for now.
-6. When finished setting up correct accounts for departments 
+7. When finished setting up correct accounts for departments 
 
 ## Contributing
 

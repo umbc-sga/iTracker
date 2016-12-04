@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Profile;
+use App\ProjectPicture;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -70,7 +71,18 @@ class BasecampController extends Controller
      * @return \Illuminate\Support\Collection
      */
     public function projects(Request $request){
-        return $this->api->projects();
+        $projects = $this->api->projects();
+
+        $pictures = ProjectPicture::whereIn('api_id', $projects->pluck('id'))->get()->keyBy('api_id');
+
+        return $projects->transform(function($project) use ($pictures){
+
+            $project->picture = $pictures->get($project->id, null);
+            if($project->picture)
+                $project->picture = asset('storage' . $project->picture->src);
+
+            return $project;
+        });
     }
 
     /**
@@ -80,7 +92,12 @@ class BasecampController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function project(Request $request, $project){
-        return response()->json($this->api->project($project));
+        $project = $this->api->project($project);
+        if($project) {
+            $project->picture = asset('storage'.ProjectPicture::where('api_id', $project->id)->first()->src);
+        }
+
+        return response()->json($project);
     }
 
     /**
@@ -101,7 +118,12 @@ class BasecampController extends Controller
         return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
     }
 
-    // Include all projects and departments
+    /**
+     * Get basecamp project
+     * @param Request $request
+     * @param $person int Person ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function person(Request $request, $person){
         $apiPerson = $this->api->person($person);
 
@@ -130,7 +152,21 @@ class BasecampController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function group(Request $request, $group){
-        return response()->json($this->api->team($group));
+        $group = $this->api->team($group);
+
+        $projects = collect($group->projects);
+        $pictures = ProjectPicture::whereIn('api_id', $projects->pluck('id'))->get()->keyBy('api_id');
+
+        $group->projects = $projects->transform(function($project) use ($pictures){
+
+            $project->picture = $pictures->get($project->id, null);
+            if($project->picture)
+                $project->picture = asset('storage' . $project->picture->src);
+
+            return $project;
+        });;
+
+        return response()->json($group);
     }
 
     /**

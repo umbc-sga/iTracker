@@ -23,6 +23,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('project', '[0-9]+');
     Route::post('project/{project}/history', ['as' => 'projectHistory', 'uses' => 'BasecampController@history'])
         ->where('project', '[0-9]+');
+    Route::post('project/{project}/picture', ['as' => 'projectImage', 'middleware' => ['web', 'auth'], 'uses' => 'ProjectController@imageUpload'])
+        ->where('project', '[0-9]+');
     Route::post('project/{project}/events/{page?}', ['as' => 'projectEvents', 'uses' => 'BasecampController@projectEvents'])
         ->where('project', '[0-9]+')
         ->where('page', '[1-9]+[0-9]*');
@@ -51,7 +53,10 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('dept', '[0-9]+');
 
     Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
+    Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
     Route::post('currentUser', ['as' => 'currentUser', 'middleware' => ['web', 'auth'], 'uses' => 'APIController@currentUser']);
+
+    Route::post('/', ['as' => 'root', 'uses' => 'APIController@NoAPIResponse']);
 });
 
 Route::any('/{any}', 'APIController@NoAPIResponse')->where('any', '.*');
