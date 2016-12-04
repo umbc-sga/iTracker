@@ -19,6 +19,10 @@ class Organization extends Model
             'user_id', 'organization_id', 'id');
     }
 
+    public function institution(){
+        return $this->hasMany(OrganizationUser::class, 'organization_id', 'id');
+    }
+
     /**
      * @param $teams Collection
      * @param BasecampAPI $api

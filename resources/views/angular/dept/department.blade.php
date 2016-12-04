@@ -26,7 +26,10 @@
                     @{{ department.description.length > 0 ? department.description : 'No description :(' }}
                 </div>
             </div>
-            <div class="meetTheTeam" data-members="department.memberships" data-team-title="Meet the Team"></div>
+            <div class="meetTheTeam"
+                 data-members="department.memberships"
+                 data-team-title="Meet the Team"
+                 data-show-positions="true"></div>
         </div>
         <div class="col-xs-12 col-md-7">
             <div class="box box-primary">

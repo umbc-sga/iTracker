@@ -15,10 +15,15 @@
                     </div>
                 </a>
                 <div class="col-xs-8">
+                    <div class="pull-right" data-ng-show="showPositions">
+                        <i data-ng-show="person.position.title[0] == 'E'" class="fa fa-university pull-right" title="Executive Cabinet" aria-hidden="true"></i>
+                        <i data-ng-show="person.position.title[0] == 'C'" class="fa fa-balance-scale pull-right" title="Cabinet" aria-hidden="true"></i>
+                        <i data-ng-show="person.position == null" class="fa fa-question pull-right" title="Has not joined iTracker" aria-hidden="true"></i>
+                    </div>
+
                     <a data-ng-href="{{url('/person')}}/@{{person.id}}">
                         <h4>@{{person.name}}</h4>
                     </a>
-                    <h5>@{{person.position}}</h5>
                     <h5>@{{person.email_address}}</h5>
                 </div>
             </div>

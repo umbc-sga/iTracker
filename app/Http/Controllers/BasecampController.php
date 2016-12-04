@@ -137,7 +137,21 @@ class BasecampController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function dept(Request $request, $deptName){
-        return response()->json($this->api->teamByName($deptName));
+        $department = $this->api->teamByName($deptName);
+        $ids = collect($department->memberships)->pluck('id');
+        $profiles = Profile::whereIn('api_id', $ids)
+                            ->with('user',
+                                'user.organizations',
+                                'user.organizations.organization',
+                                'user.organizations.role')
+                            ->get();
+
+        foreach($profiles as $profile)
+            foreach($profile->user->organizations as $organization)
+                if($organization->organization->api_id == $department->id)
+                    $department->memberships[$ids->search($profile->api_id)]->position = $organization->role;
+
+        return response()->json($department);
     }
 
     /**
