@@ -94,7 +94,8 @@ class BasecampController extends Controller
     public function project(Request $request, $project){
         $project = $this->api->project($project);
         if($project) {
-            $project->picture = asset('storage'.ProjectPicture::where('api_id', $project->id)->first()->src);
+            if($picture = ProjectPicture::where('api_id', $project->id)->first())
+            $project->picture = asset('storage'.$picture->src);
         }
 
         return response()->json($project);
