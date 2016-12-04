@@ -195,7 +195,6 @@ class BasecampAPI
         $resource = ltrim($resource,'/');
 
         //Cache miss call to API
-        //@todo handle exceptions
         $res = $client->request('PUT', $resource, [
             'json' => $data,
             'headers' => [
