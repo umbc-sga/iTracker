@@ -1,10 +1,14 @@
 <div class="box-header with-border">
     <h3 class="box-title">
-        Department Admin -- @{{ permissions.role.title }}
+        Department Admin -- @{{ title }}
     </h3>
 </div>
 <div class="box-body">
-    <div class="officerAdmin" data-permissions="permissions.role.permissions"></div>
-    <div class="officerExec" data-permissions="permissions.role.permissions"></div>
-    @{{ permissions.role.permissions }}
+    @{{ perms }}
+    <div class="officerAdmin"
+         data-permissions="perms"
+         data-department="department"></div>
+    <div class="officerExec"
+         data-permissions="perms"
+         data-department="department"></div>
 </div>

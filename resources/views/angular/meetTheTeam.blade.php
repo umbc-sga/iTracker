@@ -24,6 +24,7 @@
                     <a data-ng-href="{{url('/person')}}/@{{person.id}}">
                         <h4>@{{person.name}}</h4>
                     </a>
+                    <h5 data-ng-show="person.title">@{{person.title}}</h5>
                     <h5>@{{person.email_address}}</h5>
                 </div>
             </div>
