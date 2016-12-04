@@ -32,6 +32,11 @@ class ProfileController extends Controller
     }
 
     public function profile(Request $request, $person){
-        return Profile::where('api_id', $person)->first();
+        if($profile = Profile::where('api_id', $person)->first())
+            return $profile;
+        else
+            return response([
+                'error' => 'No profile found'
+            ])->setStatusCode(404);
     }
 }

@@ -17,4 +17,8 @@ class OrganizationUser extends Model
     public function organization(){
         return $this->hasOne(Organization::class, 'id', 'organization_id');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

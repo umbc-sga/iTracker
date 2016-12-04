@@ -41,6 +41,14 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('group', '[0-9]+');
     Route::post('dept/{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept']);
     Route::post('dept/{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
+    Route::put('dept/{dept}/makeExec/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeExec'])
+        ->where('dept', '[0-9]+')
+        ->where('person', '[0-9]+');
+    Route::put('dept/{dept}/makeCabinet/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeCabinet'])
+        ->where('dept', '[0-9]+')
+        ->where('person', '[0-9]+');
+    Route::put('dept/{dept}/profileEdit', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@editProfile'])
+        ->where('dept', '[0-9]+');
 
     Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
     Route::post('currentUser', ['as' => 'currentUser', 'middleware' => ['web', 'auth'], 'uses' => 'APIController@currentUser']);

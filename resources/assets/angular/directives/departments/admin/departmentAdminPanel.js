@@ -15,7 +15,6 @@ angular.module('itracker')
                     $scope.title = '';
 
                     $scope.$watch('permissions', (permissions) => {
-                        $log.debug(permissions);
                         if(permissions && permissions.role.permissions) {
                             let list = [];
 

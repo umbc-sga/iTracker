@@ -45,7 +45,6 @@ angular.module('itracker')
             getDepartmentPersonWithRole: (roleId, deptId) => request('/dept/'+deptId+'/role/'+roleId),
             getDepartmentProjects: (deptId) => request('/dept/'+deptId+'/projects'),
 
-            getRole: (roleId) => request('/role/'+roleId),
-            changeRole: (person, dept, role) => request('/dept/'+dept+'/person/'+person+'/role/'+role, 'PUT')
+            changeRole: (person, dept, role) => request('/dept/'+dept+'/'+role+'/'+person, 'PUT')
         };
     }]);

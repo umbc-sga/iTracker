@@ -4,7 +4,6 @@
     </h3>
 </div>
 <div class="box-body">
-    @{{ perms }}
     <div class="officerExec"
          data-permissions="perms"
          data-department="department"></div>

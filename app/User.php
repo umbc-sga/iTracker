@@ -62,7 +62,10 @@ class User extends Authenticatable
             )->first();
     }
 
+    //@todo fix login recreating permissions in same organization
     public function syncPermissions(BasecampAPI $api){
+        return null;
+
         if($person = $api->personByEmail($this->email)){
             $teams = $api->personTeams($person)->pluck('id')->toArray();
 
@@ -78,7 +81,7 @@ class User extends Authenticatable
 
             $orgs = Organization::sync(null, $api)['organizations'];
 
-            $normie = OrganizationRoles::where('title', 'LIKE', '%general%')->first();
+            $normie = OrganizationRoles::where('stub', 'peasant')->first();
 
             //Add to organizations they're in
             if($normie)
