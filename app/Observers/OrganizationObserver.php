@@ -24,13 +24,13 @@ class OrganizationObserver
 
         $normie = OrganizationRoles::where('title', 'LIKE', '%general%')->first();
 
-        foreach($profiles as $profile){
-            OrganizationUser::create([
-                'user_id' => $profile->user->id,
-                'organization_id' => $organization->id,
-                'organization_role' => $normie->id,
-                'title' => $normie->title
-            ]);
-        }
+        if($normie)
+            foreach($profiles as $profile)
+                OrganizationUser::create([
+                    'user_id' => $profile->user->id,
+                    'organization_id' => $organization->id,
+                    'organization_role' => $normie->id,
+                    'title' => $normie->title
+                ]);
     }
 }

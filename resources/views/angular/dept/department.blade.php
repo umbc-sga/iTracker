@@ -40,6 +40,10 @@
                     <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>
+            <div class="box box-danger departmentAdmin"
+                 data-ng-show="orgUser"
+                 data-user="orgUser"
+                 data-permissions="orgPermissions"></div>
         </div>
         {{--
         <div class="col-md-4">

@@ -583,27 +583,57 @@ class BasecampAPI
             return null;
 
         //Get all projects
-        $person->projects = $this->projects()->filter(function($project) use ($person){
-            foreach($this->peopleInProject($project->id) as $peep)
-                if($peep->id == $person->id)
-                    return true;
-
-            return false;
-        })->values();
+        $person->projects = $this->personProjects($person);
 
         //Get all departments they're in
-        $person->departments = $this->teams()->filter(function($team) use ($person){
+        $person->departments = $this->personTeams($person);
+
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
+
+        return $person;
+    }
+
+    /**
+     * Get all teams a person is in
+     * @param $person
+     * @return Collection
+     */
+    public function personTeams($person){
+        return $this->teams()->filter(function($team) use ($person){
             foreach($this->peopleInProject($team->id) as $peep)
                 if($peep->id == $person->id)
                     return true;
 
             return false;
         })->values();
+    }
 
+    /**
+     * Get all projects a person has
+     * @param $person object Person object
+     * @return Collection
+     */
+    public function personProjects($person){
+        return $this->projects()->filter(function($project) use ($person){
+            foreach($this->peopleInProject($project->id) as $peep)
+                if($peep->id == $person->id)
+                    return true;
 
-        if($this->cacheEnabled())
-            cache([$cacheName => json_encode($person)], $this->cacheDecayTime());
+            return false;
+        })->values();
+    }
 
-        return $person;
+    /**
+     * Get person by email
+     * @param $email string Email
+     * @return object|null
+     */
+    public function personByEmail($email){
+        foreach($this->people() as $person)
+            if($person->email_address == $email)
+                return $person;
+
+        return null;
     }
 }

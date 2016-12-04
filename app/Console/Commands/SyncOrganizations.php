@@ -44,11 +44,8 @@ class SyncOrganizations extends Command
      */
     public function handle()
     {
-        //DB::beginTransaction();
-
         $orgs = Organization::sync($this->api->teams());
 
-        //DB::rollBack();
         $this->info('Synced, there are '.$orgs['organizations']->count().' organizations');
         $this->info('Deleted '.$orgs['deleted'].' organizations');
 

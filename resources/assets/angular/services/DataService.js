@@ -17,7 +17,8 @@ angular.module('itracker')
             activeTodoListsRemainingCount: 0,
             completedTodoListsCompletedCount: 0,
             completedTodoListsRemainingCount: 0,
-            emails: {}
+            emails: {},
+            user: null
         };
 
         /**

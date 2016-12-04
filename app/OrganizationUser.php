@@ -8,7 +8,7 @@ class OrganizationUser extends Model
 {
     protected $fillable = ['user_id', 'organization_id', 'organization_role', 'title'];
 
-    protected $hidden = ['id'];
+    protected $hidden = ['id', 'created_at', 'updated_at', 'organization_role', 'organization_id', 'user_id'];
 
     public function role(){
         return $this->hasOne(OrganizationRoles::class, 'id', 'organization_role');

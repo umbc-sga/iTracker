@@ -27,15 +27,10 @@ class OrganizationSeeder extends Seeder
             $titles[$key] = OrganizationRoles::create(['title' => $title]);
 
         $permissions = collect([
-            'addOfficer' => [$titles['exec']],
-            'updatePersonalInfo' => $titles,
             'makeAdmin' => [$titles['exec']],
-            'createPosition' => $titles,
             'makeExec' => [$titles['exec']],
-            'removePosition' => $titles,
-            'demotePerson' => [$titles['exec']],
-            'updateMEmbersInfo' => [$titles['exec'], $titles['normie']],
-            'removeCabinetOfficer' => [$titles['exec']]
+            'editOfficers' => [$titles['exec']],
+            'updateMembersInfo' => [$titles['exec'], $titles['normie']],
         ]);
 
         $permissions->transform(function($organizations, $permission){

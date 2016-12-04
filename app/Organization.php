@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Classes\Basecamp\BasecampAPI;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,8 @@ class Organization extends Model
 
     protected $guarded = ['id'];
 
+    protected $hidden = ['created_at', 'updated_at', 'id'];
+
     public function people(){
         return $this->hasManyThrough(User::class, OrganizationUser::class,
             'user_id', 'organization_id', 'id');
@@ -18,9 +21,13 @@ class Organization extends Model
 
     /**
      * @param $teams Collection
+     * @param BasecampAPI $api
      * @return array
      */
-    public static function sync($teams){
+    public static function sync($teams, BasecampAPI $api = null){
+        if(is_null($teams))
+            $teams = $api->teams();
+
         $orgs = Organization::all();
 
         $validOrgs = $teams->pluck('id');
