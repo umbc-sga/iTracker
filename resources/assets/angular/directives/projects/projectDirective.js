@@ -32,8 +32,6 @@ angular.module('itracker')
                         data.append('_token', $scope.token);
                         data.append('image', file);
 
-                        $log.debug(data);
-
                         apiService.request('project/'+$scope.project.id+'/picture', 'POST', data, {
                             //Headers
                             'Content-Type': undefined
@@ -58,62 +56,65 @@ angular.module('itracker')
                             .catch((response) => $log.error(response))
                             .finally(()=>$scope.loaded = true);
 
-                    let getProjectTodos = () => basecampService.getProjectTodos(projectId)
-                        .then((response) => {
-                            let lists = response.data;
+                    let getProjectTodos = () =>
+                        basecampService.getProjectTodos(projectId)
+                            .then((response) => {
+                                let lists = response.data;
 
-                            for(let list of lists){
-                                let ratio = list.completed_ratio.split('/');
-                                list.ratio = Math.floor((ratio[0]/ratio[1])*100);
-                            }
-
-                            $scope.project.todo = lists;
-                        })
-                        .catch((response) => $log.error(response))
-                        .finally(() => $scope.todoLoaded = true);
-
-                    let getProjectHistory = () => basecampService.getProjectHistory(projectId)
-                        .then((response) => {
-                            let timeline = [];
-
-                            for(let moment of response.data){
-                                let obj = {
-                                    type: moment.type,
-                                    action: '',
-                                    description: moment.description,
-                                    updated_at: moment.updated_at,
-                                    created_at: moment.created_at,
-                                    url: moment.url,
-                                    creator: moment.creator
-                                };
-
-                                switch(moment.type){
-                                    case 'Upload':
-                                        obj.action = 'uploaded '+moment.filename;
-                                        break;
-                                    case 'Todo':
-                                        obj.action = (moment.completed ? 'completed' : '') + moment.content;
-                                        break;
-                                    default:
-                                        break;
+                                for(let list of lists){
+                                    let ratio = list.completed_ratio.split('/');
+                                    list.ratio = Math.floor((ratio[0]/ratio[1])*100);
                                 }
 
-                                timeline.push(obj);
-                            }
+                                $scope.project.todo = lists;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(() => $scope.todoLoaded = true);
 
-                            $scope.project.history = timeline;
-                        })
-                        .catch((response) => $log.error(response))
-                        .finally(() => $scope.historyLoaded = true);
+                    let getProjectHistory = () =>
+                        basecampService.getProjectHistory(projectId)
+                            .then((response) => {
+                                let timeline = [];
+
+                                for(let moment of response.data){
+                                    let obj = {
+                                        type: moment.type,
+                                        action: '',
+                                        description: moment.description,
+                                        updated_at: moment.updated_at,
+                                        created_at: moment.created_at,
+                                        url: moment.url,
+                                        creator: moment.creator
+                                    };
+
+                                    switch(moment.type){
+                                        case 'Upload':
+                                            obj.action = 'uploaded '+moment.filename;
+                                            break;
+                                        case 'Todo':
+                                            obj.action = (moment.completed ? 'completed' : '') + moment.content;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    timeline.push(obj);
+                                }
+
+                                $scope.project.history = timeline;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(() => $scope.historyLoaded = true);
 
 
                     $scope.bootstrap = () => {
                         $scope.loaded = false;
                         $scope.todoLoaded = false;
                         $scope.historyLoaded = false;
-                        getProject();
-                        getProjectTodos();
-                        getProjectHistory();
+                        getProject().then(() => {
+                            getProjectTodos();
+                            getProjectHistory();
+                        });
                     };
 
                     $scope.bootstrap();
