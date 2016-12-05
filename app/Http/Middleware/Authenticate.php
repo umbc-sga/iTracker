@@ -35,7 +35,8 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         if ($this->auth->guest()) {
-            if ($request->ajax()) {
+
+            if ($request->acceptsJson()) {
                 return response([
                     'json' => 'Unauthorized.'
                     ])->setStatusCode(401);

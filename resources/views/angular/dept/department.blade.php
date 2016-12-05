@@ -26,7 +26,10 @@
                     @{{ department.description.length > 0 ? department.description : 'No description :(' }}
                 </div>
             </div>
-            <div class="meetTheTeam" data-members="department.memberships" data-team-title="Meet the Team"></div>
+            <div class="meetTheTeam"
+                 data-members="department.memberships"
+                 data-team-title="Meet the Team"
+                 data-show-positions="true"></div>
         </div>
         <div class="col-xs-12 col-md-7">
             <div class="box box-primary">
@@ -40,6 +43,11 @@
                     <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>
+            <div class="box box-danger departmentAdmin"
+                 data-ng-show="orgPermissions.role.stub != 'peasant' || orgUser.superadmin"
+                 data-department="department"
+                 data-user="orgUser"
+                 data-permissions="orgPermissions"></div>
         </div>
         {{--
         <div class="col-md-4">

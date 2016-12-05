@@ -48,7 +48,7 @@ return [
     | Date version
     |
     */
-    'version' => '2016.11.25',
+    'version' => '2016.12.4',
 
     /*
     |--------------------------------------------------------------------------
@@ -189,10 +189,10 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Laravel\Socialite\SocialiteServiceProvider::class,
-        Zizaco\Entrust\EntrustServiceProvider::class,
 
         \App\Providers\BasecampProvider::class,
         \App\Providers\BasecampAPIProvider::class,
+        \App\Providers\OrganizationProvider::class,
 
     ],
 
@@ -243,7 +243,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

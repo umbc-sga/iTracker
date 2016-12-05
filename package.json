@@ -4,6 +4,7 @@
     "node": "^6.9.0"
   },
   "scripts": {
+    "build": "gulp build",
     "prod": "gulp prod",
     "dev": "gulp"
   },
