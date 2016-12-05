@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Profile;
+use App\ProjectPicture;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Classes\Basecamp\BasecampAPI;
@@ -69,7 +71,18 @@ class BasecampController extends Controller
      * @return \Illuminate\Support\Collection
      */
     public function projects(Request $request){
-        return $this->api->projects();
+        $projects = $this->api->projects();
+
+        $pictures = ProjectPicture::whereIn('api_id', $projects->pluck('id'))->get()->keyBy('api_id');
+
+        return $projects->transform(function($project) use ($pictures){
+
+            $project->picture = $pictures->get($project->id, null);
+            if($project->picture)
+                $project->picture = asset('storage' . $project->picture->src);
+
+            return $project;
+        });
     }
 
     /**
@@ -79,7 +92,13 @@ class BasecampController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function project(Request $request, $project){
-        return response()->json($this->api->project($project));
+        $project = $this->api->project($project);
+        if($project) {
+            if($picture = ProjectPicture::where('api_id', $project->id)->first())
+            $project->picture = asset('storage'.$picture->src);
+        }
+
+        return response()->json($project);
     }
 
     /**
@@ -100,13 +119,20 @@ class BasecampController extends Controller
         return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
     }
 
-    //@todo aggregate all relevant personal info
-    // Include all projects and departments
+    /**
+     * Get basecamp project
+     * @param Request $request
+     * @param $person int Person ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function person(Request $request, $person){
         $apiPerson = $this->api->person($person);
 
-        if(!is_null($apiPerson) && property_exists($apiPerson, 'id'))
-            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->first();
+        if(!is_null($apiPerson) && property_exists($apiPerson, 'id')) {
+            $apiPerson->profile = Profile::where('api_id', $apiPerson->id)->with('user')->first();
+            if($apiPerson->profile)
+                $apiPerson->user = User::fullUser($apiPerson->profile->user->id);
+        }
 
         return response()->json($apiPerson);
     }
@@ -127,7 +153,21 @@ class BasecampController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function group(Request $request, $group){
-        return response()->json($this->api->team($group));
+        $group = $this->api->team($group);
+
+        $projects = collect($group->projects);
+        $pictures = ProjectPicture::whereIn('api_id', $projects->pluck('id'))->get()->keyBy('api_id');
+
+        $group->projects = $projects->transform(function($project) use ($pictures){
+
+            $project->picture = $pictures->get($project->id, null);
+            if($project->picture)
+                $project->picture = asset('storage' . $project->picture->src);
+
+            return $project;
+        });;
+
+        return response()->json($group);
     }
 
     /**
@@ -136,8 +176,26 @@ class BasecampController extends Controller
      * @param $deptName string Name of department
      * @return \Illuminate\Http\JsonResponse
      */
-    public function dept(Request $request, $deptName){
-        return response()->json($this->api->teamByName($deptName));
+    public function dept(Request $request, $deptName)
+    {
+        $department = $this->api->teamByName($deptName);
+        $ids = collect($department->memberships)->pluck('id');
+        $profiles = Profile::whereIn('api_id', $ids)
+            ->with('user',
+                'user.organizations',
+                'user.organizations.organization',
+                'user.organizations.role')
+            ->get();
+
+        foreach ($profiles as $profile)
+            foreach ($profile->user->organizations as $organization)
+                if ($organization->organization->api_id == $department->id) {
+                    $person = &$department->memberships[$ids->search($profile->api_id)];
+                    $person->position = $organization->title;
+                    $person->role = $organization->role;
+                }
+
+        return response()->json($department);
     }
 
     /**

@@ -17,7 +17,8 @@ angular.module('itracker')
             activeTodoListsRemainingCount: 0,
             completedTodoListsCompletedCount: 0,
             completedTodoListsRemainingCount: 0,
-            emails: {}
+            emails: {},
+            user: null
         };
 
         /**
@@ -121,6 +122,10 @@ angular.module('itracker')
                     }
                 }
             });
+
+            retrievalService.getCurrentUser().then((response) => {
+                this.main.user = response.data;
+            });
         };
 
         return {
@@ -129,6 +134,7 @@ angular.module('itracker')
             main: this.main,
             groups: this.groups,
             projects: this.projects,
-            people: this.people
+            people: this.people,
+            user: this.main.user
         }
     }]);

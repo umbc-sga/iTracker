@@ -38,6 +38,10 @@ class dropBasecampAuth extends Command
      */
     public function handle()
     {
+        if($resp = $this->ask('This will terminate all API access until you reauthorize! Are you sure? (y/N)', 'n'))
+            if(strtolower($resp)[0] == 'n')
+                return null;
+
         Cache::forget('BCaccessToken');
         Cache::forget('BCrefreshToken');
         Cache::forget('BCexpiration');

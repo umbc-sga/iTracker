@@ -47,7 +47,7 @@ class AuthController extends Controller
             ]);
         }
 
-        auth()->login($usr);
+        auth()->login($usr, true);
 
         if($profile = $usr->generateProfile($api))
             return redirect()->route('profile.edit', ['user' => $profile->api_id]);

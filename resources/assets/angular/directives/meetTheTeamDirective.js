@@ -6,7 +6,8 @@ angular.module('itracker')
                 restrict: 'C',
                 scope: {
                     teamTitle: '@',
-                    members: '='
+                    members: '=',
+                    showPositions: '='
                 },
                 templateUrl: '/angular/meetTheTeam'
             };

@@ -1,123 +1,129 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('project', ['$routeParams', '$log', 'basecampService',
-        function($routeParams, $log, basecampService){
+    .directive('project', ['$routeParams', '$log', 'basecampService', 'dataService', 'apiService',
+        function($routeParams, $log, basecampService, dataService, apiService){
             return {
                 restrict: 'C',
+                scope: {
+                    'token': '@'
+                },
                 controller: ['$scope', ($scope) => {
                     let projectId = $routeParams.projectId;
 
                     $scope.project = {};
 
+                    $scope.data = dataService.main;
+                    $scope.canEdit = false;
+
                     $scope.loaded = false;
                     $scope.todoLoaded = false;
                     $scope.historyLoaded = false;
 
-                    basecampService.getProject(projectId)
-                        .then((response) => $scope.project = response.data)
-                        .catch((response) => $log.error(response))
-                        .finally(()=>$scope.loaded = true);
+                    $scope.uploadImage = (event) => {
+                        if(event.target.files.length < 1)
+                            return;
 
-                    basecampService.getProjectTodos(projectId)
-                        .then((response) => {
-                            let lists = response.data;
+                        let file = event.target.files[0];
 
-                            for(let list of lists){
-                                let ratio = list.completed_ratio.split('/');
-                                list.ratio = Math.floor((ratio[0]/ratio[1])*100);
-                            }
+                        let data = new FormData();
 
-                            $scope.project.todo = lists;
+                        data.append('_method', 'POST');
+                        data.append('_token', $scope.token);
+                        data.append('image', file);
+
+                        apiService.request('project/'+$scope.project.id+'/picture', 'POST', data, {
+                            //Headers
+                            'Content-Type': undefined
                         })
-                        .catch((response) => $log.error(response))
-                        .finally(() => $scope.todoLoaded = true);
-
-                    basecampService.getProjectHistory(projectId)
-                        .then((response) => {
-                            let timeline = [];
-
-                            for(let moment of response.data){
-                                let obj = {
-                                    type: moment.type,
-                                    action: '',
-                                    description: moment.description,
-                                    updated_at: moment.updated_at,
-                                    created_at: moment.created_at,
-                                    url: moment.url,
-                                    creator: moment.creator
-                                };
-
-                                switch(moment.type){
-                                    case 'Upload':
-                                        obj.action = 'uploaded '+moment.filename;
-                                        break;
-                                    case 'Todo':
-                                        obj.action = (moment.completed ? 'completed' : '') + moment.content;
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                timeline.push(obj);
-                            }
-
-                            $scope.project.history = timeline;
-                        })
-                        .catch((response) => $log.error(response))
-                        .finally(() => $scope.historyLoaded = true);
-
-                    /*
-                    $scope.prettyDate = function(dateTime){
-                        let dateStr = dateTime.substring(0,dateTime.indexOf('T'));
-                        let year = dateStr.substring(0,dateStr.indexOf('-'));
-                        let rest = dateStr.substring(dateStr.indexOf('-') + 1);
-                        let month = monthNames[parseInt(rest.substring(0,rest.indexOf('-'))) - 1];
-                        rest = rest.substring(rest.indexOf('-') + 1);
-                        return rest + ' ' + month + ' ' + year;
+                            .then((response) => {
+                                if(response.data)
+                                    $scope.bootstrap();
+                            })
+                            .catch((response) => $log.error(response.data))
                     };
 
-                    $scope.page = 1;
-                    $scope.more = true;
-                    $scope.limit = 10;
-                    $scope.pull = true;
+                    let getProject = () =>
+                        basecampService.getProject(projectId)
+                            .then((response) => {
+                                let project = $scope.project = response.data;
 
-                    $scope.getEventSet = function(){
-                        if($scope.pull && $scope.limit >= $scope.events.length){
-                            var curDate = '';
-                            basecampService.getProjectEvents(projectId, $scope.page).then((response) => {
-                                let events = response.data;
+                                if(project.departments && $scope.data.user)
+                                    for(let org of $scope.data.user.organizations)
+                                        if (org.organization.api_id == project.departments[0])
+                                            $scope.canEdit = true;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(()=>$scope.loaded = true);
 
-                                console.log(events);
-                                if(events.length < 50){
-                                    $scope.pull = false;
+                    let getProjectTodos = () =>
+                        basecampService.getProjectTodos(projectId)
+                            .then((response) => {
+                                let lists = response.data;
+
+                                for(let list of lists){
+                                    let ratio = list.completed_ratio.split('/');
+                                    list.ratio = Math.floor((ratio[0]/ratio[1])*100);
                                 }
 
-                                for(let event of events){
-                                    event.created_at = $scope.prettyDate(event.created_at);
-                                    event.updated_at = $scope.prettyDate(event.updated_at);
+                                $scope.project.todo = lists;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(() => $scope.todoLoaded = true);
 
-                                    let date = event.created_at;
-                                    if (date === curDate) {
-                                        event.created_at = '';
+                    let getProjectHistory = () =>
+                        basecampService.getProjectHistory(projectId)
+                            .then((response) => {
+                                let timeline = [];
+
+                                for(let moment of response.data){
+                                    let obj = {
+                                        type: moment.type,
+                                        action: '',
+                                        description: moment.description,
+                                        updated_at: moment.updated_at,
+                                        created_at: moment.created_at,
+                                        url: moment.url,
+                                        creator: moment.creator
+                                    };
+
+                                    switch(moment.type){
+                                        case 'Upload':
+                                            obj.action = 'uploaded '+moment.filename;
+                                            break;
+                                        case 'Todo':
+                                            obj.action = (moment.completed ? 'completed' : '') + moment.content;
+                                            break;
+                                        default:
+                                            break;
                                     }
 
-                                    curDate = date;
-                                    $scope.events.push(event);
+                                    timeline.push(obj);
                                 }
 
-                                $scope.page++;
-                                if($scope.limit >= $scope.events.length){
-                                    $scope.more = false;
-                                }
-                            });
-                        } else if($scope.limit >= $scope.events.length){
-                            $scope.more = false;
-                        }
+                                $scope.project.history = timeline;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(() => $scope.historyLoaded = true);
+
+
+                    $scope.bootstrap = () => {
+                        $scope.loaded = false;
+                        $scope.todoLoaded = false;
+                        $scope.historyLoaded = false;
+                        getProject().then(() => {
+                            getProjectTodos();
+                            getProjectHistory();
+                        });
                     };
-                    //$scope.getEventSet();
-                    */
+
+                    $scope.bootstrap();
                 }],
-                templateUrl: '/angular/proj.project'
+                templateUrl: '/angular/proj.project',
+                link: function(scope, element, attrs){
+                    scope.upload = () => {
+                        $(element).find(' input[type=file]').trigger('click');
+                    }
+                }
             };
         }]);

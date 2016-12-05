@@ -34,6 +34,5 @@ Route::put('project/join', ['as' => 'project.join', 'middleware' => ['auth'], 'u
 
 Route::get('/profile/{user}/edit', ['as' => 'profile.edit', 'middleware' => ['basecamp', 'auth'], 'uses' => 'HomeController@index'])
     ->where('user', '[0-9]+');
-Route::put('/profile', ['as' => 'profile.store', 'middleware' => ['basecamp', 'auth'], 'uses' => 'ProfileController@edit']);
 
 Route::get('/{any?}', ['as' => 'home', 'middleware' => ['basecamp'], 'uses' => 'HomeController@index'])->where('any', '.*');
