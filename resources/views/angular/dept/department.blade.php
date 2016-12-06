@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="box box-danger departmentAdmin"
-                 data-ng-show="orgPermissions.role.stub != 'peasant' || orgUser.superadmin"
+                 data-ng-show="orgUser && (orgPermissions.role.stub != 'peasant' || orgUser.superadmin)"
                  data-department="department"
                  data-user="orgUser"
                  data-permissions="orgPermissions"></div>
