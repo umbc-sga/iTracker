@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
 {
+    /**
+     * Does person in organization have permission?
+     * @param User $user user to check
+     * @param Organization $org Organization
+     * @param $name array|string Array or string of permissions to check
+     * @return bool
+     */
     protected function getOrganizationPermission(User $user, Organization $org, $name){
         if($user->email == env('APP_SUPER_ADMIN')) return true;
 

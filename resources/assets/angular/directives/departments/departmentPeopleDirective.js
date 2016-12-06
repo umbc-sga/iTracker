@@ -10,6 +10,10 @@ angular.module('itracker')
                 },
                 controller: ['$scope', ($scope) => {
                     $scope.departments = [];
+
+                    /**
+                     * Get group data
+                     */
                     for(let group of $scope.groups) {
                         basecampService.getGroup(group.id).then((response) => {
                             response.data.loaded = true;

@@ -126,7 +126,7 @@ class BasecampAPI
      */
     protected function personShouldBeFiltered($person){
         return $this->restrictedEmails->search(strtolower($person->email_address)) !== false
-            || strtolower($person->personable_type) === 'tombstone';
+            || in_array(strtolower($person->personable_type), ['tombstone', 'integration', 'dummyuser']);
     }
 
     /**
@@ -311,6 +311,11 @@ class BasecampAPI
         return $projects;
     }
 
+    /**
+     * Get every page in request (WARNING: DOES NOT CARE ABOUT RAM)
+     * @param $url string url
+     * @return object
+     */
     private function getRecursive($url){
         $resp = $this->get($url);
 
@@ -385,11 +390,20 @@ class BasecampAPI
      */
     public function projectTodos($project)
     {
+        $cacheName = $this->prefix().'project-'.$project->id.'-todos';
+
+        //Check cache
+        if($this->cacheEnabled() && $cached = cache($cacheName))
+            return json_decode($cached);
+
         $todolists = $this->get($project->dock->todoset->data->todolists_url);
 
         foreach($todolists as &$list){
             $list->todos = $this->get($list->todos_url);
         }
+
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($todolists)], $this->cacheDecayTime());
 
         return $todolists;
     }
@@ -401,9 +415,19 @@ class BasecampAPI
      */
     public function projectEvents($project)
     {
-        $events = $this->get($project->dock->schedule->data->entries_url);
+        $cacheName = $this->prefix().'project-'.$project->id.'-events';
 
-        return collect($events)->sortBy('starts_at')->values();
+        //Check cache
+        if($this->cacheEnabled() && $cached = cache($cacheName))
+            return json_decode($cached);
+
+        $events = collect($this->get($project->dock->schedule->data->entries_url))
+                        ->sortBy('starts_at')->values();
+
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($events)], $this->cacheDecayTime());
+
+        return $events;
     }
 
     /**
@@ -414,6 +438,12 @@ class BasecampAPI
      */
     public function projectHistory($project)
     {
+        $cacheName = $this->prefix().'project-'.$project->id.'-history';
+
+        //Check cache
+        if($this->cacheEnabled() && $cached = cache($cacheName))
+            return json_decode($cached);
+
         $buckets = [];
         foreach($project->dock as $dock)
             if(property_exists($dock, 'data'))
@@ -428,8 +458,12 @@ class BasecampAPI
                 .'&bucket='.implode(',', $buckets)
                 .'&sort=created_at&direction=asc', false);
 
-        return $history->flatten(1)
-            ->values();
+        $historicalList = $history->flatten(1)->values();
+
+        if($this->cacheEnabled())
+            cache([$cacheName => json_encode($historicalList)], $this->cacheDecayTime());
+
+        return $historicalList;
     }
 
     /**

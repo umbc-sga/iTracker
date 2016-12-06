@@ -18,16 +18,11 @@ class BasecampController extends Controller
      */
     protected $api;
 
-    private $filteredEmails = [
-        'sga@umbc.edu',
-        'berger@umbc.edu',
-        'saddison@umbc.edu'
-    ];
 
     public function __construct(BasecampAPI $api)
     {
         $this->api = $api;
-        $this->api->setEmailFilters($this->filteredEmails);
+        $this->api->setEmailFilters(explode(',', env('APP_EMAIL_FILTER')));
     }
 
     /**
@@ -150,6 +145,7 @@ class BasecampController extends Controller
         $projects = collect($group->projects);
         $pictures = ProjectPicture::whereIn('api_id', $projects->pluck('id'))->get()->keyBy('api_id');
 
+        //Put project pictures into group projects
         $group->projects = $projects->transform(function($project) use ($pictures){
 
             $project->picture = $pictures->get($project->id, null);

@@ -10,20 +10,15 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentController extends Controller
+class DepartmentController extends OrganizationController
 {
-    protected function getOrganizationPermission(User $user, Organization $org,  $name){
-        return $user->email == env('APP_SUPER_ADMIN')
-            || false !== OrganizationUser::where('user_id', $user->id)
-                    ->where('organization_id', $org->id)
-                    ->with('role', 'role.permissions')
-                    ->first()
-                    ->role
-                    ->permissions
-                    ->pluck('permission')
-                    ->search($name);
-    }
-
+    /**
+     * Make person in department an executive cabinet member
+     * @param Request $request
+     * @param $dept int Department ID
+     * @param $person int Person ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function makeExec(Request $request, $dept, $person){
         $profile = Profile::where('api_id', $person)->with('user')->first();
 
@@ -48,6 +43,13 @@ class DepartmentController extends Controller
         return response()->json(false);
     }
 
+    /**
+     * Make person in department a cabinet member
+     * @param Request $request
+     * @param $dept int Department ID
+     * @param $person int Person ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function makeCabinet(Request $request, $dept, $person){
         $profile = Profile::where('api_id', $person)->with('user')->first();
 
@@ -72,7 +74,14 @@ class DepartmentController extends Controller
         return response()->json(false);
     }
 
+    /**
+     * Edit profile information of someone in department
+     * @param Request $request
+     * @param $dept int Department ID
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editProfile(Request $request, $dept){
+        //Validate profile information
         if($validator = Validator::make($request->all(), [
             'profile' => 'required|numeric',
             'bio' => 'required|string',
@@ -90,11 +99,15 @@ class DepartmentController extends Controller
 
         $org = Organization::where('api_id', $dept)->first();
 
+        //Check whether authed user can edit profile
         if($org && $this->getOrganizationPermission(auth()->user(), $org, 'updateMembersInfo')) {
+            //See if person is in the organization at all
             $user = OrganizationUser::where('user_id', $profile->user->id)
                 ->where('organization_id', $org->id)->with('user', 'user.profile')->first();
 
+            //If user has profile
             if($user->user->profile)
+                //Update it
                 $user->user->profile->update([
                     'biography' => $request->input('bio', null),
                     'classStanding' => $request->input('classStanding', null),

@@ -13,11 +13,17 @@ angular.module('itracker')
                 controller: ['$scope', '$filter', ($scope, $filter) => {
                     let departmentName = () => $filter('departmentHref')($scope.department.name);
 
+                    /**
+                     * Modify profile
+                     * @param profile profile information
+                     * @param token csrf token
+                     * @param internalScope form scope
+                     */
                     $scope.modifyProfile = (profile, token, internalScope) => {
                         $log.debug('exit function');
                         $log.info(profile);
 
-                        apiService.request('/dept/'+$scope.department.id+'/profileEdit', 'PUT', {
+                        return apiService.request('/dept/'+$scope.department.id+'/profileEdit', 'PUT', {
                             _method: 'PUT',
                             _token: token,
                             profile: profile.api_id,
@@ -38,11 +44,15 @@ angular.module('itracker')
                             });
                     };
 
+                    /**
+                     * Make person executive
+                     * @param person Person object
+                     */
                     $scope.makeExec = (person) => {
                         if(!person)
                             return;
 
-                        basecampService.changeRole(person.id, $scope.department.id,'makeExec')
+                        return basecampService.changeRole(person.id, $scope.department.id,'makeExec')
                             .then((response) => {
                                 if(response.data)
                                     basecampService.getDepartment(departmentName())
@@ -50,11 +60,15 @@ angular.module('itracker')
                             });
                     };
 
+                    /**
+                     * Make person cabinet
+                     * @param person Person object
+                     */
                     $scope.makeCabinet = (person) => {
                         if(!person)
                             return;
 
-                        basecampService.changeRole(person.id, $scope.department.id,'makeCabinet')
+                        return basecampService.changeRole(person.id, $scope.department.id,'makeCabinet')
                             .then((response) => {
                                 if(response.data)
                                     basecampService.getDepartment(departmentName())

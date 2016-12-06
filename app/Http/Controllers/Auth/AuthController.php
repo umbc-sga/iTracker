@@ -19,20 +19,37 @@ class AuthController extends Controller
         config()->set('services.google.redirect',route('auth.callback'));
     }
 
+    /**
+     * Login using google driver
+     * @return mixed
+     */
     public function login(){
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * Logout
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout(){
         auth()->logout();
         return redirect()->route('home');
     }
 
+    /**
+     * OAuth callback
+     * @param Request $request
+     * @param BasecampAPI $api
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function callback(Request $request, BasecampAPI $api){
+        //Get google user
         $user = Socialite::driver('google')->user();
 
+        //Store google user into session
         $request->session()->put('google_user', $user);
 
+        //Get user account
         $usr = User::where('email', $user->email)->first();
 
         if(!$usr) {
@@ -47,8 +64,10 @@ class AuthController extends Controller
             ]);
         }
 
+        //Log user in
         auth()->login($usr, true);
 
+        //Generate profile
         if($profile = $usr->generateProfile($api))
             return redirect()->route('profile.edit', ['user' => $profile->api_id]);
 

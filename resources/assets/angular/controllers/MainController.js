@@ -14,52 +14,5 @@ angular.module('itracker')
          */
         $scope.data = dataService.main;
 
-        /**
-         * Recalculate main counters when main active todo lists change
-         */
-        $scope.$watch('main.activeTodoLists', function (activeTodoLists, oldActiveTodoLists) {
-
-            // Do nothing of nothing changed
-            if (activeTodoLists === oldActiveTodoLists) {
-                return;
-            }
-
-            $log.debug('Recalculate main active todo list counters');
-
-            // Reset main counters
-            $scope.main.activeTodoListsCompletedCount = 0;
-            $scope.main.activeTodoListsRemainingCount = 0;
-
-            // Increment counters
-            for(let list of activeTodoLists){
-                $scope.main.activeTodoListsCompletedCount += list.completed_count;
-                $scope.main.activeTodoListsRemainingCount += list.remaining_count;
-            }
-        }, true);
-
-        /**
-         * Recalculate main counters when main completed todo lists change
-         */
-        $scope.$watch('main.completedTodoLists', function (completedTodoLists, oldCompletedTodoLists) {
-
-            // Do nothing of nothing changed
-            if (completedTodoLists === oldCompletedTodoLists) {
-                return;
-            }
-
-            $log.debug('Recalculate main completed todo list counters');
-
-            // Reset counters
-            $scope.main.completedTodoListsCompletedCount = 0;
-            $scope.main.completedTodoListsRemainingCount = 0;
-
-            // Increment counters
-            for(let list of completedTodoLists) {
-                $scope.main.completedTodoListsCompletedCount += list.completed_count;
-                $scope.main.completedTodoListsRemainingCount += list.remaining_count;
-            }
-        }, true);
-
-
         $scope.bootstrap = () => dataService.bootstrap();
     }]);

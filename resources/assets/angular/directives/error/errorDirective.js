@@ -10,9 +10,6 @@ angular.module('itracker')
             },
             controller: ['$scope', function($scope){
                 $scope.data = dataService.main;
-
-                //$scope.message
-                //$scope.error
             }],
             templateUrl: '/angular/error.generic'
         };

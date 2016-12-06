@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('itracker')
     .filter('capitalize', function() {
         return function(input) {

@@ -9,6 +9,11 @@ use App\Profile;
 
 class ProfileController extends Controller
 {
+    /**
+     * Edit profile
+     * @param Request $request
+     * @return array
+     */
     public function edit(Request $request){
         $this->validate($request, [
             'profile' => 'required|numeric',
@@ -31,6 +36,11 @@ class ProfileController extends Controller
         return ['redirectTo' => '/people/'.$request->input('profile')];
     }
 
+    /**
+     * @param Request $request
+     * @param $person int Person API
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function profile(Request $request, $person){
         if($profile = Profile::where('api_id', $person)->first())
             return $profile;

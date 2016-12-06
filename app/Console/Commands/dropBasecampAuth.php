@@ -34,7 +34,6 @@ class dropBasecampAuth extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
      */
     public function handle()
     {
@@ -42,6 +41,7 @@ class dropBasecampAuth extends Command
             if(strtolower($resp)[0] == 'n')
                 return null;
 
+        //Forget basecamp authentication
         Cache::forget('BCaccessToken');
         Cache::forget('BCrefreshToken');
         Cache::forget('BCexpiration');
