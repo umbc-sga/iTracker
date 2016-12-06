@@ -1,5 +1,5 @@
 <div class="box box-widget widget-user-2">
-    <a data-ng-href="{{url('/person')}}/@{{person.id}}/">
+    <a data-ng-href="{{url('/people')}}/@{{person.id}}/">
         <div class="widget-user-header bg-blue" style="height: inherit; overflow: auto">
             <div class="widget-user-image">
                 <img class="img-circle" data-ng-src="@{{person.avatar_url}}" alt="User Avatar">

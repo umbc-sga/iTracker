@@ -50,8 +50,9 @@
                     </div>
                     <div class="box-body">
                         <div class="progress progress-xl progress-striped active" style="height:30px;">
-                            <div class="progress-bar progress-bar-primary"
-                                 style="width: @{{ project.ratio }}%">
+                            <div class="progress-bar"
+                                 data-ng-class="{'progress-bar-primary': project.ratio > 0, 'progress-bar-danger': project.ratio <= 0}"
+                                 style="width: @{{ project.ratio > 0 ? project.ratio : 100 }}%">
                                 <h6>@{{ project.ratio }}%</h6>
                             </div>
                         </div>

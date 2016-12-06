@@ -10,25 +10,25 @@ angular.module('itracker',[
         .when('/', {
             templateUrl: '/angular/pages.home',
         })
-        .when('/departments/people', {
-            templateUrl: '/angular/pages.departmentPeople',
-        })
         .when('/people', {
             templateUrl: '/angular/pages.allPeople',
         })
-        .when('/person/:personId/', {
+        .when('/people/:personId/', {
             templateUrl: '/angular/pages.person',
         })
         .when('/projects/', {
             templateUrl: '/angular/pages.allProjects',
         })
+        .when('/projects/:projectId/', {
+            templateUrl: '/angular/pages.project',
+        })
         .when('/departments', {
             templateUrl: '/angular/pages.allDepartments',
         })
-        .when('/project/:projectId/', {
-            templateUrl: '/angular/pages.project',
+        .when('/departments/people', {
+            templateUrl: '/angular/pages.departmentPeople',
         })
-        .when('/department/:departmentName', {
+        .when('/departments/:departmentName', {
             templateUrl: '/angular/pages.department'
         })
         .when('/profile/:profileId/:action', {
@@ -45,8 +45,4 @@ angular.module('itracker',[
     $logProvider.debugEnabled(window.debug || false);
 
 }]);
-
-var monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-];
 

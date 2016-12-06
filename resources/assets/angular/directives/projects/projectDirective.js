@@ -122,6 +122,9 @@ angular.module('itracker')
                                         case 'Todo':
                                             obj.action = (moment.completed ? 'completed' : '') + moment.content;
                                             break;
+                                        case 'Todolist':
+                                            obj.action = 'todolist ' + moment.name + ' ' + moment.description;
+                                            break;
                                         default:
                                             break;
                                     }

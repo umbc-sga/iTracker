@@ -28,7 +28,7 @@ class ProfileController extends Controller
                 'fact' => $request->input('fact', null),
             ]);
 
-        return ['redirectTo' => '/person/'.$request->input('profile')];
+        return ['redirectTo' => '/people/'.$request->input('profile')];
     }
 
     public function profile(Request $request, $person){

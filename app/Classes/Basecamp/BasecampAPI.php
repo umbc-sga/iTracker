@@ -410,7 +410,7 @@ class BasecampAPI
      * Get project todos
      * @param $project object Project object
      * @todo Handle older history
-     * @return array
+     * @return Collection
      */
     public function projectHistory($project)
     {
@@ -426,11 +426,10 @@ class BasecampAPI
         foreach($types as $type)
             $history[$type] = $this->get('projects/recordings.json?type='.$type
                 .'&bucket='.implode(',', $buckets)
-                .'&sort=created_at&direction=desc', false);
+                .'&sort=created_at&direction=asc', false);
 
         return $history->flatten(1)
-            ->sortByDesc('updated_at')
-            ->values()->all();
+            ->values();
     }
 
     /**

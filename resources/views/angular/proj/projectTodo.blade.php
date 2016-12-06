@@ -40,7 +40,7 @@
                         </td>
                         <td align="center" valign="middle">
                             <span data-ng-repeat="person in todo.assignees">
-                                <a data-ng-href="{{url('/person')}}/@{{person.id}}/">
+                                <a data-ng-href="{{url('/people')}}/@{{person.id}}/">
                                     <img data-ng-src="@{{person.avatar_url}}"
                                          class="img-circle"
                                          style="width: 75px"

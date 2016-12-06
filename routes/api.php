@@ -32,30 +32,37 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
     });
 
 
-
     Route::post('people', ['as' => 'people', 'uses' => 'BasecampController@people']);
-    Route::post('person/{person}', ['as' => 'person', 'uses' => 'BasecampController@person'])
-        ->where('person', '[0-9]+');
-    Route::post('person/{person}/projects', ['as' => 'personProjects', 'uses' => 'BasecampController@personProject'])
-        ->where('person', '[0-9]+');
-    Route::post('person/{person}/profile', ['as' => 'personProjects', 'uses' => 'ProfileController@profile'])
-        ->where('person', '[0-9]+');
+
+    Route::group(['prefix' => 'person'], function() {
+        Route::post('{person}', ['as' => 'person', 'uses' => 'BasecampController@person'])
+            ->where('person', '[0-9]+');
+        Route::post('{person}/projects', ['as' => 'personProjects', 'uses' => 'BasecampController@personProject'])
+            ->where('person', '[0-9]+');
+        Route::post('{person}/profile', ['as' => 'personProjects', 'uses' => 'ProfileController@profile'])
+            ->where('person', '[0-9]+');
+    });
+
 
 
     Route::post('groups', ['as' => 'groups', 'uses' => 'BasecampController@groups']);
     Route::post('group/{group}', ['as' => 'group', 'uses' => 'BasecampController@group'])
         ->where('group', '[0-9]+');
-    Route::post('dept/{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept']);
-    Route::post('dept/{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
-    Route::put('dept/{dept}/makeExec/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeExec'])
-        ->where('dept', '[0-9]+')
-        ->where('person', '[0-9]+');
-    Route::put('dept/{dept}/makeCabinet/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeCabinet'])
-        ->where('dept', '[0-9]+')
-        ->where('person', '[0-9]+');
-    Route::put('dept/{dept}/profileEdit', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@editProfile'])
-        ->where('dept', '[0-9]+');
 
+    Route::group(['prefix' => 'dept'], function() {
+        Route::post('{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept'])
+            ->where('dept', '[0-9]+');
+        Route::post('{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
+
+        Route::put('{dept}/makeExec/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeExec'])
+            ->where('dept', '[0-9]+')
+            ->where('person', '[0-9]+');
+        Route::put('{dept}/makeCabinet/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeCabinet'])
+            ->where('dept', '[0-9]+')
+            ->where('person', '[0-9]+');
+        Route::put('{dept}/profileEdit', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@editProfile'])
+            ->where('dept', '[0-9]+');
+    });
 
     Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
     Route::put('profileStore', ['as' => 'profile.store', 'middleware' => ['web', 'auth'], 'uses' => 'ProfileController@edit']);
