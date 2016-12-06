@@ -52,6 +52,11 @@ angular.module('itracker')
                                     for(let org of $scope.data.user.organizations)
                                         if (org.organization.api_id == project.departments[0])
                                             $scope.canEdit = true;
+
+                                let completed_ratio = project.dock.todoset.data.completed_ratio.split('/');
+                                $scope.project.ratio = completed_ratio[1] == 0 ? -1 : (completed_ratio[0] / completed_ratio[1])*100;
+
+
                             })
                             .catch((response) => $log.error(response))
                             .finally(()=>$scope.loaded = true);

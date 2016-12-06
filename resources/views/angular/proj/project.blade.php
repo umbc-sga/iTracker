@@ -34,7 +34,7 @@
                          height="100%" />
                 </div>
             </div>
-            <div class="box box-primary">
+            <div class="box box-primary" data-ng-show="project.ratio >= 0">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         Progress Bar
@@ -43,8 +43,8 @@
                 <div class="box-body">
                     <div class="progress progress-xl progress-striped active" style="height:30px;">
                         <div class="progress-bar progress-bar-primary"
-                             style="width: @{{(project.dock.todoset.data.completed_ratio.split('/')[0] / project.dock.todoset.data.completed_ratio.split('/')[1])*100}}%">
-                            <h6>@{{ (project.dock.todoset.data.completed_ratio.split('/')[0] / project.dock.todoset.data.completed_ratio.split('/')[1])*100 }}%</h6>
+                             style="width: @{{ project.ratio }}%">
+                            <h6>@{{ project.ratio }}%</h6>
                         </div>
                     </div>
                 </div>
