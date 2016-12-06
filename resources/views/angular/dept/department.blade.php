@@ -5,7 +5,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Home</a></li>
-        <li>Departments</li>
+        <li><a data-ng-href="{{url('departments')}}">Departments</a></li>
         <li class="active">@{{department.name}}</li>
     </ol>
 </section>
