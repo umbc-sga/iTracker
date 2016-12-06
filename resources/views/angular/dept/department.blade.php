@@ -39,7 +39,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div data-ng-show="department.project.count == 0">This department does not have any active projects...YET!</div>
+                    <div data-ng-show="department.projects.length == 0">This department does not have any active projects...YET!</div>
                     <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>
