@@ -28,7 +28,7 @@ angular.module('itracker')
             getPeopleInProject: (projectId) => request('/project/'+projectId+'/people'),
             getProjectTodos: (projectId) => request('/project/'+projectId+'/todos'),
             getProjectHistory: (projectId) => request('/project/'+projectId+'/history'),
-            getProjectEvents: (projectId, page) => request('/project/'+projectId+'/events/'+page),
+            getProjectEvents: (projectId) => request('/project/'+projectId+'/events'),
             getProject: (projectId) => request('/project/'+projectId),
 
             getPeople: () => request('/people'),

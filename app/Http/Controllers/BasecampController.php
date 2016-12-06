@@ -111,14 +111,6 @@ class BasecampController extends Controller
         return $this->api->peopleInProject($project);
     }
 
-    //@todo Migrate to API class
-    public function projectEvents(Request $request, $project, $page = 1){
-        $project = $this->api->project($project);
-
-        $schedule = collect($project->dock)->filter(function($dock){ return $dock->name == 'schedule'; })->first();
-        return $this->api->get(rtrim($schedule->url, '.json').'/entries.json?page='.$page);
-    }
-
     /**
      * Get basecamp project
      * @param Request $request
@@ -219,7 +211,7 @@ class BasecampController extends Controller
     /**
      * Get project Todos
      * @param Request $request
-     * @param $project object Project object
+     * @param $project int Project ID
      * @return \Illuminate\Http\JsonResponse
      */
     public function todos(Request $request, $project){
@@ -229,11 +221,21 @@ class BasecampController extends Controller
     /**
      * Get history of project
      * @param Request $request
-     * @param $project object Project object
+     * @param $project int Project ID
      * @return \Illuminate\Http\JsonResponse
      */
     public function history(Request $request, $project){
         return response()->json($this->api->projectHistory($this->api->project($project)));
+    }
+
+    /**
+     * Get all events in project
+     * @param Request $request
+     * @param $project int Project ID
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function projectEvents(Request $request, $project){
+        return response()->json($this->api->projectEvents($this->api->project($project)));
     }
 
     /**

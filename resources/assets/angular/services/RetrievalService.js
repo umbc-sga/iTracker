@@ -22,17 +22,6 @@ angular.module('itracker')
             basecampService.getPerson(personId).then((response) => {
                 return response.data;
             });
-            /*$scope.getPersonInfo(personId).success(function (data, status, headers, config) {
-             person = data;
-             $scope.getExtraPersonInfo(personId).success(function(data, status, headers, config) {
-             person.bio = data.bio;
-             person.major = data.major;
-             person.classStanding = data.classStanding;
-             person.hometown = data.hometown;
-             person.fact = data.fact;
-             person.position = data.position;
-             })
-             });*/
         };
 
         this.getPersonEvents = function(personID, page) {

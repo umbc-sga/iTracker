@@ -397,8 +397,20 @@ class BasecampAPI
     /**
      * Get project todos
      * @param $project object Project object
-     * @todo Handle older history
      * @return object
+     */
+    public function projectEvents($project)
+    {
+        $events = $this->get($project->dock->schedule->data->entries_url);
+
+        return collect($events)->sortBy('starts_at')->values();
+    }
+
+    /**
+     * Get project todos
+     * @param $project object Project object
+     * @todo Handle older history
+     * @return array
      */
     public function projectHistory($project)
     {

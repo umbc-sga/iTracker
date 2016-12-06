@@ -19,6 +19,8 @@ angular.module('itracker')
                     $scope.loaded = false;
                     $scope.todoLoaded = false;
                     $scope.historyLoaded = false;
+                    $scope.eventsLoaded = false;
+
 
                     $scope.uploadImage = (event) => {
                         if(event.target.files.length < 1)
@@ -76,6 +78,27 @@ angular.module('itracker')
                             .catch((response) => $log.error(response))
                             .finally(() => $scope.todoLoaded = true);
 
+                    let getProjectEvents = () =>
+                        basecampService.getProjectEvents(projectId)
+                            .then((response) => {
+                                let events = [];
+                                let now = new Date();
+
+                                for(let event of response.data){
+                                    let eventStart = new Date(event.starts_at);
+                                    let eventEnd = new Date(event.ends_at);
+                                    if(eventEnd > now && eventStart < now)
+                                        event.live = true;
+
+                                    if(eventEnd > now)
+                                        events.push(event);
+                                }
+
+                                $scope.project.events = events;
+                            })
+                            .catch((response) => $log.error(response))
+                            .finally(() => $scope.eventsLoaded = true);
+
                     let getProjectHistory = () =>
                         basecampService.getProjectHistory(projectId)
                             .then((response) => {
@@ -119,6 +142,7 @@ angular.module('itracker')
                         getProject().then(() => {
                             getProjectTodos();
                             getProjectHistory();
+                            getProjectEvents();
                         });
                     };
 

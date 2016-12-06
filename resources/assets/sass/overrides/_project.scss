@@ -11,6 +11,11 @@
   @include shadow(2);
 }
 
+.projectPicture{
+  display: block;
+  object-fit: cover;
+  max-height: 300px;
+}
 .projectPicture.canEdit{
   -webkit-transition: all 0.25s ease-in-out;
   -moz-transition: all 0.25s ease-in-out;
