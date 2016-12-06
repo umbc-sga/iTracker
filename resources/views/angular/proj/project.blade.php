@@ -73,7 +73,10 @@
             <div class="loader smallLoader" data-ng-show="!historyLoaded"></div>
             <div class="box box-primary col-xs-12" data-ng-show="historyLoaded">
                 <h2>History of the Project</h2>
-                <div class="iTrakertimeline" data-timeline="project.history"></div>
+                <div class="box-body" data-ng-show="project.history.length <= 0">
+                    <h3><small>(No history)</small> </h3>
+                </div>
+                <div class="iTrakertimeline" data-timeline="project.history" data-ng-show="project.history.length > 0"></div>
             </div>
 
             <div class="loader smallLoader" data-ng-show="!todoLoaded"></div>
