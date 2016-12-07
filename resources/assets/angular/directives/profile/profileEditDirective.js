@@ -40,7 +40,7 @@ angular.module('itracker')
                 $scope.submit = (token) => ($scope.exitFunction ? $scope.exitFunction : (token) => {
                     $scope.submitting = true;
 
-                    apiService.request('profileStore', 'PUT', {
+                    return apiService.request('profileStore', 'PUT', {
                         _method: 'PUT',
                         _token: token,
                         profile: $scope.profile.api_id,

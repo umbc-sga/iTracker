@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('itracker')
     .filter('departmentHref', function() {
         return function(input) {

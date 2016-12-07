@@ -46,5 +46,5 @@
     </table>
 </div>
 <div class="box-footer" data-ng-show="readMore">
-    <a href="{{url('/project')}}/@{{project.id}}"><button type="button" class="btn btn-primary btn-block btn-flat">Read More!</button></a>
+    <a href="{{url('/projects')}}/@{{project.id}}"><button type="button" class="btn btn-primary btn-block btn-flat">Read More!</button></a>
 </div>

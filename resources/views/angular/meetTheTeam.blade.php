@@ -5,7 +5,7 @@
         </h3>
         <div class="box-body no-padding">
             <div class="row" style="vertical-align:middle;" data-ng-repeat="person in members | orderBy:'name'">
-                <a data-ng-href="{{url('/person')}}/@{{person.id}}">
+                <a data-ng-href="{{url('/people')}}/@{{person.id}}">
                     <div class="col-xs-4">
                         <img data-ng-src="@{{person.avatar_url}}"
                              style="height: 100%; width: 100%;"
@@ -21,10 +21,10 @@
                         <i data-ng-show="person.role == null" class="fa fa-question pull-right" title="Has not joined iTracker" aria-hidden="true"></i>
                     </div>
 
-                    <a data-ng-href="{{url('/person')}}/@{{person.id}}">
+                    <a data-ng-href="{{url('/people')}}/@{{person.id}}">
                         <h4>@{{person.name}}</h4>
                     </a>
-                    <h5 data-ng-show="person.title">@{{person.position}}</h5>
+                    <h5 data-ng-show="person.title">@{{person.title}}</h5>
                     <h5>@{{person.email_address}}</h5>
                 </div>
             </div>

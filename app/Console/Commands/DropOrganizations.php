@@ -46,6 +46,7 @@ class DropOrganizations extends Command
             if(strtolower($resp)[0] == 'n')
                 return null;
 
+        //Drop all organization information
         Schema::disableForeignKeyConstraints();
         $records = Organization::where('id', '!=', 'null')->delete()
                     + OrganizationUser::where('id', '!=', 'null')->delete()
@@ -54,5 +55,6 @@ class DropOrganizations extends Command
         Schema::enableForeignKeyConstraints();
 
         $this->info($records.' records deleted');
+        $this->warn('You must run php artisan db:seed before syncing organizations');
     }
 }

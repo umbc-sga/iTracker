@@ -14,11 +14,21 @@ class ProjectController extends OrganizationController
 {
     protected $api;
 
+    /**
+     * ProjectController constructor.
+     * @param BasecampAPI $api
+     */
     public function __construct(BasecampAPI $api)
     {
         $this->api = $api;
     }
 
+    /**
+     * Upload image and store it
+     * @param Request $request
+     * @param $project
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function imageUpload(Request $request, $project){
         if($validator = Validator::make($request->all(), [
             'image' => 'required|file|image'

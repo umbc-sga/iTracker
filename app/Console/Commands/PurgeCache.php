@@ -47,7 +47,9 @@ class PurgeCache extends Command
             if(strtolower($resp)[0] == 'n')
                 return null;
 
+        //Purge all cached entries
         $rows = DB::table('cache')->select('key')->where('key', 'like', config('cache.prefix').'api%')->delete();
+
         $this->info('Purged '.$rows.' items from the cache');
     }
 }

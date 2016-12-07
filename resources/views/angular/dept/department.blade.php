@@ -5,7 +5,7 @@
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('/')}}"><i class="fa fa-home"></i> Home</a></li>
-        <li>Departments</li>
+        <li><a data-ng-href="{{url('departments')}}">Departments</a></li>
         <li class="active">@{{department.name}}</li>
     </ol>
 </section>
@@ -39,12 +39,12 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div data-ng-show="department.project.count == 0">This department does not have any active projects...YET!</div>
+                    <div data-ng-show="department.projects.length == 0">This department does not have any active projects...YET!</div>
                     <div class="projectsAtAGlance" data-projects="department.projects" data-read-more="true"></div>
                 </div>
             </div>
             <div class="box box-danger departmentAdmin"
-                 data-ng-show="orgPermissions.role.stub != 'peasant' || orgUser.superadmin"
+                 data-ng-show="orgUser && (orgPermissions.role.stub != 'peasant' || orgUser.superadmin)"
                  data-department="department"
                  data-user="orgUser"
                  data-permissions="orgPermissions"></div>

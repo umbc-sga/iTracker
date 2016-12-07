@@ -13,6 +13,9 @@ angular.module('itracker')
                     $scope.orgUser = null;
                     $scope.orgPermissions = null;
 
+                    /**
+                     * Get department
+                     */
                     basecampService.getDepartment($routeParams.departmentName).then((response) => {
                         $scope.department = response.data;
                     }).catch((err) => {
@@ -21,6 +24,9 @@ angular.module('itracker')
                         $scope.loaded = true;
                     });
 
+                    /**
+                     * Keep authenticated user up to date
+                     */
                     $scope.$watch(()=>dataService.main.user, function(user, oldValue){
                         if(user != null)
                             for(let organization of user.organizations)
