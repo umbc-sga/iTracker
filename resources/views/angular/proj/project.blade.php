@@ -36,7 +36,7 @@
                              class="projectPicture"
                              data-ng-class="{canEdit: canEdit}"
                              data-ng-click="upload()"
-                             title="project picture"
+                             title="Change project picture"
                              alt="project picture"
                              width="100%"
                              height="100%" />
