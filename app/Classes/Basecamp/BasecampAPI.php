@@ -134,7 +134,7 @@ class BasecampAPI
      * @param $resource string Resource URL
      * @param bool $allPages Get all pages in response
      * @param $force bool Force API call, ignore setting
-     * @return object
+     * @return object|array
      */
     public function get($resource, $allPages = true, $force = false){
         $client = new Client([
@@ -184,7 +184,7 @@ class BasecampAPI
      * Put Request to API
      * @param $resource string Resource URL
      * @param $data array Data to pass to api
-     * @return object
+     * @return object|array
      */
     public function put($resource, $data){
         $client = new Client([
@@ -399,7 +399,7 @@ class BasecampAPI
         $todolists = $this->get($project->dock->todoset->data->todolists_url);
 
         foreach($todolists as &$list){
-            $list->todos = $this->get($list->todos_url);
+            $list->todos = array_merge($this->get($list->todos_url), $this->get($list->todos_url.'?completed=true'));
         }
 
         if($this->cacheEnabled())
