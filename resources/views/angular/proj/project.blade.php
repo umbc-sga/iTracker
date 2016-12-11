@@ -83,7 +83,7 @@
                 <div class="box box-primary col-xs-12" data-ng-show="eventsLoaded">
                     <h2>Project Events</h2>
                     <div class="box-body" data-ng-show="project.events.length <= 0">
-                        <h3><small>(No history)</small> </h3>
+                        <h3><small>(No upcoming events)</small> </h3>
                     </div>
                     <div data-ng-repeat="event in project.events">
                         <div class="basecampEvent" data-event="event"></div>
