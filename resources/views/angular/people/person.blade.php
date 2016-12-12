@@ -51,7 +51,7 @@
                 <div class="box-group">
                     <h4 data-ng-show="person.departments.length == 0">This person is not in any departments</h4>
                     <div class="box box-success col-xs-12" data-ng-repeat="department in person.departments | orderBy:'department.name'">
-                        <a data-ng-href="{{url('/department/')}}/@{{ department.name | departmentHref }}" style="color:black">
+                        <a data-ng-href="{{url('/departments/')}}/@{{ department.name | departmentHref }}" style="color:black">
                             <h5>@{{ department.name }}</h5>
                         </a>
                     </div>

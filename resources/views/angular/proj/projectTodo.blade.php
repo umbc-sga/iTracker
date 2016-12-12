@@ -31,9 +31,8 @@
                         <th style="width: 150px;">Assigned To</th>
                     </tr>
 
-                    <tr data-ng-repeat="todo in list.todos">
+                    <tr data-ng-repeat="todo in list.todos | orderBy:'completed'" data-ng-class="{'bg-success':todo.completed}">
                         <td valign="middle">
-
                             <h5>@{{todo.content}}</h5>
                             <h6 data-ng-show="todo.due_on != null">Due: @{{todo.due_on | date}}</h6>
                             <h6>Created: @{{todo.created_at | date}} | Last update: @{{todo.updated_at | date}}</h6>

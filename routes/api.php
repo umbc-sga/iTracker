@@ -50,8 +50,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.', 'middleware' => ['basecamp']]
         ->where('group', '[0-9]+');
 
     Route::group(['prefix' => 'dept'], function() {
-        Route::post('{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept'])
-            ->where('dept', '[0-9]+');
+        Route::post('{dept}', ['as' => 'dept', 'uses' => 'BasecampController@dept']);
         Route::post('{dept}/projects', ['as' => 'deptProjects', 'uses' => 'BasecampController@deptartmentProjects']);
 
         Route::put('{dept}/makeExec/{person}', ['middleware' => ['web', 'auth'], 'uses' => 'DepartmentController@makeExec'])

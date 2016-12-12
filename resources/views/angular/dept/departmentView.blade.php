@@ -1,7 +1,7 @@
 <h2>
     @{{department.name}}
     <small>
-        <a data-ng-href="{{url('/department')}}/@{{department.name | departmentHref}}">See Department</a>
+        <a data-ng-href="{{url('/departments')}}/@{{department.name | departmentHref}}">See Department</a>
     </small>
 </h2>
 <div class="row" style="display: flex; flex-wrap: wrap; align-items: stretch">

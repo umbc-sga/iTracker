@@ -73,7 +73,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li data-ng-repeat="group in data.groups | orderBy: 'name'">
-                                <a data-ng-href="{{url('/department')}}/@{{group.name | departmentHref}}/">
+                                <a data-ng-href="{{url('/departments')}}/@{{group.name | departmentHref}}/">
                                     <i class="fa fa-circle-o"></i>@{{group.name}}
                                 </a>
                             </li>
