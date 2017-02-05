@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('featuredProjects', ['basecampService',
-        function(basecampService){
+    .directive('featuredProjects', ['basecampService', 'apiService',
+        function(basecampService, apiService){
         return {
             restrict: 'C',
             scope: {
@@ -18,6 +18,6 @@ angular.module('itracker')
                             $scope.featuredProjs.push(project);
                         }
             }],
-            templateUrl: '/angular/proj.featuredProjects'
+            templateUrl: apiService.root+'/angular/proj.featuredProjects'
         };
     }]);

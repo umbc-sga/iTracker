@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('projectTodo', [function(){
+    .directive('projectTodo', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
                     todos: '='
                 },
-                templateUrl: '/angular/proj.projectTodo'
+                templateUrl: apiService.root+'/angular/proj.projectTodo'
             };
         }]);

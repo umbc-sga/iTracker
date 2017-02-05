@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('person', ['$routeParams', '$log', 'basecampService',
-        function($routeParams, $log, basecampService){
+    .directive('person', ['$routeParams', '$log', 'basecampService', 'apiService',
+        function($routeParams, $log, basecampService, apiService){
             return {
                 restrict: 'C',
                 controller: ['$scope', ($scope) => {
@@ -17,6 +17,6 @@ angular.module('itracker')
                         .then((response) => $scope.person = response.data)
                         .finally(() => $scope.loaded = true);
                 }],
-                templateUrl: '/angular/people.person'
+                templateUrl: apiService.root+'/angular/people.person'
             };
         }]);

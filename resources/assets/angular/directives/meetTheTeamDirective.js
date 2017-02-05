@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('meetTheTeam', [function(){
+    .directive('meetTheTeam', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
@@ -9,6 +9,6 @@ angular.module('itracker')
                     members: '=',
                     showPositions: '='
                 },
-                templateUrl: '/angular/meetTheTeam'
+                templateUrl: apiService.root+'/angular/meetTheTeam'
             };
         }]);

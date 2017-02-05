@@ -6,36 +6,42 @@ angular.module('itracker',[
     'ngRoute',
 ]).config(['$routeProvider','$locationProvider', '$logProvider', '$compileProvider',
     function ($routeProvider, $locationProvider, $logProvider, $compileProvider) {
+
+    let _base = document
+        .getElementsByTagName('base')[0]
+        .getAttribute('href')
+        .replace(new RegExp(`^https?:\/\/${location.host}`),'');
+
     $routeProvider
         .when('/', {
-            templateUrl: '/angular/pages.home',
+            templateUrl: _base+'/angular/pages.home',
         })
         .when('/people', {
-            templateUrl: '/angular/pages.allPeople',
+            templateUrl: _base+'/angular/pages.allPeople',
         })
         .when('/people/:personId/', {
-            templateUrl: '/angular/pages.person',
+            templateUrl: _base+'/angular/pages.person',
         })
         .when('/projects/', {
-            templateUrl: '/angular/pages.allProjects',
+            templateUrl: _base+'/angular/pages.allProjects',
         })
         .when('/projects/:projectId/', {
-            templateUrl: '/angular/pages.project',
+            templateUrl: _base+'/angular/pages.project',
         })
         .when('/departments', {
-            templateUrl: '/angular/pages.allDepartments',
+            templateUrl: _base+'/angular/pages.allDepartments',
         })
         .when('/departments/people', {
-            templateUrl: '/angular/pages.departmentPeople',
+            templateUrl: _base+'/angular/pages.departmentPeople',
         })
         .when('/departments/:departmentName', {
-            templateUrl: '/angular/pages.department'
+            templateUrl: _base+'/angular/pages.department'
         })
         .when('/profile/:profileId/:action', {
-            templateUrl: '/angular/pages.profile'
+            templateUrl: _base+'/angular/pages.profile'
         })
         .otherwise({
-            templateUrl: '/angular/pages.404error'
+            templateUrl: _base+'/angular/pages.404error'
         });
 
     $locationProvider.html5Mode(true);

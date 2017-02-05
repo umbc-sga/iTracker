@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('profileEdit', ['$routeParams', '$log', 'basecampService', 'errorService', 'apiService', '$location',
+    .directive('profileEdit', ['$routeParams', '$log', 'basecampService',
+        'errorService', 'apiService', '$location',
         function($routeParams, $log, basecampService, errorService, apiService, $location){
         return {
             restrict: 'C',
@@ -60,6 +61,6 @@ angular.module('itracker')
                         });
                 })($scope.profile, token, $scope);
             }],
-            templateUrl: '/angular/profile.editProfile'
+            templateUrl: apiService.root+'/angular/profile.editProfile'
         };
     }]);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('numberBox', [function(){
+    .directive('numberBox', ['apiService', function(apiService){
         return {
             restrict: 'C',
             scope: {
@@ -12,6 +12,6 @@ angular.module('itracker')
                 str: '@',
                 description: '@'
             },
-            templateUrl: '/angular/numberBox'
+            templateUrl: apiService.root+'/angular/numberBox'
         };
     }]);

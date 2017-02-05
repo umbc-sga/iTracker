@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('genericError', ['dataService', function(dataService){
+    .directive('genericError', ['dataService', 'apiService', function(dataService, apiService){
         return {
             restrict: 'C',
             scope: {
@@ -11,6 +11,6 @@ angular.module('itracker')
             controller: ['$scope', function($scope){
                 $scope.data = dataService.main;
             }],
-            templateUrl: '/angular/error.generic'
+            templateUrl: apiService.root+'/angular/error.generic'
         };
     }]);

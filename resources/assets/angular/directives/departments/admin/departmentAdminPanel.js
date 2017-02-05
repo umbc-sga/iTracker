@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('departmentAdmin', ['$routeParams', '$log', 'basecampService', 'dataService',
-        function($routeParams, $log, basecampService, dataService){
+    .directive('departmentAdmin', ['$routeParams', '$log', 'basecampService', 'dataService', 'apiService',
+        function($routeParams, $log, basecampService, dataService, apiService){
             return {
                 restrict: 'C',
                 scope: {
@@ -29,6 +29,6 @@ angular.module('itracker')
                         }
                     })
                 }],
-                templateUrl: '/angular/dept.admin.departmentAdmin'
+                templateUrl: apiService.root+'/angular/dept.admin.departmentAdmin'
             };
         }]);
