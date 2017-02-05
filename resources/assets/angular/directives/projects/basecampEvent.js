@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('basecampEvent', [function(){
+    .directive('basecampEvent', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
                     event: '=',
                 },
-                templateUrl: '/angular/proj.basecampEvent'
+                templateUrl: apiService.root+'/angular/proj.basecampEvent'
             };
         }]);

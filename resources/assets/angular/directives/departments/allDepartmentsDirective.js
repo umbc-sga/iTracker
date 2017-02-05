@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('allDepartments', [function(){
+    .directive('allDepartments', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
                     departments: '='
                 },
-                templateUrl: '/angular/dept.allDepartments'
+                templateUrl: apiService.root+'/angular/dept.allDepartments'
             };
         }]);

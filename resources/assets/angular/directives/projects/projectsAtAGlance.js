@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('projectsAtAGlance', [function(){
+    .directive('projectsAtAGlance', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
                     projects: '=',
                     readMore: '='
                 },
-                templateUrl: '/angular/proj.projectsAtAGlance'
+                templateUrl: apiService.root+'/angular/proj.projectsAtAGlance'
             };
         }]);

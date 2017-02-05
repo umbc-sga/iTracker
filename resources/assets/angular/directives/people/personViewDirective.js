@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('personView', [function(){
+    .directive('personView', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
                     person: '='
                 },
-                templateUrl: '/angular/people.personView'
+                templateUrl: apiService.root+'/angular/people.personView'
             };
         }]);

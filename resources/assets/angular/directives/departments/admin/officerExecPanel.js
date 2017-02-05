@@ -76,6 +76,6 @@ angular.module('itracker')
                             });
                     };
                 }],
-                templateUrl: '/angular/dept.admin.officerExec'
+                templateUrl: apiService.root+'/angular/dept.admin.officerExec'
             };
         }]);

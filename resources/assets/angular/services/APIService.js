@@ -2,7 +2,12 @@
 
 angular.module('itracker')
     .factory('apiService', ['$q', '$log', '$http', function($q, $log, $http) {
-        let _apiVer = '/api/v1/';
+        let _base = document
+            .getElementsByTagName('base')[0]
+            .getAttribute('href')
+            .replace(new RegExp(`^https?:\/\/${location.host}`),'');
+
+        let _apiVer = _base.replace(/\/+$/,'')+'/api/v1/';
 
         /**
          * Handles request and returns promise
@@ -24,6 +29,7 @@ angular.module('itracker')
         };
 
         return {
-            request: request
+            request: request,
+            root: _base
         };
     }]);
