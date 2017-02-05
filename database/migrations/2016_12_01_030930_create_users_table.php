@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->text('google_etag');
             $table->text('google_token');
             $table->text('display_name');
-            $table->text('gender');
             $table->string('email')->unique();
             $table->string('name');
             $table->rememberToken();
