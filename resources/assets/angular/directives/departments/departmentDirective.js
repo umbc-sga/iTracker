@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('department', ['$routeParams', '$log', 'basecampService', 'dataService',
-        function($routeParams, $log, basecampService, dataService){
+    .directive('department', ['$routeParams', '$log', 'basecampService', 'dataService', 'apiService',
+        function($routeParams, $log, basecampService, dataService, apiService){
             return {
                 restrict: 'C',
                 controller: ['$scope', '$filter', ($scope, $filter) => {
@@ -38,6 +38,6 @@ angular.module('itracker')
                         $scope.orgUser = null;
                     });
                 }],
-                templateUrl: '/angular/dept.department'
+                templateUrl: apiService.root+'/angular/dept.department'
             };
         }]);

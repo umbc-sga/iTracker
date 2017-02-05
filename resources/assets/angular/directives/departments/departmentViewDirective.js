@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('departmentView', ['$routeParams', '$log', 'basecampService',
-        function($routeParams, $log, basecampService){
+    .directive('departmentView', ['$routeParams', '$log', 'basecampService', 'apiService',
+        function($routeParams, $log, basecampService, apiService){
             return {
                 restrict: 'C',
                 scope: {
@@ -15,6 +15,6 @@ angular.module('itracker')
                         $scope.loaded = true;
                     }).catch((response) => $log.error('Error when getting department: ', response));
                 }],
-                templateUrl: '/angular/dept.departmentView'
+                templateUrl: apiService.root+'/angular/dept.departmentView'
             };
         }]);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('iTrakertimeline', [function(){
+    .directive('iTrakertimeline', ['apiService', function(apiService){
         return {
             restrict: 'C',
             scope: {
@@ -12,6 +12,6 @@ angular.module('itracker')
 
                 $scope.increaseLimit = () => $scope.limit += 5;
             }],
-            templateUrl: '/angular/timeline'
+            templateUrl: apiService.root+'/angular/timeline'
         };
     }]);

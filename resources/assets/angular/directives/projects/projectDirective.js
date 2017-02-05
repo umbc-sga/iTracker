@@ -169,7 +169,7 @@ angular.module('itracker')
 
                     $scope.bootstrap();
                 }],
-                templateUrl: '/angular/proj.project',
+                templateUrl: apiService.root+'/angular/proj.project',
                 link: function(scope, element, attrs){
                     /**
                      * Trigger upload dialog

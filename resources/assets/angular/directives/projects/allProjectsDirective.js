@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('itracker')
-    .directive('allProjects', [function(){
+    .directive('allProjects', ['apiService', function(apiService){
             return {
                 restrict: 'C',
                 scope: {
@@ -12,6 +12,6 @@ angular.module('itracker')
 
                     $scope.colorPic = randomColor();
                 }],
-                templateUrl: '/angular/proj.allProjects'
+                templateUrl: apiService.root+'/angular/proj.allProjects'
             };
         }]);
