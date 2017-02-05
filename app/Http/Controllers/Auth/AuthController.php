@@ -58,7 +58,6 @@ class AuthController extends Controller
                 'google_etag' => $user->user['etag'],
                 'google_token' => $user->token,
                 'display_name' => $user->user['displayName'],
-                'gender' => null,
                 'email' => $user->email,
                 'name' => $user->name,
             ]);
